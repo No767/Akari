@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  postgres:
+    container_name: Akari-Postgres-Dev
+    build:
+      context: .
+      dockerfile: Postgres-Docker/Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+
+  redis:
+    container_name: Akari-Redis-Dev
+    image: redis:latest
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_volume:/data
+    command: redis-server --save 60 1 --loglevel warning
+
+volumes:
+  postgres_volume:
+  redis_volume:

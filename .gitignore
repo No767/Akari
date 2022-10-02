@@ -1,0 +1,6 @@
+__pycache__
+.vscode
+.idea
+.env
+docker-compose.yml
+Testing-Scripts
