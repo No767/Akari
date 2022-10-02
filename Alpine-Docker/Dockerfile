@@ -38,7 +38,7 @@ RUN apk add --no-cache \
   wget
 
 WORKDIR /Akari
-COPY /Bot/akari.py /Akari/akari.py
+COPY /Bot/akari.py /Akari/Bot/akari.py
 COPY /Bot/Cogs /Akari/Bot/Cogs
 COPY /Scripts/seeder.py /Akari/seeder.py
 COPY /Lib/ /Akari/Lib/
