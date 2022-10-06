@@ -54,8 +54,8 @@ RUN pip install --upgrade pip setuptools
 # Add an unprivileged user and set directory permissions
 RUN adduser --disabled-password --gecos "" akari \
   && chown -R akari:akari /Akari \
-  && chmod +x /akari/start.sh \
-  && chmod +x /akari/wait-for
+  && chmod +x /Akari/start.sh \
+  && chmod +x /Akari/wait-for
 
 USER akari
 
