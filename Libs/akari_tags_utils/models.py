@@ -1,5 +1,6 @@
-from tortoise.models import Model
 from tortoise import fields
+from tortoise.models import Model
+
 
 class AkariTags(Model):
     uuid = fields.UUIDField(pk=True)
@@ -8,9 +9,9 @@ class AkariTags(Model):
     created_at = fields.DatetimeField(null=True, auto_now_add=True)
     guild_id = fields.BigIntField()
     author_id = fields.BigIntField()
-    
+
     class Meta:
         table = "tags"
-        
+
     def __str__(self):
         return self.name

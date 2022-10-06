@@ -1,17 +1,17 @@
+import platform
+
 import discord
 from discord.commands import Option, SlashCommandGroup
 from discord.ext import commands
-import platform
 
 
 class Info(commands.Cog):
     """Commands for getting info about a user, or the bot"""
+
     def __init__(self, bot):
         self.bot = bot
 
-    info = SlashCommandGroup(
-        "info", "Gets the information needed of the user"
-    )
+    info = SlashCommandGroup("info", "Gets the information needed of the user")
 
     @info.command(name="user")
     async def getUserInfo(
@@ -49,29 +49,23 @@ class Info(commands.Cog):
         )
         embed.add_field(
             name="Roles",
-            value=str([roleName.name for roleName in user.roles][1:]).replace(
-                "'", ""
-            ),
+            value=str([roleName.name for roleName in user.roles][1:]).replace("'", ""),
             inline=True,
         )
-        embed.add_field(
-            name="Desktop Status", value=user.desktop_status, inline=True
-        )
+        embed.add_field(name="Desktop Status", value=user.desktop_status, inline=True)
         embed.add_field(name="Web Status", value=user.web_status, inline=True)
         embed.add_field(name="On Mobile?", value=user.is_on_mobile(), inline=True)
         embed.add_field(name="Bot?", value=user.bot, inline=True)
         embed.add_field(name="Top Role", value=user.top_role.name, inline=True)
         embed.add_field(
             name="Mutual Guilds",
-            value=str([guilds.name for guilds in user.mutual_guilds]).replace(
-                "'", ""
-            ),
+            value=str([guilds.name for guilds in user.mutual_guilds]).replace("'", ""),
             inline=True,
         )
         embed.add_field(name="Guild Nickname", value=user.nick, inline=True)
         embed.add_field(name="On Timeout?", value=user.timed_out, inline=True)
         await ctx.respond(embed=embed)
-        
+
     @info.command(name="bot")
     async def botInfo(self, ctx):
         """Gets any info about the bot"""
@@ -81,10 +75,15 @@ class Info(commands.Cog):
         embed.add_field(name="Server Count", value=len(self.bot.guilds), inline=True)
         embed.add_field(name="Users Count", value=len(self.bot.users), inline=True)
         embed.add_field(name="System", value=platform.system(), inline=True)
-        embed.add_field(name="Python Compiler", value=platform.python_compiler(), inline=True)
-        embed.add_field(name="Python Version", value=platform.python_version(), inline=True)
+        embed.add_field(
+            name="Python Compiler", value=platform.python_compiler(), inline=True
+        )
+        embed.add_field(
+            name="Python Version", value=platform.python_version(), inline=True
+        )
         embed.add_field(name="Pycord Version", value=discord.__version__, inline=True)
         await ctx.respond(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(Info(bot))
