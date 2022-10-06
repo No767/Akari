@@ -1,12 +1,19 @@
 import logging
 import os
 from pathlib import Path
+import sys
 
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 
 load_dotenv()
+
+# This is done to trick the bot file that
+# the Libs folder is in the path of this file
+basePath = Path(__file__).parents[1].absolute()
+libPath = os.path.join(str(basePath), "Libs")
+sys.path.append(str(libPath))
 
 DISCORD_BOT_TOKEN = os.getenv("Akari_Dev_Token")
 intents = discord.Intents.default()

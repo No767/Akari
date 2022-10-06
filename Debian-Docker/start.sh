@@ -14,37 +14,38 @@ fi
 if [[ -v POSTGRES_USER ]]; then
     echo "Postgres_User=${POSTGRES_USER}" >> /Akari/Bot/.env
 else
-    echo "Missing Postgres_User env var! Postgres_User environment variable is not set."
+    echo "Missing POSTGRES_USER env var! POSTGRES_USER environment variable is not set."
     exit 1;
 fi
 
 if [[ -v POSTGRES_PASSWORD ]]; then
     echo "Postgres_Password=${POSTGRES_PASSWORD}" >> /Akari/Bot/.env
 else
-    echo "Missing Postgres_Password env var! Postgres_Password environment variable is not set."
+    echo "Missing POSTGRES_PASSWORD env var! POSTGRES_PASSWORD environment variable is not set."
     exit 1;
 fi
 
 if [[ -v POSTGRES_HOST ]]; then
     echo "Postgres_Host=${POSTGRES_HOST}" >> /Akari/Bot/.env
 else
-    echo "Missing Postgres_Host env var! Postgres_Host environment variable is not set."
+    echo "Missing POSTGRES_HOST env var! POSTGRES_HOST environment variable is not set."
     exit 1;
 fi
 
 if [[ -v POSTGRES_PORT ]]; then
     echo "Postgres_Port=${POSTGRES_PORT}" >> /Akari/Bot/.env
 else
-    echo "Missing Postgres_Port env var! Postgres_Port environment variable is not set."
+    echo "Missing POSTGRES_PORT env var! POSTGRES_PORT environment variable is not set."
     exit 1;
 fi
 
-if [[ -v POSTGRES_TAGS_DB ]]; then
-    echo "Postgres_Tags_DB=${POSTGRES_TAGS_DB}" >> /Akari/Bot/.env
+if [[ -v POSTGRES_DB ]]; then
+    echo "Postgres_Akari_DB=${POSTGRES_DB}" >> /Akari/Bot/.env
 else
-    echo "Missing Postgres_Tags_DB env var! Postgres_Tags_DB environment variable is not set."
+    echo "Missing POSTGRES_DB env var! POSTGRES_DB environment variable is not set."
     exit 1;
 fi
+
 
 AKARI_FIRST_START_CHECK="AKARI_FIRST_START"
 

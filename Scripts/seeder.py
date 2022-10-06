@@ -8,18 +8,18 @@ from dotenv import load_dotenv
 import urllib.parse
 
 path = Path(__file__).parents[0].absolute()
-packagePath = os.path.join(str(path), "Lib")
+packagePath = os.path.join(str(path), "Libs")
 envPath = os.path.join(str(path), "Bot", ".env")
 sys.path.append(packagePath)
 
-load_dotenv(envPath)
+load_dotenv(dotenv_path=envPath)
 
 POSTGRES_USER = os.getenv("Postgres_User")
 POSTGRES_PASSWORD = urllib.parse.quote_plus(os.getenv("Postgres_Password"))
 POSTGRES_HOST = os.getenv("Postgres_Host")
 POSTGRES_PORT = os.getenv("Postgres_Port")
-POSTGRES_TAGS_DB = os.getenv("Postgres_Tags_DB")
-CONNECTION_URI = f"asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_TAGS_DB}"
+POSTGRES_DB = os.getenv("Postgres_Akari_DB")
+CONNECTION_URI = f"asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
 
 async def init():
     await Tortoise.init(

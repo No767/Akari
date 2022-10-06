@@ -41,7 +41,7 @@ WORKDIR /Akari
 COPY /Bot/akari.py /Akari/Bot/akari.py
 COPY /Bot/Cogs /Akari/Bot/Cogs
 COPY /Scripts/seeder.py /Akari/seeder.py
-COPY /Lib/ /Akari/Lib/
+COPY /Libs/ /Akari/Libs/
 COPY /Alpine-Docker/start.sh /Akari/start.sh
 COPY /Alpine-Docker/wait-for /Akari/wait-for
 

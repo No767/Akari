@@ -37,10 +37,11 @@ class HelpSelect(discord.ui.Select):
         
         
 class Help(commands.Cog):
+    """Commands for accessing the help page"""
     def __init__(self, bot):
         self.bot = bot
         
-    @slash_command(name="help", description="Access help info for Akari", guild_ids=[970159505390325842])
+    @slash_command(name="help", description="Access help info for Akari")
     async def akariHelp(self, ctx):
         embed = discord.Embed(title=self.bot.user.name)
         embed.description = """

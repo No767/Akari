@@ -3,7 +3,7 @@ from tortoise import fields
 
 class AkariTags(Model):
     uuid = fields.UUIDField(pk=True)
-    tag_name = fields.CharField(max_length=255)
+    tag_name = fields.CharField(max_length=255, unique=True)
     tag_content = fields.TextField()
     created_at = fields.DatetimeField(null=True, auto_now_add=True)
     guild_id = fields.BigIntField()
@@ -11,3 +11,6 @@ class AkariTags(Model):
     
     class Meta:
         table = "tags"
+        
+    def __str__(self):
+        return self.name

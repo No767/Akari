@@ -5,11 +5,12 @@ import platform
 
 
 class Info(commands.Cog):
+    """Commands for getting info about a user, or the bot"""
     def __init__(self, bot):
         self.bot = bot
 
     info = SlashCommandGroup(
-        "info", "Gets the information needed of the user", guild_ids=[970159505390325842]
+        "info", "Gets the information needed of the user"
     )
 
     @info.command(name="user")
