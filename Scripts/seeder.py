@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 from tortoise import Tortoise
 
 path = Path(__file__).parents[0].absolute()
-packagePath = os.path.join(str(path), "Libs")
+packagePath = os.path.join(str(path), "Bot", "Libs")
 envPath = os.path.join(str(path), "Bot", ".env")
 sys.path.append(packagePath)
 

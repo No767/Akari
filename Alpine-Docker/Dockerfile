@@ -1,7 +1,7 @@
 ####################################################################################################
 ## Builder image
 ####################################################################################################
-FROM python:3.10.7-alpine3.16 AS builder
+FROM python:3.10.8-alpine3.16 AS builder
 
 # Note that some libaries require Linux Kernel C Headers
 RUN apk add --no-cache \
@@ -29,7 +29,7 @@ RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
 ####################################################################################################
 ## Final image
 ####################################################################################################
-FROM python:3.10.7-alpine3.16
+FROM python:3.10.8-alpine3.16
 
 RUN apk add --no-cache \
   ca-certificates \
@@ -41,7 +41,7 @@ WORKDIR /Akari
 COPY /Bot/akari.py /Akari/Bot/akari.py
 COPY /Bot/Cogs /Akari/Bot/Cogs
 COPY /Scripts/seeder.py /Akari/seeder.py
-COPY /Libs/ /Akari/Libs/
+COPY /Bot/Libs/ /Akari/Bot/Libs/
 COPY /Alpine-Docker/start.sh /Akari/start.sh
 COPY /Alpine-Docker/wait-for /Akari/wait-for
 

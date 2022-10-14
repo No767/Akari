@@ -1,7 +1,7 @@
 ####################################################################################################
 ## Builder image
 ####################################################################################################
-FROM python:3.10.7-slim-bullseye AS builder
+FROM python:3.10.8-slim-bullseye AS builder
 
 ENV DEBIAN_FRONTEND=noninteractive 
 
@@ -28,7 +28,7 @@ RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
 ####################################################################################################
 ## Final image
 ####################################################################################################
-FROM python:3.10.7-slim-bullseye
+FROM python:3.10.8-slim-bullseye
 RUN apt update \
   && apt install -y --no-install-recommends \
   tini \
@@ -40,7 +40,7 @@ WORKDIR /Akari
 COPY /Bot/akari.py /Akari/Bot/akari.py
 COPY /Bot/Cogs /Akari/Bot/Cogs
 COPY /Scripts/seeder.py /Akari/seeder.py
-COPY /Libs/ /Akari/Libs/
+COPY /Bot/Libs/ /Akari/Bot/Libs/
 COPY /Debian-Docker/start.sh /Akari/start.sh
 COPY /Debian-Docker/wait-for /Akari/wait-for
 

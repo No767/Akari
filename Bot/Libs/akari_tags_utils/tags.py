@@ -99,3 +99,18 @@ class AkariTagsUtils:
         await Tortoise.close_connections()
 
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+
+    async def doesTagExists(self, name: str, guild_id: int) -> bool:
+        """Checks if a tag exists or not
+
+        Args:
+            name (str): Tag Name
+            guild_id (int): Discord Guild ID
+
+        Returns:
+            bool: True if it exists, False if it doesn't
+        """
+        await Tortoise.init(db_url=self.uri, modules={"models": self.models})
+        data = await AkariTags.filter(tag_name=name, guild_id=guild_id).first().values()
+        await Tortoise.close_connections()
+        return True if data is not None else False
