@@ -1,6 +1,8 @@
+import asyncio
 import platform
 
 import discord
+import uvloop
 from discord.commands import Option, SlashCommandGroup
 from discord.ext import commands
 
@@ -66,6 +68,8 @@ class Info(commands.Cog):
         embed.add_field(name="On Timeout?", value=user.timed_out, inline=True)
         await ctx.respond(embed=embed)
 
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+
     @info.command(name="bot")
     async def botInfo(self, ctx):
         """Gets any info about the bot"""
@@ -83,6 +87,8 @@ class Info(commands.Cog):
         )
         embed.add_field(name="Pycord Version", value=discord.__version__, inline=True)
         await ctx.respond(embed=embed)
+
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 
 def setup(bot):

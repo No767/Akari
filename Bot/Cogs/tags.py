@@ -1,7 +1,9 @@
+import asyncio
 import os
 import urllib.parse
 
 import discord
+import uvloop
 from akari_tags_utils import AkariTags, AkariTagsUtils
 from akari_ui_components import (
     CreateTagModal,
@@ -51,6 +53,7 @@ class Tags(commands.Cog):
             .first()
             .values()
         )
+        await Tortoise.close_connections()
         try:
             if data is None:
                 raise ItemNotFound
@@ -74,6 +77,8 @@ class Tags(commands.Cog):
                     description=f"Sorry, the tag requested ({name}) can't be found. Please try again."
                 )
             )
+
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
     @tagsView.command(name="all")
     async def viewTagsOne(self, ctx):
@@ -108,6 +113,8 @@ class Tags(commands.Cog):
                 )
             )
 
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+
     @tagsDelete.command(name="one")
     async def deleteOneTag(self, ctx):
         """Deletes one tag within a server"""
@@ -115,6 +122,8 @@ class Tags(commands.Cog):
             uri=self.uri, models=["akari_tags_utils.models"], title="Tag Removal"
         )
         await ctx.send_modal(mainModal)
+
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
     @tagsDelete.command(name="all")
     async def deleteAllTags(self, ctx):
@@ -128,6 +137,8 @@ class Tags(commands.Cog):
             ),
         )
 
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+
     @tags.command(name="create")
     async def createTag(self, ctx):
         """Creates a tag"""
@@ -135,6 +146,8 @@ class Tags(commands.Cog):
             uri=self.uri, models=["akari_tags_utils.models"], title="Tag Creation"
         )
         await ctx.send_modal(modal)
+
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
     @tagsEdit.command(name="name")
     async def editTag(self, ctx):
@@ -144,6 +157,8 @@ class Tags(commands.Cog):
         )
         await ctx.send_modal(mainModal)
 
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+
     @tagsEdit.command(name="content")
     async def editTagContent(self, ctx):
         """Edits the tag's content"""
@@ -151,6 +166,8 @@ class Tags(commands.Cog):
             uri=self.uri, models=["akari_tags_utils.models"], title="Tag Content Edit"
         )
         await ctx.send_modal(mainModal)
+
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
     @tags.command(name="display")
     async def displayTag(self, ctx, *, name: Option(str, "The tag name to display")):
@@ -163,6 +180,7 @@ class Tags(commands.Cog):
             .first()
             .values()
         )
+        await Tortoise.close_connections()
         try:
             if data is None:
                 raise ItemNotFound
@@ -176,6 +194,8 @@ class Tags(commands.Cog):
                 ephemeral=True,
             )
 
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+
     @tags.command(name="raw")
     async def displayRawTag(self, ctx, *, name: Option(str, "The tag name to display")):
         """Displays the contents of a tag raw, with escaped characters"""
@@ -187,6 +207,7 @@ class Tags(commands.Cog):
             .first()
             .values()
         )
+        await Tortoise.close_connections()
         try:
             if data is None:
                 raise ItemNotFound
@@ -202,6 +223,8 @@ class Tags(commands.Cog):
                 ephemeral=True,
             )
 
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+
     @tags.command(name="claim")
     async def claimTag(self, ctx, *, name: Option(str, "The tag name to claim")):
         """Allows you to claim a tag"""
@@ -213,6 +236,7 @@ class Tags(commands.Cog):
             .first()
             .values()
         )
+        await Tortoise.close_connections()
         try:
             if data is None:
                 raise ItemNotFound
@@ -228,6 +252,8 @@ class Tags(commands.Cog):
                 ),
                 ephemeral=True,
             )
+
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
     @tags.command(name="transfer")
     async def transferAuthorTag(
@@ -246,6 +272,7 @@ class Tags(commands.Cog):
             .first()
             .values()
         )
+        await Tortoise.close_connections()
         try:
             if data is None:
                 raise ItemNotFound
@@ -263,6 +290,8 @@ class Tags(commands.Cog):
                 ),
                 ephemeral=True,
             )
+
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 
 def setup(bot):

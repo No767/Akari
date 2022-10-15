@@ -36,6 +36,8 @@ class HelpSelect(discord.ui.Select):
             ephemeral=True,
         )
 
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+
 
 class Help(commands.Cog):
     """Commands for accessing the help page"""

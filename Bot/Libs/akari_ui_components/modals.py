@@ -126,6 +126,7 @@ class EditTagModal(discord.ui.Modal):
             await AkariTags.filter(
                 tag_name=self.children[0].value, guild_id=interaction.guild.id
             ).update(tag_name=self.children[1].value)
+            await Tortoise.close_connections()
             await interaction.response.send_message(
                 f"The tag {self.children[0].value} has been renamed to {self.children[1].value}",
                 ephemeral=True,
@@ -173,6 +174,7 @@ class EditTagContentModal(discord.ui.Modal):
             await AkariTags.filter(
                 tag_name=self.children[0].value, guild_id=interaction.guild.id
             ).update(tag_content=self.children[1].value)
+            await Tortoise.close_connections()
             await interaction.response.send_message(
                 f"The tag {self.children[0].value} has been edited", ephemeral=True
             )
