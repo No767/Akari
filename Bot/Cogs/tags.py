@@ -1,9 +1,24 @@
 import asyncio
 import os
+import sys
 import urllib.parse
+from pathlib import Path
 
 import discord
 import uvloop
+from discord.commands import Option, SlashCommandGroup
+from discord.ext import commands, pages
+from dotenv import load_dotenv
+from rin_exceptions import ItemNotFound
+from tortoise import Tortoise
+
+path = Path(__file__).parents[1].absolute()
+packagePath = os.path.join(str(path), "Libs")
+envPath = os.path.join(str(path), ".env")
+sys.path.append(packagePath)
+
+load_dotenv()
+
 from akari_tags_utils import AkariTags, AkariTagsUtils
 from akari_ui_components import (
     CreateTagModal,
@@ -12,13 +27,6 @@ from akari_ui_components import (
     PurgeAllTagsView,
     RemoveTagModal,
 )
-from discord.commands import Option, SlashCommandGroup
-from discord.ext import commands, pages
-from dotenv import load_dotenv
-from rin_exceptions import ItemNotFound
-from tortoise import Tortoise
-
-load_dotenv()
 
 POSTGRES_USER = os.getenv("Postgres_User")
 POSTGRES_PASSWORD = urllib.parse.quote_plus(os.getenv("Postgres_Password"))
