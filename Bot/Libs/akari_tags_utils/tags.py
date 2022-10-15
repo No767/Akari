@@ -42,7 +42,6 @@ class AkariTagsUtils:
             guild_id=guild_id,
             author_id=author_id,
         )
-        await Tortoise.close_connections()
 
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
@@ -55,9 +54,7 @@ class AkariTagsUtils:
             list: A list of the data
         """
         await Tortoise.init(db_url=self.uri, modules={"models": self.models})
-        data = await AkariTags.all().values()
-        await Tortoise.close_connections()
-        return data
+        return await AkariTags.all().values()
 
     async def getAllData(self, guild_id: int) -> list:
         """Gets all of the data from the DB w/ the guild id
@@ -69,9 +66,7 @@ class AkariTagsUtils:
             list: A list of the data
         """
         await Tortoise.init(db_url=self.uri, modules={"models": self.models})
-        data = await AkariTags.filter(guild_id=guild_id).all().values()
-        await Tortoise.close_connections()
-        return data
+        return await AkariTags.filter(guild_id=guild_id).all().values()
 
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
@@ -83,7 +78,6 @@ class AkariTagsUtils:
         """
         await Tortoise.init(db_url=self.uri, modules={"models": self.models})
         await AkariTags.filter(guild_id=guild_id).all().delete()
-        await Tortoise.close_connections()
 
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
@@ -96,7 +90,6 @@ class AkariTagsUtils:
         """
         await Tortoise.init(db_url=self.uri, modules={"models": self.models})
         await AkariTags.filter(tag_name=name, guild_id=guild_id).all().delete()
-        await Tortoise.close_connections()
 
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
@@ -114,3 +107,5 @@ class AkariTagsUtils:
         data = await AkariTags.filter(tag_name=name, guild_id=guild_id).first().values()
         await Tortoise.close_connections()
         return True if data is not None else False
+
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
