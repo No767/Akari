@@ -19,6 +19,7 @@ sys.path.append(packagePath)
 
 load_dotenv()
 
+from akari_cache import AkariCache, commandKeyBuilder
 from akari_tags_utils import AkariTags, AkariTagsUtils
 from akari_ui_components import (
     CreateTagModal,
@@ -28,14 +29,18 @@ from akari_ui_components import (
     RemoveTagModal,
 )
 
+REDIS_HOST = os.getenv("Redis_Host")
+REDIS_PORT = os.getenv("Redis_Port")
 POSTGRES_USER = os.getenv("Postgres_User")
 POSTGRES_PASSWORD = urllib.parse.quote_plus(os.getenv("Postgres_Password"))
 POSTGRES_HOST = os.getenv("Postgres_Host")
 POSTGRES_PORT = os.getenv("Postgres_Port")
 POSTGRES_DB = os.getenv("Postgres_Akari_DB")
 CONNECTION_URI = f"asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
+REDIS_CONNECTION_URI = f"redis://{REDIS_HOST}:{REDIS_PORT}/0?decode_responses=True"
 
 tagsUtils = AkariTagsUtils(uri=CONNECTION_URI, models=["akari_tags_utils.models"])
+cache = AkariCache(url=REDIS_CONNECTION_URI)
 
 
 class Tags(commands.Cog):
@@ -178,58 +183,89 @@ class Tags(commands.Cog):
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
     @tags.command(name="display")
-    async def displayTag(self, ctx, *, name: Option(str, "The tag name to display")):
+    async def displayTag(
+        self,
+        ctx: discord.ApplicationContext,
+        *,
+        name: Option(str, "The tag name to display"),
+    ):
         """Displays the contents of a tag"""
-        await Tortoise.init(
-            db_url=self.uri, modules={"models": ["akari_tags_utils.models"]}
+        key = commandKeyBuilder(
+            prefix="cache",
+            namespace="akari",
+            user_id=ctx.user.id,
+            command=f"{ctx.command.qualified_name}".replace(" ", "-"),
         )
-        data = (
-            await AkariTags.filter(tag_name=name, guild_id=ctx.guild.id)
-            .first()
-            .values()
-        )
-        await Tortoise.close_connections()
-        try:
-            if data is None:
-                raise ItemNotFound
-            else:
-                await ctx.respond(data["tag_content"])
-        except ItemNotFound:
-            await ctx.respond(
-                embed=discord.Embed(
-                    description=f"Sorry, the tag requested ({name}) can't be found. Please try again."
-                ),
-                ephemeral=True,
+        if await cache.cacheExists(key=key) is False:
+            await Tortoise.init(
+                db_url=self.uri, modules={"models": ["akari_tags_utils.models"]}
             )
+            data = (
+                await AkariTags.filter(tag_name=name, guild_id=ctx.guild.id)
+                .first()
+                .values()
+            )
+            await Tortoise.close_connections()
+            try:
+                if data is None:
+                    raise ItemNotFound
+                else:
+                    await cache.setCommandCache(
+                        key=key, value=str(data["tag_content"]), ttl=60
+                    )
+                    await ctx.respond(data["tag_content"])
+            except ItemNotFound:
+                await ctx.respond(
+                    embed=discord.Embed(
+                        description=f"Sorry, the tag requested ({name}) can't be found. Please try again."
+                    ),
+                    ephemeral=True,
+                )
+        else:
+            cachedData = await cache.getCommandCache(key=key)
+            await ctx.respond(cachedData)
 
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
     @tags.command(name="raw")
     async def displayRawTag(self, ctx, *, name: Option(str, "The tag name to display")):
         """Displays the contents of a tag raw, with escaped characters"""
-        await Tortoise.init(
-            db_url=self.uri, modules={"models": ["akari_tags_utils.models"]}
+        key = commandKeyBuilder(
+            prefix="cache",
+            namespace="akari",
+            user_id=ctx.user.id,
+            command=f"{ctx.command.qualified_name}".replace(" ", "-"),
         )
-        data = (
-            await AkariTags.filter(tag_name=name, guild_id=ctx.guild.id)
-            .first()
-            .values()
-        )
-        await Tortoise.close_connections()
-        try:
-            if data is None:
-                raise ItemNotFound
-            else:
-                await ctx.respond(
-                    discord.utils.escape_markdown(text=data["tag_content"])
-                )
-        except ItemNotFound:
-            await ctx.respond(
-                embed=discord.Embed(
-                    description=f"Sorry, the tag requested ({name}) can't be found. Please try again."
-                ),
-                ephemeral=True,
+        if await cache.cacheExists(key=key) is False:
+            await Tortoise.init(
+                db_url=self.uri, modules={"models": ["akari_tags_utils.models"]}
             )
+            data = (
+                await AkariTags.filter(tag_name=name, guild_id=ctx.guild.id)
+                .first()
+                .values()
+            )
+            await Tortoise.close_connections()
+            try:
+                if data is None:
+                    raise ItemNotFound
+                else:
+                    await cache.setCommandCache(
+                        key=key, value=str(data["tag_content"]), ttl=60
+                    )
+                    await ctx.respond(
+                        discord.utils.escape_markdown(text=data["tag_content"])
+                    )
+            except ItemNotFound:
+                await ctx.respond(
+                    embed=discord.Embed(
+                        description=f"Sorry, the tag requested ({name}) can't be found. Please try again."
+                    ),
+                    ephemeral=True,
+                )
+        else:
+            cachedData = await cache.getCommandCache(key=key)
+            await ctx.respond(discord.utils.escape_markdown(cachedData))
 
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
