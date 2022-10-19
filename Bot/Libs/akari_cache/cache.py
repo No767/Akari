@@ -1,9 +1,10 @@
 import asyncio
-from typing import Optional
+from typing import Optional, Union
 
 import uvloop
-from akari_cache import commandKeyBuilder
 from coredis import Redis
+
+from .key_builder import commandKeyBuilder
 
 
 class AkariCache:
@@ -23,14 +24,14 @@ class AkariCache:
         key: Optional[str] = commandKeyBuilder(
             prefix="adachi", namespace="cache", user_id=None, command=None
         ),
-        value: Optional[str] = None,
+        value: Union[str, bytes] = None,
         ttl: Optional[int] = 30,
     ) -> None:
         """Sets the command cache on Redis
 
         Args:
             key (Optional[str], optional): Key to set on Redis. Defaults to `commandKeyBuilder(prefix="adachi", namespace="cache", user_id=None, command=None)`.
-            value (Optional[str], optional): Value to set on Redis. Defaults to None.
+            value (Union[str, bytes]): Value to set on Redis. Defaults to None.
             ttl (Optional[int], optional): TTL for the key-value pair. Defaults to 30.
         """
         conn = Redis.from_url(self.url)
