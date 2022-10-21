@@ -25,7 +25,7 @@ def defaultKeyBuilder(
 def commandKeyBuilder(
     prefix: Optional[str] = None,
     namespace: Optional[str] = None,
-    user_id: Optional[int] = None,
+    guild_id: Optional[int] = None,
     command: Optional[str] = None,
 ) -> str:
     """A key builder for commands
@@ -33,10 +33,10 @@ def commandKeyBuilder(
     Args:
         prefix (Optional[str], optional): Prefix of the key. Defaults to None.
         namespace (Optional[str], optional): Namespace of the key. Defaults to None.
-        user_id (Optional[int], optional): Discord User ID. Defaults to None.
+        guild_id (Optional[int], optional): Discord Guild ID. Defaults to None.
         command (Optional[str], optional): Slash Command Name. Defaults to None.
 
     Returns:
         str: The key stored in Redis
     """
-    return f"{prefix}:{namespace}:{user_id}:{command}"
+    return f"{prefix}:{namespace}:{guild_id}:{command}"

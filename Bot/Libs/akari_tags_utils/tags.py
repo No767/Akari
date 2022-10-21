@@ -1,5 +1,4 @@
 import asyncio
-import uuid
 from datetime import datetime
 
 import uvloop
@@ -16,7 +15,7 @@ class AkariTagsUtils:
 
     async def createData(
         self,
-        uuid: uuid.uuid4(),
+        uuid: str,
         tag_name: str,
         tag_content: str,
         created_at: datetime,
@@ -26,7 +25,7 @@ class AkariTagsUtils:
         """Creates and inserts the data into the DB
 
         Args:
-            uuid (uuid.uuid4): Item UUID
+            uuid (str): Item UUID
             tag_name (str): Tag Name
             tag_content (str): Tag Content
             created_at (datetime): `datetime` for when it is created

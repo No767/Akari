@@ -193,7 +193,7 @@ class Tags(commands.Cog):
         key = commandKeyBuilder(
             prefix="cache",
             namespace="akari",
-            user_id=ctx.user.id,
+            guild_id=ctx.guild.id,
             command=f"{ctx.command.qualified_name}".replace(" ", "-"),
         )
         if await cache.cacheExists(key=key) is False:
@@ -233,7 +233,7 @@ class Tags(commands.Cog):
         key = commandKeyBuilder(
             prefix="cache",
             namespace="akari",
-            user_id=ctx.user.id,
+            guild_id=ctx.guild.id,
             command=f"{ctx.command.qualified_name}".replace(" ", "-"),
         )
         if await cache.cacheExists(key=key) is False:

@@ -78,7 +78,7 @@ class CreateTagModal(discord.ui.Modal):
             )
         else:
             await self.tagsUtils.createData(
-                uuid=uuid.uuid4(),
+                uuid=str(uuid.uuid4()),
                 tag_name=self.children[0].value,
                 tag_content=self.children[1].value,
                 created_at=utcnow(),

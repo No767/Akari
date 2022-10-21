@@ -22,7 +22,7 @@ class AkariCache:
     async def setCommandCache(
         self,
         key: Optional[str] = commandKeyBuilder(
-            prefix="adachi", namespace="cache", user_id=None, command=None
+            prefix="cache", namespace="akari", guild_id=None, command=None
         ),
         value: Union[str, bytes] = None,
         ttl: Optional[int] = 30,

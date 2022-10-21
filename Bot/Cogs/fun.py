@@ -22,7 +22,6 @@ class Fun(commands.Cog):
     fun = SlashCommandGroup(
         "fun",
         "Commands for messing around with the bot",
-        guild_ids=[970159505390325842],
     )
 
     @fun.command(name="memes")

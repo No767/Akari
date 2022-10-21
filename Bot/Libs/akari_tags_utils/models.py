@@ -3,7 +3,7 @@ from tortoise.models import Model
 
 
 class AkariTags(Model):
-    uuid = fields.UUIDField(pk=True)
+    uuid = fields.CharField(pk=True, max_length=255)
     tag_name = fields.CharField(max_length=255)
     tag_content = fields.TextField()
     created_at = fields.DatetimeField(null=True, auto_now_add=True)
