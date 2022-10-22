@@ -1,5 +1,5 @@
 from .modals import CreateTagModal, EditTagContentModal, EditTagModal, RemoveTagModal
-from .views import PurgeAllTagsView
+from .views import PurgeALDataView, PurgeAllTagsView
 
 __all__ = [
     "RemoveTagModal",
@@ -7,4 +7,5 @@ __all__ = [
     "CreateTagModal",
     "EditTagModal",
     "EditTagContentModal",
+    "PurgeALDataView",
 ]
