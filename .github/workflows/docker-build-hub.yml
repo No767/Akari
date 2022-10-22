@@ -23,12 +23,10 @@ jobs:
           images: |
             no767/akari
           tags: |
-            type=semver,pattern={{raw}},suffix=-alpine
             type=semver,pattern={{version}},suffix=-alpine
             type=semver,pattern={{major}}.{{minor}},suffix=-alpine
             type=semver,pattern={{major}},suffix=-alpine
             type=edge,branch=dev,suffix=-alpine
-            type=edge,branch=dev
           flavor: |
             latest=false
 
@@ -80,15 +78,14 @@ jobs:
           images: |
             no767/akari
           tags: |
-            type=semver,pattern={{raw}},suffix=-bullseye
             type=semver,pattern={{version}},suffix=-bullseye
             type=semver,pattern={{major}}.{{minor}},suffix=-bullseye
             type=semver,pattern={{major}},suffix=-bullseye
-            type=semver,pattern={{raw}}
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
             type=edge,branch=dev,suffix=-bullseye
+            type=edge,branch=dev
 
       - name: Setup Docker Buildx
         id: buildx
