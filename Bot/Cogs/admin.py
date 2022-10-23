@@ -1,9 +1,9 @@
 import asyncio
+import datetime
 import os
 import sys
 import urllib.parse
 import uuid
-from datetime import timedelta
 from pathlib import Path
 
 import discord
@@ -64,14 +64,14 @@ class Admin(commands.Cog):
             date_issued=discord.utils.utcnow(),
             duration=999,
         )
-        await user.ban(delete_message_days=7, reason=reason)
+        await user.ban(reason=reason)
         embed = discord.Embed(
             title=f"Banned {user.name}", color=discord.Color.from_rgb(255, 51, 51)
         )
         embed.description = (
             f"**Successfully banned {user.name}**\n\n**Reason:** {reason}"
         )
-        await ctx.respond(embed=embed)
+        await ctx.respond(embed=embed, ephemeral=True)
 
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
@@ -150,7 +150,7 @@ class Admin(commands.Cog):
         """Applies a timeout to the user for a specified amount of time"""
         try:
             parsedTime = timeparse(duration)
-            timeoutDuration = timedelta(seconds=parsedTime)
+            timeoutDuration = datetime.timedelta(seconds=int(parsedTime))
             await alUtils.addALRow(
                 uuid=uuid.uuid4(),
                 guild_id=ctx.guild.id,
@@ -159,14 +159,14 @@ class Admin(commands.Cog):
                 type_of_action="timeout",
                 reason=reason,
                 date_issued=discord.utils.utcnow(),
-                duration=timeoutDuration,
+                duration=parsedTime,
             )
             await user.timeout_for(duration=timeoutDuration, reason=reason)
             embed = discord.Embed(
                 title=f"Timeout applied for {user.name}",
                 color=discord.Color.from_rgb(255, 255, 102),
             )
-            embed.description = f"{user.name }has been successfully timed out for {timeoutDuration}\n\n**Reason:** {reason}"
+            embed.description = f"{user.name}has been successfully timed out for {timeoutDuration}\n\n**Reason:** {reason}"
             await ctx.respond(embed=embed, ephemeral=True)
         except TypeError:
             await ctx.respond(

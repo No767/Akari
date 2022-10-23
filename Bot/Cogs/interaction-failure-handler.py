@@ -28,6 +28,42 @@ class InteractionFailureHandler(commands.Cog):
                     description=f"This command is currently on cooldown. Try again in {hours} hour(s), {minutes} minute(s), and {seconds} second(s)."
                 )
             )
+        elif isinstance(error, commands.BotMissingPermissions):
+            missingPerms = (
+                str(error.missing_permissions)
+                .replace("[", "")
+                .replace("]", "")
+                .replace("'", "")
+            )
+            await ctx.respond(
+                embed=discord.Embed(
+                    description=f"Akari is missing the following permissions: {error.missing_permissions}"
+                )
+            )
+        elif isinstance(error, commands.BotMissingAnyRole):
+            missingRoles = (
+                str(error.missing_roles)
+                .replace("[", "")
+                .replace("]", "")
+                .replace("'", "")
+            )
+            await ctx.respond(
+                embed=discord.Embed(
+                    description=f"Akari is missing the following roles: {missingRoles}"
+                )
+            )
+        elif isinstance(error, commands.MissingAnyRole):
+            missingRoles = (
+                str(error.missing_roles)
+                .replace("[", "")
+                .replace("]", "")
+                .replace("'", "")
+            )
+            await ctx.respond(
+                embed=discord.Embed(
+                    description=f"You are missing the following roles: {missingRoles}"
+                )
+            )
         elif isinstance(error, commands.MissingPermissions):
             missingPerms = (
                 str(error.missing_permissions)
@@ -38,18 +74,6 @@ class InteractionFailureHandler(commands.Cog):
             await ctx.respond(
                 embed=discord.Embed(
                     description=f"You are missing the following permissions: {missingPerms}"
-                )
-            )
-        elif isinstance(error, commands.BotMissingPermissions):
-            missingPerms = (
-                str(error.missing_permissions)
-                .replace("[", "")
-                .replace("]", "")
-                .replace("'", "")
-            )
-            await ctx.respond(
-                embed=discord.Embed(
-                    description=f"Akari is missing the following permissions: {missingPerms}"
                 )
             )
         elif isinstance(error, discord.ApplicationCommandInvokeError):
