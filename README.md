@@ -1,6 +1,6 @@
 <div align=center>
 
-![Akari](./Assets/akari-rounded-200.png)
+![Akari](./Assets/akari-200-svg.svg)
 
 # Akari
 
