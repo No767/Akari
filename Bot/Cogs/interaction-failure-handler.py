@@ -49,7 +49,7 @@ class InteractionFailureHandler(commands.Cog):
             )
             await ctx.respond(
                 embed=discord.Embed(
-                    description=f"Kumiko is missing the following permissions: {missingPerms}"
+                    description=f"Akari is missing the following permissions: {missingPerms}"
                 )
             )
         elif isinstance(error, discord.ApplicationCommandInvokeError):
@@ -62,7 +62,7 @@ class InteractionFailureHandler(commands.Cog):
                     title="An error has occured",
                     color=discord.Color.from_rgb(255, 41, 41),
                 )
-                errorEmbedHeader = "Uh oh! It seems like the command ran into an issue! For support, please visit Kumiko's Support Server to get help!"
+                errorEmbedHeader = "Uh oh! It seems like the command ran into an issue! For support, please visit Akari's Support Server to get help!"
                 errorEmbed.description = f"{errorEmbedHeader}\n\n**Error:** ```{error.original}```\n**Full Exception Message:**\n```{self.fullException(error.original)}: {str(error.original)}```"
                 await ctx.respond(embed=errorEmbed)
 
