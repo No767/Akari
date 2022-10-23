@@ -19,6 +19,7 @@ Akari is a multipurpose toolkit bot for Discord servers. Akari contains a variet
 
 - [x] Custom tags
 - [x] Moderation
+- [ ] Role management system
 - [ ] Utility Commands
 - [ ] Modmail
 

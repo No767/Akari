@@ -148,6 +148,7 @@ class Tags(commands.Cog):
             view=PurgeAllTagsView(
                 uri=CONNECTION_URI, models=["akari_tags_utils.models"]
             ),
+            ephemeral=True,
         )
 
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
@@ -324,9 +325,7 @@ class Tags(commands.Cog):
                 await AkariTags.filter(tag_name=name, guild_id=ctx.guild.id).update(
                     author_id=user.id
                 )
-                await ctx.respond(
-                    f"Successfully transferred the tag from {ctx.user.name} to {user.name}!"
-                )
+                await ctx.respond(f"Successfully transferred the tag to {user.name}!")
         except ItemNotFound:
             await ctx.respond(
                 embed=discord.Embed(

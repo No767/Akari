@@ -94,6 +94,34 @@ class Fun(commands.Cog):
 
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
+    @fun.command(name="coinflip")
+    async def coinFlip(self, ctx):
+        """Flips a coin"""
+        coinList = ["Heads", "Tails"]
+        coinFlip = random.choice(coinList)  # nosec
+        await ctx.respond(f"The coin landed on {coinFlip.lower()}")
+
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+
+    @fun.command(name="diceroll")
+    async def diceRoll(
+        self,
+        ctx,
+        *,
+        sides: Option(
+            int,
+            "How much sides does that die have",
+            min_value=1,
+            max_value=100,
+            default=6,
+        ),
+    ):
+        """Rolls a die"""
+        roll = random.randint(1, sides)  # nosec
+        await ctx.respond(f"The die landed on a {roll}")
+
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+
 
 def setup(bot):
     bot.add_cog(Fun(bot))
