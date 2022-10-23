@@ -5,7 +5,7 @@ from datetime import datetime
 import uvloop
 from tortoise import Tortoise
 
-from . import AkariAdminLogs
+from .models import AkariAdminLogs
 
 
 class AkariAdminLogsUtils:
