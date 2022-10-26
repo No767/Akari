@@ -78,9 +78,8 @@ class Info(commands.Cog):
         embed.title = self.bot.user.name
         embed.add_field(name="Server Count", value=len(self.bot.guilds), inline=True)
         embed.add_field(name="Users Count", value=len(self.bot.users), inline=True)
-        embed.add_field(name="System", value=platform.system(), inline=True)
         embed.add_field(
-            name="Python Compiler", value=platform.python_compiler(), inline=True
+            name="Ping", value=f"{self.bot.latency*1000:.2f}ms", inline=True
         )
         embed.add_field(
             name="Python Version", value=platform.python_version(), inline=True

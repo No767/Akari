@@ -15,7 +15,7 @@ class HelpSelect(discord.ui.Select):
                     label=cog_name,
                     description=cog.__doc__,
                 )
-                for cog_name, cog in cog.bot.cogs.items()
+                for cog_name, cog in sorted(cog.bot.cogs.items())
                 if cog_name not in ["InteractionFailureHandler"]
             ],
         )
