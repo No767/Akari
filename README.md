@@ -4,7 +4,7 @@
 
 # Akari
 
-[![Required Python Version](https://img.shields.io/badge/Python-3.10-blue?logo=python&logoColor=white)](https://github.com/No767/Akari/blob/dev/pyproject.toml) [![CodeQL](https://github.com/No767/Akari/actions/workflows/codeql.yml/badge.svg)](https://github.com/No767/Akari/actions/workflows/codeql.yml) [![Snyk](https://github.com/No767/Akari/actions/workflows/snyk.yml/badge.svg)](https://github.com/No767/Akari/actions/workflows/snyk.yml) ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/No767/Akari?label=Release&logo=github&sort=semver) ![GitHub](https://img.shields.io/github/license/No767/Akari?label=License&logo=github)
+[![Required Python Version](https://img.shields.io/badge/Python-3.10-blue?logo=python&logoColor=white)](https://github.com/No767/Akari/blob/dev/pyproject.toml) [![CodeQL](https://github.com/No767/Akari/actions/workflows/codeql.yml/badge.svg)](https://github.com/No767/Akari/actions/workflows/codeql.yml) [![Snyk](https://github.com/No767/Akari/actions/workflows/snyk.yml/badge.svg)](https://github.com/No767/Akari/actions/workflows/snyk.yml) [![Docker Build](https://github.com/No767/Akari/actions/workflows/docker-build.yml/badge.svg)](https://github.com/No767/Akari/actions/workflows/docker-build.yml) ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/No767/Akari?label=Release&logo=github&sort=semver) ![GitHub](https://img.shields.io/github/license/No767/Akari?label=License&logo=github)
 
 A multipurpose toolkit bot for Discord servers
 
