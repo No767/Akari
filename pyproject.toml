@@ -20,7 +20,7 @@ py-cord = "2.2.2"
 pysimdjson = "^5.0.2"
 charset-normalizer = "^2.1.1"
 redis = {extras = ["hiredis"], version = "^4.3.4"}
-coredis = "~4.7.0"
+coredis = "~4.8.0"
 python-dateutil = "^2.8.2"
 pytimeparse = "^1.1.8"
 

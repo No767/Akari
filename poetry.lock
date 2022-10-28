@@ -134,7 +134,7 @@ python-versions = "*"
 
 [[package]]
 name = "coredis"
-version = "4.7.0"
+version = "4.8.0"
 description = "Python async client for Redis key-value store"
 category = "main"
 optional = false
@@ -566,7 +566,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "312ee18daeffde06da1255b34ae1b6df928499d4cafe18762cd1936febb49e6f"
+content-hash = "a48b17dfcd11150e1999a76bfc5a5ad7d580d7a361237953c086f7665eae269c"
 
 [metadata.files]
 aiodns = [
@@ -858,30 +858,30 @@ ciso8601 = [
     {file = "ciso8601-2.2.0.tar.gz", hash = "sha256:14ad817ed31a698372d42afa81b0173d71cd1d0b48b7499a2da2a01dcc8695e6"},
 ]
 coredis = [
-    {file = "coredis-4.7.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:61151bb96a1df01c620c4ece3a394ab8b0168baf46ae43ce0e10932889f5d8d6"},
-    {file = "coredis-4.7.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:741806735a8c23aa4a83177e7225a70f57c2bbda260269b87fccdc1b21d4419f"},
-    {file = "coredis-4.7.0-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:dff02f5f04256cb93a1394ff5fb83d380966ee83dc7dcfdf9b82541005ea86c2"},
-    {file = "coredis-4.7.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:db93577d4b93f41bf53afe29d1f05e3cb9c2105bfff95a85235d14fcc62414b4"},
-    {file = "coredis-4.7.0-cp310-cp310-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:608c8fa14e5b49630b882d363d527360d42a527932b55234dc3d3b386400c9ea"},
-    {file = "coredis-4.7.0-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:7bc3c3a8927bc41a21806436becae9d1ee1586b528e93715a53ffb1cd784dfb3"},
-    {file = "coredis-4.7.0-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:143b66b0026968512b19fa5ce2045d08a6f68ff8c94a8d4016530d179403d3ed"},
-    {file = "coredis-4.7.0-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:53de21a3fd0280d0e0621022c86f1a82a4bde8dd0bfa4b38f5fc0a552ec86a07"},
-    {file = "coredis-4.7.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:d05795b003fa73103d64df8754829db97ac2b16852d2c9671add8c1f5b533343"},
-    {file = "coredis-4.7.0-cp311-cp311-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:4c8ec3d7aa0da6b1a47438d70881273cfda0116d9581d48d53392026d383c49c"},
-    {file = "coredis-4.7.0-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:9c6646fdc997a410e6925f55e5ed751b67f80ab31762ce945aa1044f12f32ab3"},
-    {file = "coredis-4.7.0-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:37d6ccaefbbfa8777e702d3af851c50811f963bd4a935dac50db0bb84d5cf9c7"},
-    {file = "coredis-4.7.0-cp37-cp37m-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:be792ef4bd2c2770a0ca98d0b78bfc2f04c89cce18a29cfe1dbc393467a3df55"},
-    {file = "coredis-4.7.0-cp38-cp38-macosx_10_9_universal2.whl", hash = "sha256:b03a7856af08785d7b5d5e48dacedaa50fb680f732b1207bc6b5210e97a59d92"},
-    {file = "coredis-4.7.0-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:cf4eb0360166a088f1dc08bec2f06648fe2d229bd244ab7883afee311ad40487"},
-    {file = "coredis-4.7.0-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:aa64dfd57caf48976318ac63eec2719dc54573d888f1355261aa8599a3543541"},
-    {file = "coredis-4.7.0-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:1d889d449d33e151724d1050041f8142cdc652bc073f19583ecb5782f41922f1"},
-    {file = "coredis-4.7.0-cp38-cp38-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:0a1606ea0d98cfd6ef885bacedf4a6def440ea76cbc5794d6a70c626cbe99899"},
-    {file = "coredis-4.7.0-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:58430668dd0d374f7619e6d2b2170b3c6e6d4119bd45bfd484dae8d3b213b1e0"},
-    {file = "coredis-4.7.0-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:0e79ef7f7c9fc8eb2170eb7a73e2b0275e4aa8badc8d038393865353178c5d1e"},
-    {file = "coredis-4.7.0-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:fe25fa47792b044bb907e80ec44c54254607d6c377a8acf6b81e466cfc762637"},
-    {file = "coredis-4.7.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:57116428fd27958153e64740950fe5b19ac4ce0f1f32a80bc2784267162324e4"},
-    {file = "coredis-4.7.0-cp39-cp39-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:7b3204714a14b2166979037f072251fcb218e6aa839ad003d6b82c260f923d2a"},
-    {file = "coredis-4.7.0.tar.gz", hash = "sha256:65f12eff08f237a939c2947aac9cea43b70d9ab01bf6136a32fd2b20b5e1fc85"},
+    {file = "coredis-4.8.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:ad2b75c542b01b8283bddb262d86f3b093dd709c0ac3cb3a400b63340b1fbeda"},
+    {file = "coredis-4.8.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:42511236bafe36bc56275f70a80c682de1ce73591dc52fa886a82e7649bc17cc"},
+    {file = "coredis-4.8.0-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:867354aef27b387a10c89771027e3cd99319e2ed3afe60ec9ced14ad477bf778"},
+    {file = "coredis-4.8.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:0920eda035c072ef495967796197dd8f514dd537cee8d1d710699195ce592fec"},
+    {file = "coredis-4.8.0-cp310-cp310-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:fabaee5601d5f5a1216b65f0ef66738576245398482c79665e51e837447b343e"},
+    {file = "coredis-4.8.0-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:011fe767c51b8c571c128298aa969f7bf00fa80f964e3c68ca41eecc19a50c1a"},
+    {file = "coredis-4.8.0-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:6d2ad281391ba9a1d0e9dcbb3afe326fe0638c7282a30efe2fea2df368f46330"},
+    {file = "coredis-4.8.0-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:2d40819242fb8294fbe640a014ddf77118b424c2b5828bce37bdbff7b7f57722"},
+    {file = "coredis-4.8.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:c1a6546e3aab7fd48b1f3e0749b3f780d79b97a9288604ba9103fe431776aac5"},
+    {file = "coredis-4.8.0-cp311-cp311-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:79a15d0b5e2d6319b1808c358d49a5ac67f88a7bb31aaee4c77e96890797df60"},
+    {file = "coredis-4.8.0-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:009f44219bea2e7c8ca7a82ee43a83120d5e98a3afe949613031c149165795a5"},
+    {file = "coredis-4.8.0-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:1784f6bf8e163bddcb6e9098d55d3aa9379537bbc74c897ef584dc147c73be66"},
+    {file = "coredis-4.8.0-cp37-cp37m-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:dcf685677f7f1931aad497a50725337f8fa173c059732a43c7fd7011343b8e09"},
+    {file = "coredis-4.8.0-cp38-cp38-macosx_10_9_universal2.whl", hash = "sha256:7c5521e085effd3d07a9564b5720bd3d1ea9fd78d66d456d2bc74901c93650bb"},
+    {file = "coredis-4.8.0-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:b162ab8d98a2a3842856a6575f70363444490d02ebe84e5c577f04393ef92c04"},
+    {file = "coredis-4.8.0-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:31c1142e0ebf2fcff695b97296f002da5211ebf18debe6f9fbd15a462a843da6"},
+    {file = "coredis-4.8.0-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:6b99794d1bd4334e9de1de2342e6e19e245eeecb0996a173ab2619f2f39a063a"},
+    {file = "coredis-4.8.0-cp38-cp38-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:2985eb645b823b79f8aabf6ab9454ee42cd53a61149b229dfe20a2befabac3a6"},
+    {file = "coredis-4.8.0-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:b4b3541a87b29d55764d35f76f3964a85bd1e585d9652422ffb09f73bdd64fa1"},
+    {file = "coredis-4.8.0-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:4de08ab2e1df8c59084d55f19504927e9bfa960d656ae6842c4632b34465cd36"},
+    {file = "coredis-4.8.0-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:ab4286dc709e6a5a8a80d0e82a33e48ba0c66aec1d5db73c8c5969927d3b1c0d"},
+    {file = "coredis-4.8.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:e266e345c3a494cdaa0b119a19dcf4b79b91ec8da47ba5dd3933ad6d0e5e5136"},
+    {file = "coredis-4.8.0-cp39-cp39-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:2223827e652969e2b73d596a28a98d790856b03d067864f4495fa28faec47971"},
+    {file = "coredis-4.8.0.tar.gz", hash = "sha256:bffc69d25a2d09e05f908d2b158a0d632b5f9e2a76e78901ef27afc973aa19ca"},
 ]
 Deprecated = [
     {file = "Deprecated-1.2.13-py2.py3-none-any.whl", hash = "sha256:64756e3e14c8c5eea9795d93c524551432a0be75629f8f29e67ab8caf076c76d"},
