@@ -84,6 +84,7 @@ class CreateTagModal(discord.ui.Modal):
                 created_at=utcnow(),
                 guild_id=interaction.guild.id,
                 author_id=interaction.user.id,
+                author_name=interaction.user.name,
             )
             await interaction.response.send_message(
                 f"The tag {self.children[0].value} has been created.", ephemeral=True

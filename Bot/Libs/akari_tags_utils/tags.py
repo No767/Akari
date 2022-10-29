@@ -21,6 +21,7 @@ class AkariTagsUtils:
         created_at: datetime,
         guild_id: int,
         author_id: int,
+        author_name: str,
     ):
         """Creates and inserts the data into the DB
 
@@ -31,6 +32,7 @@ class AkariTagsUtils:
             created_at (datetime): `datetime` for when it is created
             guild_id (int): Guild ID
             author_id (int): Author ID
+            author_name (str): Author Name
         """
         await Tortoise.init(db_url=self.uri, modules={"models": self.models})
         await AkariTags.create(
@@ -40,6 +42,7 @@ class AkariTagsUtils:
             created_at=created_at,
             guild_id=guild_id,
             author_id=author_id,
+            author_name=author_name,
         )
         await Tortoise.close_connections()
 

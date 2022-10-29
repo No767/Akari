@@ -9,6 +9,7 @@ class AkariTags(Model):
     created_at = fields.DatetimeField(null=True, auto_now_add=True)
     guild_id = fields.BigIntField()
     author_id = fields.BigIntField()
+    author_name = fields.CharField(max_length=255)
 
     class Meta:
         table = "tags"

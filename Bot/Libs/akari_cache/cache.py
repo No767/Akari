@@ -1,6 +1,7 @@
 import asyncio
 from typing import Optional, Union
 
+import orjson
 import uvloop
 from coredis import Redis
 
@@ -10,32 +11,34 @@ from .key_builder import commandKeyBuilder
 class AkariCache:
     """Akari's custom caching library. Uses Redis as the backend for caching"""
 
-    def __init__(self, url: str):
+    def __init__(self, host: str = "127.0.0.1", port: int = 6379) -> None:
         """Constructor for `AkariCache`
 
         Args:
-            url (str): Redis Connection URL
+            host (str, optional): Redis Server Host. Defaults to "127.0.0.1".
+            port (int, optional): Redis Server Port. Defaults to 6379.
         """
         self.self = self
-        self.url = url
+        self.host = host
+        self.port = port
 
     async def setCommandCache(
         self,
         key: Optional[str] = commandKeyBuilder(
             prefix="cache", namespace="akari", guild_id=None, command=None
         ),
-        value: Union[str, bytes] = None,
+        value: Union[str, bytes, dict] = None,
         ttl: Optional[int] = 30,
     ) -> None:
         """Sets the command cache on Redis
 
         Args:
-            key (Optional[str], optional): Key to set on Redis. Defaults to `commandKeyBuilder(prefix="adachi", namespace="cache", user_id=None, command=None)`.
-            value (Union[str, bytes]): Value to set on Redis. Defaults to None.
+            key (Optional[str], optional): Key to set on Redis. Defaults to `commandKeyBuilder(prefix="akari", namespace="cache", user_id=None, command=None)`.
+            value (Union[str, bytes, dict]): Value to set on Redis. Defaults to None.
             ttl (Optional[int], optional): TTL for the key-value pair. Defaults to 30.
         """
-        conn = Redis.from_url(self.url)
-        await conn.set(key=key, value=value, ex=ttl)
+        conn = Redis(host=self.host, port=self.port)
+        await conn.set(key=key, value=orjson.dumps(value), ex=ttl)
 
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
@@ -45,8 +48,8 @@ class AkariCache:
         Args:
             key (str): Key to get from Redis
         """
-        conn = Redis.from_url(self.url)
-        return await conn.get(key)
+        conn = Redis(host=self.host, port=self.port)
+        return orjson.loads(await conn.get(key))
 
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
@@ -59,7 +62,7 @@ class AkariCache:
         Returns:
             bool: If the key exists or not
         """
-        conn = Redis.from_url(self.url)
+        conn = Redis(host=self.host, port=self.port)
         data = await conn.exists([key])
         return True if data >= 1 else False
 

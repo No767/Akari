@@ -238,9 +238,7 @@ class Admin(commands.Cog):
                         .add_field(name="Issuer", value=dict(item)["action_username"])
                         .add_field(
                             name="Date Issued",
-                            value=dict(item)["date_issued"].strftime(
-                                "%Y-%m-%d %H:%M:%S"
-                            ),
+                            value=discord.utils.format_dt(dict(item)["date_issued"]),
                         )
                         .add_field(name="Duration", value=dict(item)["duration"])
                         for item in logsData

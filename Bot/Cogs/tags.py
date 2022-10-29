@@ -6,6 +6,7 @@ from pathlib import Path
 
 import discord
 import uvloop
+from dateutil import parser
 from discord.commands import Option, SlashCommandGroup
 from discord.ext import commands, pages
 from dotenv import load_dotenv
@@ -37,10 +38,9 @@ POSTGRES_HOST = os.getenv("Postgres_Host")
 POSTGRES_PORT = os.getenv("Postgres_Port")
 POSTGRES_DB = os.getenv("Postgres_Akari_DB")
 CONNECTION_URI = f"asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
-REDIS_CONNECTION_URI = f"redis://{REDIS_HOST}:{REDIS_PORT}/0?decode_responses=True"
 
 tagsUtils = AkariTagsUtils(uri=CONNECTION_URI, models=["akari_tags_utils.models"])
-cache = AkariCache(url=REDIS_CONNECTION_URI)
+cache = AkariCache(host=REDIS_HOST, port=REDIS_PORT)
 
 
 class Tags(commands.Cog):
@@ -58,6 +58,12 @@ class Tags(commands.Cog):
     @tagsView.command(name="one")
     async def viewTagsOne(self, ctx, *, name: Option(str, "The tag name to view")):
         """View one tag within a server"""
+        key = commandKeyBuilder(
+            prefix="cache",
+            namespace="akari",
+            guild_id=ctx.guild.id,
+            command=f"{ctx.command.qualified_name}".replace(" ", "-"),
+        )
         await Tortoise.init(
             db_url=self.uri, modules={"models": ["akari_tags_utils.models"]}
         )
@@ -70,13 +76,31 @@ class Tags(commands.Cog):
         try:
             if data is None:
                 raise ItemNotFound
-            else:
+            elif await cache.cacheExists(key=key) is True:
+                cachedData = await cache.getCommandCache(key=key)
                 embed = discord.Embed()
                 embed.title = data["tag_name"]
                 embed.description = data["tag_content"]
                 embed.add_field(
                     name="Created At (UTC)",
-                    value=data["created_at"].strftime("%Y-%m-%d %H:%M:%S"),
+                    value=discord.utils.format_dt(
+                        parser.isoparse(cachedData["created_at"])
+                    ),
+                )
+                embed.add_field(
+                    name="Author",
+                    value=self.bot.get_user(cachedData["author_id"]).display_name,
+                    inline=True,
+                )
+                await ctx.respond(embed=embed)
+            else:
+                await cache.setCommandCache(key=key, value=data, ttl=60)
+                embed = discord.Embed()
+                embed.title = data["tag_name"]
+                embed.description = data["tag_content"]
+                embed.add_field(
+                    name="Created At (UTC)",
+                    value=discord.utils.format_dt(data["created_at"]),
                 )
                 embed.add_field(
                     name="Author",
@@ -97,34 +121,64 @@ class Tags(commands.Cog):
     async def viewTagsOne(self, ctx):
         """Views all tag within a server"""
         data = await tagsUtils.getAllData(guild_id=ctx.guild.id)
-        try:
-            if len(data) == 0:
-                raise ItemNotFound
-            else:
-                mainPages = pages.Paginator(
-                    pages=[
-                        discord.Embed(
-                            title=item["tag_name"], description=item["tag_content"]
-                        )
-                        .add_field(
-                            name="Created At (UTC)",
-                            value=item["created_at"].strftime("%Y-%m-%d %H:%M:%S"),
-                        )
-                        .add_field(
-                            name="Tag Creator",
-                            value=await self.bot.get_or_fetch_user(item["author_id"]),
-                        )
-                        for item in data
-                    ],
-                    loop_pages=True,
+        key = commandKeyBuilder(
+            prefix="cache",
+            namespace="akari",
+            guild_id=ctx.guild.id,
+            command=f"{ctx.command.qualified_name}".replace(" ", "-"),
+        )
+        if await cache.cacheExists(key=key) is False:
+            try:
+                if len(data) == 0:
+                    raise ItemNotFound
+                else:
+                    await cache.setCommandCache(key=key, value=data, ttl=60)
+                    mainPages = pages.Paginator(
+                        pages=[
+                            discord.Embed(
+                                title=item["tag_name"], description=item["tag_content"]
+                            )
+                            .add_field(
+                                name="Created At (UTC)",
+                                value=discord.utils.format_dt(item["created_at"]),
+                            )
+                            .add_field(
+                                name="Tag Creator",
+                                value=item["author_name"],
+                            )
+                            for item in data
+                        ],
+                        loop_pages=True,
+                    )
+                    await mainPages.respond(ctx.interaction, ephemeral=False)
+            except ItemNotFound:
+                await ctx.respond(
+                    embed=discord.Embed(
+                        description="It seems like you don't have any tags set up. Please create one to begin!"
+                    )
                 )
-                await mainPages.respond(ctx.interaction, ephemeral=False)
-        except ItemNotFound:
-            await ctx.respond(
-                embed=discord.Embed(
-                    description="It seems like you don't have any tags set up. Please create one to begin!"
-                )
+        else:
+            cachedData = await cache.getCommandCache(key=key)
+            cachedMainPages = pages.Paginator(
+                pages=[
+                    discord.Embed(
+                        title=item["tag_name"], description=item["tag_content"]
+                    )
+                    .add_field(
+                        name="Created At (UTC)",
+                        value=discord.utils.format_dt(
+                            parser.isoparse(item["created_at"])
+                        ),
+                    )
+                    .add_field(
+                        name="Tag Creator",
+                        value=item["author_name"],
+                    )
+                    for item in cachedData
+                ],
+                loop_pages=True,
             )
+            await cachedMainPages.respond(ctx.interaction, ephemeral=False)
 
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
@@ -197,34 +251,33 @@ class Tags(commands.Cog):
             guild_id=ctx.guild.id,
             command=f"{ctx.command.qualified_name}".replace(" ", "-"),
         )
-        if await cache.cacheExists(key=key) is False:
-            await Tortoise.init(
-                db_url=self.uri, modules={"models": ["akari_tags_utils.models"]}
-            )
-            data = (
-                await AkariTags.filter(tag_name=name, guild_id=ctx.guild.id)
-                .first()
-                .values()
-            )
-            await Tortoise.close_connections()
-            try:
-                if data is None:
-                    raise ItemNotFound
-                else:
-                    await cache.setCommandCache(
-                        key=key, value=str(data["tag_content"]), ttl=60
-                    )
-                    await ctx.respond(data["tag_content"])
-            except ItemNotFound:
-                await ctx.respond(
-                    embed=discord.Embed(
-                        description=f"Sorry, the tag requested ({name}) can't be found. Please try again."
-                    ),
-                    ephemeral=True,
+        await Tortoise.init(
+            db_url=self.uri, modules={"models": ["akari_tags_utils.models"]}
+        )
+        data = (
+            await AkariTags.filter(tag_name=name, guild_id=ctx.guild.id)
+            .first()
+            .values()
+        )
+        await Tortoise.close_connections()
+        try:
+            if data is None:
+                raise ItemNotFound
+            elif await cache.cacheExists(key=key) is True:
+                cachedData = await cache.getCommandCache(key=key)
+                await ctx.respond(cachedData)
+            else:
+                await cache.setCommandCache(
+                    key=key, value=str(data["tag_content"]), ttl=60
                 )
-        else:
-            cachedData = await cache.getCommandCache(key=key)
-            await ctx.respond(cachedData)
+                await ctx.respond(data["tag_content"])
+        except ItemNotFound:
+            await ctx.respond(
+                embed=discord.Embed(
+                    description=f"Sorry, the tag requested ({name}) can't be found. Please try again."
+                ),
+                ephemeral=True,
+            )
 
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
@@ -237,36 +290,39 @@ class Tags(commands.Cog):
             guild_id=ctx.guild.id,
             command=f"{ctx.command.qualified_name}".replace(" ", "-"),
         )
-        if await cache.cacheExists(key=key) is False:
-            await Tortoise.init(
-                db_url=self.uri, modules={"models": ["akari_tags_utils.models"]}
-            )
-            data = (
-                await AkariTags.filter(tag_name=name, guild_id=ctx.guild.id)
-                .first()
-                .values()
-            )
-            await Tortoise.close_connections()
-            try:
-                if data is None:
-                    raise ItemNotFound
-                else:
-                    await cache.setCommandCache(
-                        key=key, value=str(data["tag_content"]), ttl=60
-                    )
-                    await ctx.respond(
-                        discord.utils.escape_markdown(text=data["tag_content"])
-                    )
-            except ItemNotFound:
-                await ctx.respond(
-                    embed=discord.Embed(
-                        description=f"Sorry, the tag requested ({name}) can't be found. Please try again."
-                    ),
-                    ephemeral=True,
+        await Tortoise.init(
+            db_url=self.uri, modules={"models": ["akari_tags_utils.models"]}
+        )
+        data = (
+            await AkariTags.filter(tag_name=name, guild_id=ctx.guild.id)
+            .first()
+            .values()
+        )
+        await Tortoise.close_connections()
+        try:
+            if data is None:
+                raise ItemNotFound
+            elif await cache.cacheExists(key=key) is True:
+                cachedData = await cache.setCommandCache(
+                    key=key, value=str(data["tag_content"]), ttl=60
                 )
-        else:
-            cachedData = await cache.getCommandCache(key=key)
-            await ctx.respond(discord.utils.escape_markdown(cachedData))
+                await ctx.respond(
+                    discord.utils.escape_markdown(text=cachedData["tag_content"])
+                )
+            else:
+                await cache.setCommandCache(
+                    key=key, value=str(data["tag_content"]), ttl=60
+                )
+                await ctx.respond(
+                    discord.utils.escape_markdown(text=data["tag_content"])
+                )
+        except ItemNotFound:
+            await ctx.respond(
+                embed=discord.Embed(
+                    description=f"Sorry, the tag requested ({name}) can't be found. Please try again."
+                ),
+                ephemeral=True,
+            )
 
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
@@ -285,9 +341,11 @@ class Tags(commands.Cog):
         try:
             if data is None:
                 raise ItemNotFound
+            elif name == ctx.author.name:
+                await ctx.respond("You can't claim a tag with your own name.")
             else:
                 await AkariTags.filter(tag_name=name, guild_id=ctx.guild.id).update(
-                    author_id=ctx.author.id
+                    author_id=ctx.author.id, author_name=ctx.author.name
                 )
                 await ctx.respond("Successfully claimed the tag!")
         except ItemNotFound:
@@ -321,9 +379,11 @@ class Tags(commands.Cog):
         try:
             if data is None:
                 raise ItemNotFound
+            elif user.id == ctx.author.id:
+                await ctx.respond("You can't transfer a tag that is yours to yourself.")
             else:
                 await AkariTags.filter(tag_name=name, guild_id=ctx.guild.id).update(
-                    author_id=user.id
+                    author_id=user.id, author_name=user.name
                 )
                 await ctx.respond(f"Successfully transferred the tag to {user.name}!")
         except ItemNotFound:
