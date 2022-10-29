@@ -11,8 +11,8 @@ load_dotenv()
 
 # This is done to trick the bot file that
 # the Libs folder is in the path of this file
-basePath = Path(__file__).parents[1].absolute()
-libPath = os.path.join(str(basePath), "Libs")
+basePath = Path(__file__).parents[0].absolute()
+libPath = os.path.join(str(basePath), "Bot", "Libs")
 sys.path.append(str(libPath))
 
 DISCORD_BOT_TOKEN = os.getenv("Akari_Dev_Token")
@@ -25,6 +25,7 @@ logging.basicConfig(
     format="[%(levelname)s] | %(asctime)s >> %(message)s",
     datefmt="[%m/%d/%Y] [%I:%M:%S %p %Z]",
 )
+logging.getLogger("tortoise").setLevel(logging.WARNING)
 
 path = Path(__file__).parents[0].absolute()
 cogsPath = os.path.join(str(path), "Cogs")

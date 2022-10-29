@@ -1,18 +1,18 @@
 ####################################################################################################
 ## Builder image
 ####################################################################################################
-FROM python:3.10.7-alpine3.16 AS builder
+FROM python:3.10.8-slim-bullseye AS builder
 
-# Note that some libaries require Linux Kernel C Headers
-RUN apk add --no-cache \
+ENV DEBIAN_FRONTEND=noninteractive 
+
+RUN apt update \
+  && apt install -y --no-install-recommends \
+  build-essential \
   ca-certificates \
-  build-base \
-  curl \
-  linux-headers 
+  curl
 
-# Add Poetry locally
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 RUN python -m pip install --upgrade pip setuptools
 RUN curl -sSL https://install.python-poetry.org | python -
 ENV PATH="${PATH}:/root/.local/bin"
@@ -22,36 +22,33 @@ WORKDIR /Akari
 COPY /pyproject.toml /Akari/
 COPY /poetry.lock /Akari/
 
-# Create dependency wheels
 RUN poetry export -f requirements.txt --output requirements.txt --without-hashes \
   && pip wheel --wheel-dir=/Akari/wheels -r requirements.txt
 
 ####################################################################################################
 ## Final image
 ####################################################################################################
-FROM python:3.10.7-alpine3.16
-
-RUN apk add --no-cache \
-  ca-certificates \
+FROM python:3.10.8-slim-bullseye
+RUN apt update \
+  && apt install -y --no-install-recommends \
   tini \
+  ca-certificates \
   bash \
-  wget
+  netcat
 
 WORKDIR /Akari
 COPY /Bot/akari.py /Akari/Bot/akari.py
 COPY /Bot/Cogs /Akari/Bot/Cogs
 COPY /Scripts/seeder.py /Akari/seeder.py
-COPY /Libs/ /Akari/Libs/
-COPY /Alpine-Docker/start.sh /Akari/start.sh
-COPY /Alpine-Docker/wait-for /Akari/wait-for
+COPY /Bot/Libs/ /Akari/Bot/Libs/
+COPY /Docker/Debian-Docker/start.sh /Akari/start.sh
+COPY /Docker/Debian-Docker/wait-for /Akari/wait-for
 
-# Copy dependency wheels from builder stage
 COPY --from=builder /Akari/wheels /Akari/wheels
 COPY --from=builder /Akari/requirements.txt /Akari/requirements.txt
 
 RUN pip install --upgrade pip setuptools
 
-# Add an unprivileged user and set directory permissions
 RUN adduser --disabled-password --gecos "" akari \
   && chown -R akari:akari /Akari \
   && chmod +x /Akari/start.sh \
@@ -59,19 +56,16 @@ RUN adduser --disabled-password --gecos "" akari \
 
 USER akari
 
-# Set up path so pip won't complain again
 ENV PATH="${PATH}:/home/akari/.local/bin"
 
-# Install dependencies
 RUN pip install --user --no-index --find-links=/Akari/wheels -r requirements.txt
 
-ENTRYPOINT ["/sbin/tini", "--"]
+ENTRYPOINT ["/usr/bin/tini", "--"]
 
 CMD ["/Akari/start.sh"]
 
 STOPSIGNAL SIGTERM
 
-# Image metadata
 LABEL org.opencontainers.image.title="Akari"
 LABEL org.opencontainers.image.description="A multipurpose toolkit bot for servers"
 LABEL org.opencontainers.image.licenses="Apache-2.0"

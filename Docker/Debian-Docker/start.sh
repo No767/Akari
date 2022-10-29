@@ -46,6 +46,19 @@ else
     exit 1;
 fi
 
+if [[ -v REDIS_HOST ]]; then
+    echo "Redis_Host=${REDIS_HOST}" >> /Akari/Bot/.env
+else
+    echo "Missing REDIS_HOST env var! REDIS_HOST environment variable is not set."
+    exit 1;
+fi
+
+if [[ -v REDIS_PORT ]]; then
+    echo "Redis_Port=${REDIS_PORT}" >> /Akari/Bot/.env
+else
+    echo "Missing REDIS_PORT env var! REDIS_PORT environment variable is not set."
+    exit 1;
+fi
 
 AKARI_FIRST_START_CHECK="AKARI_FIRST_START"
 

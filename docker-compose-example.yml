@@ -1,8 +1,8 @@
 version: "3.9"
 services:
   postgres:
-    container_name: Akari-Postgres-Dev
-    image: postgres:latest
+    container_name: Akari-Postgres
+    image: postgres:14
     env_file:
       - .env
     volumes:
@@ -11,8 +11,8 @@ services:
       - 5432:5432
 
   redis:
-    container_name: Akari-Redis-Dev
-    image: redis:latest
+    container_name: Akari-Redis
+    image: redis:7
     ports:
       - 6379:6379
     volumes:
@@ -24,11 +24,12 @@ services:
     build: 
       context: .
       dockerfile: ./Debian-Docker/Dockerfile
-    command: sh -c '/Akari/wait-for postgres:5432 -- echo "[Wait-for] PostgreSQL is fully up. Starting Akari" && /Akari/start.sh'
+    command: sh -c '/Akari/wait-for postgres:5432 -- echo "[Wait-for] PostgreSQL is fully up. Waiting for Redis" && /Akari/wait-for redis:6379 -- echo "[Wait-for] Redis is fully up. Starting Akari" && /Akari/start.sh'
     env_file:
       - .env
     depends_on:
       - postgres
+      - redis
 
 volumes:
   postgres_volume:

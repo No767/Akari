@@ -8,7 +8,7 @@ import uvloop
 from dotenv import load_dotenv
 from tortoise import Tortoise
 
-path = Path(__file__).parents[0].absolute()
+path = Path(__file__).parents[1].absolute()
 packagePath = os.path.join(str(path), "Bot", "Libs")
 envPath = os.path.join(str(path), "Bot", ".env")
 sys.path.append(packagePath)
@@ -30,7 +30,6 @@ async def init():
     )
     await Tortoise.generate_schemas()
     await Tortoise.close_connections()
-    print("[DB Seeder] Generated all schemas for Akari")
 
 
 if __name__ == "__main__":

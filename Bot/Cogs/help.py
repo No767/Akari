@@ -15,7 +15,8 @@ class HelpSelect(discord.ui.Select):
                     label=cog_name,
                     description=cog.__doc__,
                 )
-                for cog_name, cog in cog.bot.cogs.items()
+                for cog_name, cog in sorted(cog.bot.cogs.items())
+                if cog_name not in ["InteractionFailureHandler"]
             ],
         )
         self.cog = cog
@@ -35,6 +36,8 @@ class HelpSelect(discord.ui.Select):
             embed=embed,
             ephemeral=True,
         )
+
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 
 class Help(commands.Cog):
