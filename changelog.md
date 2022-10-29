@@ -1,8 +1,8 @@
-# :tada: Akari v0.0.0 :tada:
+# :tada: Akari v0.1.0 :tada:
 
-This is the first release of Akari, and starts the project off. 
+This is the first release of Akari, and starts the project off. This release of Akari is not finished yet, and is still in development. 
 
-## :tada: New Features :tada:
+## :tada: New Additions :tada:
 
 - Administrative commands
 - Tags system
@@ -14,3 +14,4 @@ This is the first release of Akari, and starts the project off.
 - Debian + Alpine Docker images
 - Seeder scripts
 - UI components package
+- Better Caching + Serialization
