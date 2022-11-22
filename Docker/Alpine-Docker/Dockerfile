@@ -4,10 +4,13 @@
 FROM python:3.11-alpine3.16 AS builder
 
 # Note that some libaries require Linux Kernel C Headers
+# Orjson requires Rust and Cargo to build the wheels
 RUN apk add --no-cache \
   ca-certificates \
   build-base \
   curl \
+  rust \
+  cargo \
   linux-headers 
 
 # Add Poetry locally
