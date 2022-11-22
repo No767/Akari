@@ -21,9 +21,7 @@ services:
 
   akari:
     container_name: Akari-Dev
-    build: 
-      context: .
-      dockerfile: ./Debian-Docker/Dockerfile
+    image: no767/akari:latest
     command: sh -c '/Akari/wait-for postgres:5432 -- echo "[Wait-for] PostgreSQL is fully up. Waiting for Redis" && /Akari/wait-for redis:6379 -- echo "[Wait-for] Redis is fully up. Starting Akari" && /Akari/start.sh'
     env_file:
       - .env
