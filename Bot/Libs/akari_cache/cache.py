@@ -67,3 +67,31 @@ class AkariCache:
         return True if data >= 1 else False
 
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+
+    async def setCommandCacheDict(
+        self,
+        key: Optional[str] = commandKeyBuilder(
+            prefix="cache", namespace="akari", guild_id=None, command=None
+        ),
+        value: Union[str, bytes, dict] = None,
+        ttl: Optional[int] = 30,
+    ):
+        """Sets up the command cache, but this time with an HSET, not a regular set
+
+        Args:
+            key (Optional[str], optional): _description_. Defaults to commandKeyBuilder( prefix="cache", namespace="akari", guild_id=None, command=None ).
+            value (Union[str, bytes, dict], optional): _description_. Defaults to None.
+            ttl (Optional[int], optional): _description_. Defaults to 30.
+        """
+        conn = Redis(host=self.host, port=self.port)
+        await conn.hset(key=key, field_values=value)
+        await conn.expire(key=key, seconds=ttl)
+
+    async def getCommandCacheDict(self, key: str):
+        """Gets the command cache from Redis
+
+        Args:
+            key (str): Key to get from Redis
+        """
+        conn = Redis(host=self.host, port=self.port)
+        return await conn.hgetall(key=key)

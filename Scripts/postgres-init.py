@@ -26,7 +26,14 @@ CONNECTION_URI = f"asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}
 async def init():
     await Tortoise.init(
         db_url=CONNECTION_URI,
-        modules={"models": ["akari_tags_utils.models", "akari_admin_logs.models"]},
+        modules={
+            "models": [
+                "akari_tags_utils.models",
+                "akari_admin_logs.models",
+                "akari_servers.models",
+                "akari_modmail.models",
+            ]
+        },
     )
     await Tortoise.generate_schemas()
     await Tortoise.close_connections()
