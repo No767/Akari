@@ -16,7 +16,7 @@ uvloop = "^0.17.0"
 asyncpg = "^0.27.0"
 tortoise-orm = {extras = ["accel"], version = "^0.19.2"}
 rin-exceptions = "^1.0.3"
-py-cord = "2.2.2"
+py-cord = "2.3.0"
 pysimdjson = "^5.0.2"
 charset-normalizer = "^2.1.1"
 coredis = "~4.10.0"
