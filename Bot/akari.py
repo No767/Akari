@@ -10,6 +10,7 @@ load_dotenv()
 DISCORD_BOT_TOKEN = os.getenv("Akari_Dev_Token")
 intents = discord.Intents.default()
 intents.members = True
+intents.guilds = True
 bot = AkariCore(intents=intents)
 
 logging.basicConfig(

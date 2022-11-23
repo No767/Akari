@@ -42,19 +42,6 @@ class ModMail(commands.Cog):
     # async def setupModMail(self, ctx: discord.ApplicationContext):
     #     """Set up the modmail system"""
 
-    @modmail.command(name="add-profile")
-    async def addProfile(self, ctx: discord.ApplicationContext):
-        """Adds a server profile"""
-        async with AkariCM(uri=CONNECTION_URI, models=MODELS):
-            await AkariServers(
-                guild_id=ctx.guild.id,
-                admin_logs=True,
-                modmail=False,
-                suggestions=False,
-                tags=True,
-            ).save()
-            await ctx.respond("Added the server profile!")
-
     @modmail.command(name="report")
     async def reportMail(self, ctx: discord.ApplicationContext):
         """Adds a report to the modmail"""

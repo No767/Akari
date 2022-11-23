@@ -41,6 +41,7 @@ RUN apt update \
 
 WORKDIR /Akari
 COPY /Bot/akari.py /Akari/Bot/akari.py
+COPY /Bot/akaricore.py /Akari/Bot/akaricore.py
 COPY /Bot/Cogs /Akari/Bot/Cogs
 COPY /Scripts/seeder.py /Akari/seeder.py
 COPY /Bot/Libs/ /Akari/Bot/Libs/
