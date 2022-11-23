@@ -1,16 +1,13 @@
 ####################################################################################################
 ## Builder image
 ####################################################################################################
-FROM python:3.11-alpine3.16 AS builder
+FROM python:3.10-alpine3.16 AS builder
 
 # Note that some libaries require Linux Kernel C Headers
-# Orjson requires Rust and Cargo to build the wheels
 RUN apk add --no-cache \
   ca-certificates \
   build-base \
   curl \
-  rust \
-  cargo \
   linux-headers 
 
 # Add Poetry locally
@@ -19,6 +16,10 @@ ENV PYTHONUNBUFFERED 1
 RUN python -m pip install --upgrade pip setuptools
 RUN curl -sSL https://install.python-poetry.org | python -
 ENV PATH="${PATH}:/root/.local/bin"
+
+# Install Rust. This is needed by orjson
+RUN curl https://sh.rustup.rs -sSf | sh -s -- --profile minimal --default-toolchain stable -y
+ENV PATH="${PATH}:/root/.cargo/bin"
 
 WORKDIR /Akari
 
@@ -32,7 +33,7 @@ RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
 ####################################################################################################
 ## Final image
 ####################################################################################################
-FROM python:3.11-alpine3.16
+FROM python:3.10-alpine3.16
 
 RUN apk add --no-cache \
   ca-certificates \
