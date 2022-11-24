@@ -1,7 +1,9 @@
+import asyncio
 import logging
 import os
 
 import discord
+import uvloop
 from akaricore import AkariCore
 from dotenv import load_dotenv
 
@@ -21,4 +23,5 @@ logging.basicConfig(
 logging.getLogger("tortoise").setLevel(logging.WARNING)
 
 if __name__ == "__main__":
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
     bot.run(DISCORD_BOT_TOKEN)
