@@ -83,7 +83,7 @@ class AkariCache:
             value (Union[str, bytes, dict], optional): _description_. Defaults to None.
             ttl (Optional[int], optional): _description_. Defaults to 30.
         """
-        conn = Redis(host=self.host, port=self.port)
+        conn = Redis(host=self.host, port=self.port, decode_responses=True)
         await conn.hset(key=key, field_values=value)
         await conn.expire(key=key, seconds=ttl)
 
@@ -93,5 +93,5 @@ class AkariCache:
         Args:
             key (str): Key to get from Redis
         """
-        conn = Redis(host=self.host, port=self.port)
+        conn = Redis(host=self.host, port=self.port, decode_responses=True)
         return await conn.hgetall(key=key)

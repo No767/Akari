@@ -2,9 +2,9 @@ import os
 import urllib.parse
 
 import discord
-from akari_cache import AkariCache, commandKeyBuilder
-from akari_servers import AkariServers, AkariServerUtils
-from akari_utils import AkariCM
+from akari_cache import AkariCache
+from akari_servers import AkariServerUtils
+from akari_ui_components import AddModMailReportModal
 from discord.commands import SlashCommandGroup
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -22,7 +22,9 @@ CONNECTION_URI = f"asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}
 MODELS = ["akari_modmail.models", "akari_servers.models"]
 
 cache = AkariCache(host=REDIS_HOST, port=REDIS_PORT)
-serverUtils = AkariServerUtils(uri=CONNECTION_URI, models=MODELS)
+serverUtils = AkariServerUtils(
+    uri=CONNECTION_URI, models=MODELS, redis_host=REDIS_HOST, redis_port=REDIS_PORT
+)
 
 
 class ModMail(commands.Cog):
@@ -38,6 +40,7 @@ class ModMail(commands.Cog):
     # TODO: Set up the setup system
     # One dropdown to handle for who to add to the modmail
     # another for channel
+    # Data will have to be stored in a DB somewhere, and cached
     # @modmail.command("setup")
     # async def setupModMail(self, ctx: discord.ApplicationContext):
     #     """Set up the modmail system"""
@@ -45,26 +48,18 @@ class ModMail(commands.Cog):
     @modmail.command(name="report")
     async def reportMail(self, ctx: discord.ApplicationContext):
         """Adds a report to the modmail"""
-        key = commandKeyBuilder(
-            prefix="cache",
-            namespace="akari",
-            guild_id=ctx.guild.id,
-            command=f"{ctx.command.qualified_name}".replace(" ", "-"),
+        guildData = await serverUtils.cacheGuild(
+            guild_id=ctx.guild.id, command_name=ctx.command.qualified_name
         )
-        guildData = {}
-        if await cache.cacheExists(key=key) is False:
-            async with AkariCM(uri=CONNECTION_URI, models=MODELS):
-                guildData = (
-                    await AkariServers.filter(guild_id=ctx.guild.id).first().values()
-                )
-                await cache.setCommandCache(key=key, value=guildData, ttl=60)
+        if bool(int(guildData["modmail"])) is False:
+            await ctx.respond(
+                "Sorry, but it seems like ModMail hasn't been set up yet. Please contact your server administrators or staff to set it up."
+            )
         else:
-            guildData = await cache.getCommandCache(key=key)
-
-        if guildData["modmail"] is False or None:
-            await ctx.respond("Modmail is not enabled for this server!")
-        else:
-            await ctx.respond("Modmail modal here")
+            mainModal = AddModMailReportModal(
+                uri=CONNECTION_URI, models=MODELS, title="File a mod report"
+            )
+            await ctx.send_modal(mainModal)
 
 
 def setup(bot):

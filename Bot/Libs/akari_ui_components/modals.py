@@ -3,7 +3,9 @@ import uuid
 
 import discord
 import uvloop
+from akari_modmail import AkariModMail
 from akari_tags_utils import AkariTags, AkariTagsUtils
+from akari_utils import AkariCM
 from discord.utils import utcnow
 from tortoise import Tortoise
 
@@ -186,3 +188,44 @@ class EditTagContentModal(discord.ui.Modal):
             )
 
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+
+
+class AddModMailReportModal(discord.ui.Modal):
+    def __init__(self, uri: str, models: list, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.uri = uri
+        self.models = models
+        self.add_item(
+            discord.ui.InputText(
+                label="Mod Report Title",
+                style=discord.InputTextStyle.short,
+                min_length=1,
+                required=True,
+                placeholder="Type in the title of the mod report",
+            )
+        )
+        self.add_item(
+            discord.ui.InputText(
+                label="Mod Report Content",
+                style=discord.InputTextStyle.long,
+                min_length=1,
+                required=True,
+                placeholder="Type in the content of the mod report",
+            )
+        )
+
+    async def callback(self, interaction: discord.Interaction):
+        # TODO: Also get the proper channel to upload the mod report to
+        # And to upload it to the correct channel
+        async with AkariCM(uri=self.uri, models=self.models):
+            await AkariModMail(
+                uuid=str(uuid.uuid4()),
+                guild_id=interaction.guild.id,
+                title=self.children[0].value,
+                message=self.children[1].value,
+                author=interaction.user.name,
+                date_created=discord.utils.utcnow().isoformat(),
+            ).save()
+            await interaction.response.send_message(
+                "The ModMail report has been sent!", ephemeral=True
+            )
