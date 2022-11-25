@@ -5,7 +5,8 @@ from .modals import (
     EditTagModal,
     RemoveTagModal,
 )
-from .views import PurgeALDataView, PurgeAllTagsView
+from .selects import SetupModMailChannelsSelect
+from .views import InitConfirmModMailSetupView, PurgeALDataView, PurgeAllTagsView
 
 __all__ = [
     "RemoveTagModal",
@@ -15,4 +16,6 @@ __all__ = [
     "EditTagContentModal",
     "PurgeALDataView",
     "AddModMailReportModal",
+    "SetupModMailChannelsSelect",
+    "InitConfirmModMailSetupView",
 ]

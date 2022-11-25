@@ -79,9 +79,9 @@ class AkariCache:
         """Sets up the command cache, but this time with an HSET, not a regular set
 
         Args:
-            key (Optional[str], optional): _description_. Defaults to commandKeyBuilder( prefix="cache", namespace="akari", guild_id=None, command=None ).
-            value (Union[str, bytes, dict], optional): _description_. Defaults to None.
-            ttl (Optional[int], optional): _description_. Defaults to 30.
+            key (Optional[str], optional): Redis key. Defaults to commandKeyBuilder( prefix="cache", namespace="akari", guild_id=None, command=None ).
+            value (Union[str, bytes, dict], optional): The value to set to. Ideally should be a `Dict`. Defaults to None.
+            ttl (Optional[int], optional): How long the key-value pair lasts for. Defaults to 30.
         """
         conn = Redis(host=self.host, port=self.port, decode_responses=True)
         await conn.hset(key=key, field_values=value)

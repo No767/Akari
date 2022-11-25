@@ -1,3 +1,3 @@
-from .models import AkariModMail
+from .models import AkariModMail, AkariModMailConfig
 
-__all__ = ["AkariModMail"]
+__all__ = ["AkariModMail", "AkariModMailConfig"]

@@ -15,3 +15,15 @@ class AkariModMail(Model):
 
     def __str__(self):
         return self.name
+
+
+class AkariModMailConfig(Model):
+    guild_id = fields.BigIntField(pk=True)
+    channel_name = fields.CharField(max_length=255)
+    channel_id = fields.BigIntField()
+
+    class Meta:
+        table = "modmail_config"
+
+    def __str__(self):
+        return self.name

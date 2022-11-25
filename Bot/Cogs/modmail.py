@@ -3,8 +3,10 @@ import urllib.parse
 
 import discord
 from akari_cache import AkariCache
-from akari_servers import AkariServerUtils
-from akari_ui_components import AddModMailReportModal
+from akari_modmail import AkariModMailConfig
+from akari_servers import AkariServers, AkariServerUtils
+from akari_ui_components import AddModMailReportModal, InitConfirmModMailSetupView
+from akari_utils import AkariCM
 from discord.commands import SlashCommandGroup
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -37,13 +39,54 @@ class ModMail(commands.Cog):
         "modmail", "Message the mods about something", guild_ids=[970159505390325842]
     )
 
-    # TODO: Set up the setup system
-    # One dropdown to handle for who to add to the modmail
-    # another for channel
-    # Data will have to be stored in a DB somewhere, and cached
-    # @modmail.command("setup")
-    # async def setupModMail(self, ctx: discord.ApplicationContext):
-    #     """Set up the modmail system"""
+    @modmail.command(name="setup")
+    async def setupModMail(self, ctx: discord.ApplicationContext):
+        """Set up the modmail system"""
+        view = InitConfirmModMailSetupView(
+            uri=CONNECTION_URI,
+            models=MODELS,
+            redis_host=REDIS_HOST,
+            redis_port=REDIS_PORT,
+            command_name=ctx.command.qualified_name,
+            guild=ctx.guild,
+        )
+        await ctx.respond("yes", view=view)
+
+    @modmail.command(name="enable")
+    async def enableModMail(self, ctx: discord.ApplicationContext):
+        """Enable the modmail system if it is disabled"""
+        async with AkariCM(uri=self.uri, models=self.models):
+            modMailConfig = await AkariModMailConfig.filter(
+                guild_id=ctx.guild.id
+            ).exists()
+            serverConfig = (
+                await AkariServers.filter(guild_id=ctx.guild.id).first().values()
+            )
+            if modMailConfig is False:
+                return await ctx.respond(
+                    "Akari's ModMail is not set up for this server! Please run `/modmail setup` in order to set up the modmail system!"
+                )
+            elif modMailConfig is True and serverConfig["modmail"] is False:
+                await AkariServers.filter(guild_id=ctx.guild.id).update(modmail=True)
+            await ctx.respond("Akari's ModMail is enabled!")
+
+    @modmail.command(name="disable")
+    async def disableModMail(self, ctx: discord.ApplicationContext):
+        """Disable Akari's ModMail if it is enabled"""
+        async with AkariCM(uri=self.uri, models=self.models):
+            modMailConfig = await AkariModMailConfig.filter(
+                guild_id=ctx.guild.id
+            ).exists()
+            serverConfig = (
+                await AkariServers.filter(guild_id=ctx.guild.id).first().values()
+            )
+            if modMailConfig is False:
+                return await ctx.respond(
+                    "Akari's ModMail is not set up for this server! Please run `/modmail setup` in order to set up the modmail system!"
+                )
+            elif modMailConfig is True and serverConfig["modmail"] is True:
+                await AkariServers.filter(guild_id=ctx.guild.id).update(modmail=False)
+            await ctx.respond("Akari's ModMail is disabled!")
 
     @modmail.command(name="report")
     async def reportMail(self, ctx: discord.ApplicationContext):
