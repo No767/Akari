@@ -6,7 +6,7 @@ services:
     env_file:
       - .env
     volumes:
-      - postgres_volume:/var/lib/postgresql/data
+      - dev_postgres_volume:/var/lib/postgresql/data
     ports:
       - 5432:5432
 
@@ -17,9 +17,9 @@ services:
     ports:
       - 6379:6379
     volumes:
-      - redis_volume:/data
+      - dev_redis_volume:/data
     command: redis-server --save 60 1 --loglevel warning
 
 volumes:
-  postgres_volume:
-  redis_volume:
+  dev_postgres_volume:
+  dev_redis_volume:

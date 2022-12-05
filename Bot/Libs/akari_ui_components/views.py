@@ -9,7 +9,7 @@ from akari_servers import AkariServers
 from akari_tags_utils import AkariTagsUtils
 from akari_utils import AkariCM
 
-from .selects import SetupModMailChannelsSelect
+from .selects import RolesChannelSelect, SetupModMailChannelsSelect
 
 
 class PurgeAllTagsView(discord.ui.View):
@@ -178,4 +178,31 @@ class InitConfirmModMailSetupView(discord.ui.View):
         await interaction.response.send_message(
             f"The operation has been canceled by the user {interaction.user.name}",
             ephemeral=True,
+        )
+
+
+class InitConfirmRolesSetupView(discord.ui.View):
+    def __init__(
+        self,
+        uri: str,
+        models: list,
+        redis_host: str,
+        redis_port: int,
+        command_name: str,
+        *args,
+        **kwargs,
+    ) -> None:
+        super().__init__(*args, **kwargs)
+        self.uri = uri
+        self.models = models
+        self.redis_host = redis_host
+        self.redis_port = redis_port
+        self.command_name = command_name
+        self.cache = AkariCache(host=self.redis_host, port=self.redis_port)
+        self.add_item(
+            RolesChannelSelect(
+                redis_host=self.redis_host,
+                redis_port=self.redis_port,
+                command_name=self.command_name,
+            )
         )

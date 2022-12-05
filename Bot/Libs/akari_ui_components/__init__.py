@@ -5,8 +5,13 @@ from .modals import (
     EditTagModal,
     RemoveTagModal,
 )
-from .selects import SetupModMailChannelsSelect
-from .views import InitConfirmModMailSetupView, PurgeALDataView, PurgeAllTagsView
+from .selects import RolesChannelSelect, SetupModMailChannelsSelect
+from .views import (
+    InitConfirmModMailSetupView,
+    InitConfirmRolesSetupView,
+    PurgeALDataView,
+    PurgeAllTagsView,
+)
 
 __all__ = [
     "RemoveTagModal",
@@ -18,4 +23,6 @@ __all__ = [
     "AddModMailReportModal",
     "SetupModMailChannelsSelect",
     "InitConfirmModMailSetupView",
+    "RolesChannelSelect",
+    "InitConfirmRolesSetupView",
 ]
