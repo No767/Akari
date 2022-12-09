@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "Akari"
 version = "0.2.0"
-description = "A general-purpose toolkit bot for servers"
+description = "A utliity toolkit bot for Discord support servers"
 authors = ["No767 <73260931+No767@users.noreply.github.com>"]
 license = "Apache-2.0"
 readme = "README.md"
