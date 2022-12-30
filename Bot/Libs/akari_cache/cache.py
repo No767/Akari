@@ -1,7 +1,7 @@
 import asyncio
 from typing import Optional, Union
 
-import orjson
+import ormsgpack
 import uvloop
 from coredis import Redis
 
@@ -38,7 +38,7 @@ class AkariCache:
             ttl (Optional[int], optional): TTL for the key-value pair. Defaults to 30.
         """
         conn = Redis(host=self.host, port=self.port)
-        await conn.set(key=key, value=orjson.dumps(value), ex=ttl)
+        await conn.set(key=key, value=ormsgpack.packb(value), ex=ttl)
 
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
@@ -49,7 +49,7 @@ class AkariCache:
             key (str): Key to get from Redis
         """
         conn = Redis(host=self.host, port=self.port)
-        return orjson.loads(await conn.get(key))
+        return ormsgpack.unpackb(await conn.get(key))
 
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
