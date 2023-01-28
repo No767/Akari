@@ -14,5 +14,5 @@
     }
   ],
   "baseBranches": ["dev"],
-  "platformAutomerge": true
+  "platformAutomerge": true,
 }

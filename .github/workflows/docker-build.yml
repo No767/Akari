@@ -5,7 +5,7 @@ on:
     paths-ignore:
       - "**.md"
     branches:
-      - dev/v1
+      - dev
     tags:
       - 'v*'
 
@@ -56,7 +56,7 @@ jobs:
         uses: docker/build-push-action@v3.2.0
         with:
           context: .
-          file: ./Docker/Dockerfile
+          file: ./Docker/Debian-Docker/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           cache-from: type=local,src=/tmp/.buildx-cache
@@ -113,7 +113,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: ./Docker/Dockerfile
+          file: ./Docker/Debian-Docker/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           cache-from: type=local,src=/tmp/.buildx-cache

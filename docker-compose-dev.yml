@@ -13,13 +13,12 @@ services:
 
   redis:
     container_name: Akari-Redis-Dev
-    image: redis/redis-stack:7.0.6-RC4
+    image: redis:7
     ports:
       - 6379:6379
-      - 8001:8001
     volumes:
       - dev_redis_volume:/data
-    command: redis-stack-server --save 60 1 --loglevel warning --protected-mode no
+    command: redis-server --save 60 1 --loglevel warning
 
 volumes:
   dev_postgres_volume:
