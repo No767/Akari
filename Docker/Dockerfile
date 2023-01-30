@@ -22,7 +22,7 @@ WORKDIR /Akari
 COPY /pyproject.toml /Akari/
 COPY /poetry.lock /Akari/
 
-RUN poetry export -f requirements.txt --output requirements.txt --without-hashes \
+RUN poetry export -f requirements.txt --output requirements.txt --without-hashes --without dev,test,types \
   && pip wheel --wheel-dir=/Akari/wheels -r requirements.txt
 
 ####################################################################################################
@@ -37,13 +37,12 @@ RUN apt update \
   netcat
 
 WORKDIR /Akari
-COPY /Bot/akari.py /Akari/Bot/akari.py
+COPY /Bot/akaribot.py /Akari/Bot/akaribot.py
 COPY /Bot/akaricore.py /Akari/Bot/akaricore.py
 COPY /Bot/Cogs /Akari/Bot/Cogs
-COPY /Scripts/seeder.py /Akari/seeder.py
 COPY /Bot/Libs/ /Akari/Bot/Libs/
-COPY /Docker/Debian-Docker/start.sh /Akari/start.sh
-COPY /Docker/Debian-Docker/wait-for /Akari/wait-for
+COPY /Docker/start.sh /Akari/start.sh
+COPY /Docker/wait-for /Akari/wait-for
 
 COPY --from=builder /Akari/wheels /Akari/wheels
 COPY --from=builder /Akari/requirements.txt /Akari/requirements.txt

@@ -1,7 +1,7 @@
 all: run
 
 run:
-	poetry run python Bot/akari.py
+	poetry run python Bot/akaribot.py
 
 dev-setup:
 	cp .env-dev-example ./Bot/.env
@@ -14,3 +14,6 @@ compose-dev-up:
 
 compose-dev-stop:
 	sudo docker compose -f docker-compose-dev.yml stop
+
+pyright:
+	poetry run pyright Bot

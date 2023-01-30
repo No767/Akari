@@ -1,71 +1,52 @@
-import asyncio
-
 import discord
-import uvloop
-from discord.commands import slash_command
+from discord import app_commands
 from discord.ext import commands
 
 
+# This whole idea was taken from Pycord's Toolkit bot, but modified to work with discord.py
+# This system is also used on Kumiko as well
 class HelpSelect(discord.ui.Select):
-    def __init__(self, cog: commands.Cog) -> None:
+    def __init__(self, bot) -> None:
+        self.bot = bot
+        options = [
+            discord.SelectOption(label=cog_name, description=cog.__doc__)
+            for cog_name, cog in sorted(bot.cogs.items())
+            if cog_name not in ["PingRedis"]
+        ]
         super().__init__(
-            placeholder="Choose a category",
-            options=[
-                discord.SelectOption(
-                    label=cog_name,
-                    description=cog.__doc__,
-                )
-                for cog_name, cog in sorted(cog.bot.cogs.items())
-                if cog_name not in ["InteractionFailureHandler", "ServerSetup"]
-            ],
+            placeholder="Select a category",
+            options=options,
         )
-        self.cog = cog
 
     async def callback(self, interaction: discord.Interaction):
-        cog = self.cog.bot.get_cog(self.values[0])
+        cog = self.bot.get_cog(self.values[0])
         embed = discord.Embed(
             title=f"{cog.__cog_name__} Commands",
             description="\n".join(
                 f"`/{command.qualified_name}`: {command.description}"
-                for command in cog.walk_commands()
+                for command in cog.walk_app_commands()
             ),
             color=discord.Color.from_rgb(255, 145, 244),
             timestamp=discord.utils.utcnow(),
         )
-        await interaction.response.send_message(
-            embed=embed,
-            ephemeral=True,
-        )
-
-    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
 
 class Help(commands.Cog):
-    """Commands for accessing the help page"""
+    """Commands for getting commands for Akari"""
 
     def __init__(self, bot):
         self.bot = bot
 
-    @slash_command(name="help", description="Access help info for Akari")
-    async def akariHelp(self, ctx):
-        embed = discord.Embed(title=self.bot.user.name)
-        embed.description = """
-        Akari is a general purpose toolkit bot to allow for easier Discord server management.\n
-        Use the menu below to view commands.
-        """
-        embed.set_thumbnail(url=self.bot.user.display_avatar.url)
-        embed.add_field(
-            name="Server Count", value=str(len(self.bot.guilds)), inline=True
-        )
-        embed.add_field(name="User Count", value=str(len(self.bot.users)), inline=True)
-        embed.add_field(
-            name="Ping", value=f"{self.bot.latency*1000:.2f}ms", inline=True
-        )
-        view = discord.ui.View(HelpSelect(self))
-        await ctx.respond(embed=embed, view=view)
-
-    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+    # Precondition: There must be at the very least one cog loaded
+    @app_commands.command(name="help")
+    async def akariHelp(self, interaction: discord.Interaction):
+        """Shows all commands available"""
+        embed = discord.Embed()
+        embed.title = "Help"
+        view = discord.ui.View().add_item(HelpSelect(self.bot))
+        await interaction.response.send_message(embed=embed, view=view, ephemeral=True)
 
 
-def setup(bot):
-    bot.add_cog(Help(bot))
+async def setup(bot):
+    await bot.add_cog(Help(bot))
