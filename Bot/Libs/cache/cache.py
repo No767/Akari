@@ -60,7 +60,7 @@ class AkariCache:
         await self.client.json().set(name=key, path="$", obj=value)
         await self.client.expire(name=key, time=ttl)
 
-    async def getJSONCache(self, key: str) -> str | None:
+    async def getJSONCache(self, key: str) -> Union[str, None]:
         """Gets the JSON cache on Redis
 
         Args:
