@@ -4,3 +4,4 @@ __pycache__
 .env
 docker-compose.yml
 Testing-Scripts
+docs/build
