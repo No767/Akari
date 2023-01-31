@@ -22,7 +22,7 @@ WORKDIR /Akari
 COPY /pyproject.toml /Akari/
 COPY /poetry.lock /Akari/
 
-RUN poetry export -f requirements.txt --output requirements.txt --without-hashes --without dev,test,types \
+RUN poetry export -f requirements.txt --output requirements.txt --without-hashes --only main \
   && pip wheel --wheel-dir=/Akari/wheels -r requirements.txt
 
 ####################################################################################################
