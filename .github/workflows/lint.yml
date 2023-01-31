@@ -22,7 +22,7 @@ jobs:
         
       - name: Set up Python 3.11
         id: setup-python
-        uses: actions/setup-python@v4.4.0
+        uses: actions/setup-python@v4.5.0
         with:
           python-version: '3.11'
 
