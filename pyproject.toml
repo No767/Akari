@@ -41,8 +41,6 @@ nox-poetry = "^1.0.2"
 [tool.poetry.group.types.dependencies]
 types-redis = "^4.4.0.4"
 
-
-
 [tool.poetry.group.docs.dependencies]
 sphinx = "5.3.0"
 myst-parser = "^0.18.1"
