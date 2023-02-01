@@ -19,12 +19,10 @@ class PingRedis(commands.Cog):
     """Starts up the initial connect to the Redis server"""
 
     def __init__(self):
-        self.firstTime = True
         self.logger = logging.getLogger("discord")
 
     async def cog_load(self) -> None:
-        self.pingRedis.add_exception_type(ConnectionError)
-        self.pingRedis.add_exception_type(TimeoutError)
+        self.pingRedis.add_exception_type(ConnectionError, TimeoutError)
         self.pingRedis.start()
 
     async def cog_unload(self) -> None:
@@ -33,19 +31,10 @@ class PingRedis(commands.Cog):
     async def setupRedisConnPool(self, key: str = "main") -> None:
         """Sets up the Redis connection pool"""
         conn = Connection(
-            host=REDIS_HOST,
-            port=int(REDIS_PORT),
-            db=0,
-            socket_timeout=5.0,
-            socket_connect_timeout=5.0,
+            host=REDIS_HOST, port=int(REDIS_PORT), db=0, socket_timeout=5.0
         )
         memCache = Cache()
         await memCache.add(key=key, value=ConnectionPool(connection_class=conn))  # type: ignore
-        if self.firstTime:
-            self.firstTime = False
-            self.logger.info(
-                "Successfully saved Redis connection pool to internal cache"
-            )
 
     async def pingRedisServer(
         self, connection_pool: Union[ConnectionPool, None]
@@ -59,7 +48,7 @@ class PingRedis(commands.Cog):
         isServerUp = True if res == b"PONG" or "PONG" else False
         return isServerUp
 
-    @tasks.loop(count=1)
+    @tasks.loop(count=1, reconnect=True)
     async def pingRedis(self):
         """Pings Redis to make sure it is alive
 
@@ -71,14 +60,12 @@ class PingRedis(commands.Cog):
         res = await self.pingRedisServer(connection_pool=await memCache.get(key="main"))
         if res is True:
             self.logger.info("Successfully connected to Redis server")
-        else:
-            self.logger.error("Failed to connect to Redis server")
-            raise ConnectionError
 
-    @pingRedis.error
-    async def pingError(self, error):
-        self.logger.error(f"Failed to connect to Redis server")
-        self.pingRedis.restart()
+    # add_exception_type breaks this for some reason
+    # Until a fix is found, this will be commented out
+    # @pingRedis.error
+    # async def pingError(self, error):
+    #     self.logger.error(f"Failed to connect to Redis server ({error.__class__.__name__})")
 
 
 async def setup(bot) -> None:
