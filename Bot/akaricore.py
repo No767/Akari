@@ -8,7 +8,7 @@ from aiocache import Cache
 from anyio import Path
 from discord.ext import commands
 from Libs.utils.redis import pingRedisServer, setupRedisConnPool
-from prisma import Prisma
+from prisma import Prisma  # type: ignore
 from prisma.engine.errors import EngineConnectionError
 from redis.exceptions import ConnectionError, TimeoutError
 
