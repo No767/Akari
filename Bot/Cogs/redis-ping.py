@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import os
 from typing import Union
@@ -22,7 +23,6 @@ class PingRedis(commands.Cog):
         self.logger = logging.getLogger("discord")
 
     async def cog_load(self) -> None:
-        self.pingRedis.add_exception_type(ConnectionError, TimeoutError)
         self.pingRedis.start()
 
     async def cog_unload(self) -> None:
@@ -55,17 +55,18 @@ class PingRedis(commands.Cog):
         Raises:
             ConnectionError: If the Redis server is not up
         """
-        memCache = Cache()
-        await self.setupRedisConnPool()
-        res = await self.pingRedisServer(connection_pool=await memCache.get(key="main"))
-        if res is True:
-            self.logger.info("Successfully connected to Redis server")
-
-    # add_exception_type breaks this for some reason
-    # Until a fix is found, this will be commented out
-    # @pingRedis.error
-    # async def pingError(self, error):
-    #     self.logger.error(f"Failed to connect to Redis server ({error.__class__.__name__})")
+        try:
+            memCache = Cache()
+            await self.setupRedisConnPool()
+            res = await self.pingRedisServer(
+                connection_pool=await memCache.get(key="main")
+            )
+            if res is True:
+                self.logger.info("Successfully connected to Redis server")
+        except (ConnectionError, TimeoutError):
+            self.logger.error(f"Failed to connect to Redis server")
+            await asyncio.sleep(15)
+            self.pingRedis.restart()
 
 
 async def setup(bot) -> None:
