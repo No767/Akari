@@ -14,6 +14,8 @@ async def setupRedisConnPool(
     """Sets up the Redis connection pool
 
     Args:
+        redis_host (str): Redis Host to connect to
+        redis_port (int): Redis Port to connect to
         key (str): Key to store the connection pool object into memory
         timeout (float): Socket connection timeout
     """
