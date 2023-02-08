@@ -26,8 +26,8 @@ class IPCServer(commands.Cog):
 
     @Server.route()
     async def get_user_data(self, data: ClientPayload) -> Dict:
-        user = self.bot.get_user(data.user_id)
-        return user._to_minimal_user_json()  # type: ignore
+        user = await self.bot.fetch_user(data.user_id)
+        return user._to_minimal_user_json()
 
 
 async def setup(bot):
