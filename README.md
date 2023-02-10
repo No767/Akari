@@ -1,6 +1,6 @@
 <div align=center>
 
-![Akari](./Assets/akari-v2.1-heart-200.png)
+<img src="./Assets/akari-v2.1-heart.png" alt="Akari" width=200 height=200/>
 
 # Akari
 
