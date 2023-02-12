@@ -11,45 +11,10 @@ if [[ -v AKARI_DEV_TOKEN ]]; then
     echo "AKARI_DEV_TOKEN=${AKARI_DEV_TOKEN}" >> /Akari/Bot/.env
 fi 
 
-if [[ -v POSTGRES_USER ]]; then
-    echo "POSTGRES_USER=${POSTGRES_USER}" >> /Akari/Bot/.env
+if [[ -v DATABASE_URL ]]; then
+    echo "DATABASE_URL=${DATABASE_URL}" >> /Akari/.env
 else
-    echo "Missing POSTGRES_USER env var! POSTGRES_USER environment variable is not set."
-    exit 1;
-fi
-
-if [[ -v POSTGRES_PASSWORD ]]; then
-    echo "POSTGRES_PASSWORD=${POSTGRES_PASSWORD}" >> /Akari/Bot/.env
-else
-    echo "Missing POSTGRES_PASSWORD env var! POSTGRES_PASSWORD environment variable is not set."
-    exit 1;
-fi
-
-if [[ -v POSTGRES_HOST ]]; then
-    echo "POSTGRES_HOST=${POSTGRES_HOST}" >> /Akari/Bot/.env
-else
-    echo "Missing POSTGRES_HOST env var! POSTGRES_HOST environment variable is not set."
-    exit 1;
-fi
-
-if [[ -v POSTGRES_PORT ]]; then
-    echo "POSTGRES_PORT=${POSTGRES_PORT}" >> /Akari/Bot/.env
-else
-    echo "Missing POSTGRES_PORT env var! POSTGRES_PORT environment variable is not set."
-    exit 1;
-fi
-
-if [[ -v POSTGRES_DB ]]; then
-    echo "POSTGRES_DB=${POSTGRES_DB}" >> /Akari/Bot/.env
-else
-    echo "Missing POSTGRES_DB env var! POSTGRES_DB environment variable is not set."
-    exit 1;
-fi
-
-if [[ -v POSTGRES_DATABASE_URL ]]; then
-    echo "POSTGRES_DATABASE_URL=${POSTGRES_DATABASE_URL}" >> /Akari/Bot/Libs/models/.env
-else
-    echo "Missing POSTGRES_DATABASE_URL env var! POSTGRES_DATABASE_URL environment variable is not set."
+    echo "Missing DATABASE_URL env var! DATABASE_URL environment variable is not set."
     exit 1;
 fi
 

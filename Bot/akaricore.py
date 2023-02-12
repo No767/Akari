@@ -4,9 +4,9 @@ import random
 from typing import Optional
 
 import discord
-from aiocache import Cache
 from anyio import Path
 from discord.ext import commands
+from Libs.cache import memCache
 from Libs.utils.redis import pingRedisServer, setupRedisConnPool
 from prisma import Prisma  # type: ignore
 from prisma.engine.errors import EngineConnectionError
@@ -42,7 +42,6 @@ class AkariCore(commands.Bot):
 
     async def redisCheck(self) -> None:
         try:
-            memCache = Cache()
             await setupRedisConnPool()
             res = await pingRedisServer(connection_pool=await memCache.get(key="main"))
             if res is True:

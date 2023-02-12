@@ -41,6 +41,7 @@ COPY /Bot/akaribot.py /Akari/Bot/akaribot.py
 COPY /Bot/akaricore.py /Akari/Bot/akaricore.py
 COPY /Bot/Cogs /Akari/Bot/Cogs
 COPY /Bot/Libs/ /Akari/Bot/Libs/
+COPY /schema.prisma /Akari/schema.prisma
 COPY /Docker/start.sh /Akari/start.sh
 COPY /Docker/wait-for /Akari/wait-for
 

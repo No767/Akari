@@ -1,7 +1,7 @@
 from typing import Union
 
 import redis.asyncio as redis
-from aiocache import Cache
+from Libs.cache import memCache
 from redis.asyncio.connection import Connection, ConnectionPool
 
 
@@ -20,7 +20,6 @@ async def setupRedisConnPool(
         timeout (float): Socket connection timeout
     """
     conn = Connection(host=redis_host, port=redis_port, db=0, socket_timeout=timeout)
-    memCache = Cache()
     await memCache.add(key=key, value=ConnectionPool(connection_class=conn))  # type: ignore
 
 
