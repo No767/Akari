@@ -11,6 +11,8 @@ path = Path(__file__).parents[2]
 packagePath = os.path.join(str(path), "Bot", "Libs")
 sys.path.append(packagePath)
 
+from utils.redis import memCache
+
 
 @pytest.mark.asyncio
 async def test_pool_mem_cache_add():
@@ -44,7 +46,6 @@ async def test_pool_mem_cache_set():
 @pytest.mark.asyncio
 async def test_pool_mem_integration():
     connPool = ConnectionPool(max_connections=25)
-    memCache = Cache(Cache.MEMORY)
     await memCache.add(key="conn1", value=connPool)
     currPool = await memCache.get(key="conn1")
     r = redis.Redis(connection_pool=currPool)

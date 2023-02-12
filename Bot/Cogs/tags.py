@@ -3,7 +3,7 @@ import logging
 import discord
 from discord import app_commands
 from discord.ext import commands
-from Libs.cache import memCache
+from Libs.utils.redis import memCache
 
 
 class Tags(commands.GroupCog, name="tags"):

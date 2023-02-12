@@ -6,8 +6,7 @@ from typing import Optional
 import discord
 from anyio import Path
 from discord.ext import commands
-from Libs.cache import memCache
-from Libs.utils.redis import pingRedisServer, setupRedisConnPool
+from Libs.utils.redis import memCache, pingRedisServer, setupRedisConnPool
 from prisma import Prisma  # type: ignore
 from prisma.engine.errors import EngineConnectionError
 from redis.exceptions import ConnectionError, TimeoutError

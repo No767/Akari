@@ -1,8 +1,9 @@
 from typing import Union
 
 import redis.asyncio as redis
-from Libs.cache import memCache
 from redis.asyncio.connection import Connection, ConnectionPool
+
+from .cache_obj import memCache
 
 
 async def setupRedisConnPool(
