@@ -72,3 +72,39 @@ async def test_json_cache_mem(load_json_data):
     await cache.setJSONCache(key=key, value=load_json_data, ttl=60)
     res = await cache.getJSONCache(key=key)
     assert (res == load_json_data) and (isinstance(res, dict))  # nosec
+
+
+@pytest.mark.asyncio
+async def test_cache_exists():
+    key = CommandKeyBuilder(id=1275, command="more testing")
+    connPool = ConnectionPool().from_url("redis://localhost:6379/0")
+    cache = AkariCache(connection_pool=connPool)
+    await cache.setBasicCommandCache(key=key, value=DATA)
+    assert (await cache.cacheExists(key=key)) is True  # nosec
+
+
+@pytest.mark.asyncio
+async def test_default_key_builder():
+    connPool = ConnectionPool.from_url("redis://localhost:6379/0")
+    cache = AkariCache(connection_pool=connPool)
+    await cache.setBasicCommandCache(key=None, value=DATA)
+    res = await cache.getBasicCommandCache(key=f"cache:akari:None:None")
+    assert res == DATA and isinstance(res, str)  # nosec
+
+
+@pytest.mark.asyncio
+async def test_default_key_builder_no_key():
+    connPool = ConnectionPool.from_url("redis://localhost:6379/0")
+    cache = AkariCache(connection_pool=connPool)
+    await cache.setBasicCommandCache(key="what", value=DATA)
+    res = await cache.getBasicCommandCache(key="no")
+    assert res is None  # nosec
+
+
+@pytest.mark.asyncio
+async def test_default_key_builder_json(load_json_data):
+    connPool = ConnectionPool.from_url("redis://localhost:6379/0")
+    cache = AkariCache(connection_pool=connPool)
+    await cache.setJSONCache(key="no", value=load_json_data)
+    res = await cache.getJSONCache(key="nope")
+    assert res is None  # nosec

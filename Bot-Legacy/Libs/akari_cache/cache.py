@@ -73,7 +73,7 @@ class AkariCache:
         key: Optional[str] = commandKeyBuilder(
             prefix="cache", namespace="akari", guild_id=None, command=None
         ),
-        value: Union[str, bytes, dict] = None,
+        value: Union[str, bytes, dict] = {},
         ttl: Optional[int] = 30,
     ):
         """Sets up the command cache, but this time with an HSET, not a regular set

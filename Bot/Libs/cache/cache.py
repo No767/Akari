@@ -9,12 +9,14 @@ from redis.asyncio.connection import ConnectionPool
 class AkariCache:
     """Akari's custom caching library. Uses Redis as the backend"""
 
-    def __init__(self, connection_pool: ConnectionPool) -> None:
+    def __init__(self, connection_pool: Union[ConnectionPool, None]) -> None:
         """Akari's custom caching library. Uses Redis as the backend
 
         Args:
-            connection_pool (ConnectionPool): Connection Pool object used for Redis
+            connection_pool (Union[ConnectionPool, None]): Connection Pool object used for Redis
         """
+        if connection_pool is None:
+            self.connection_pool = ConnectionPool.from_url("redis://localhost:6379/0")
         self.connection_pool = connection_pool
         self.client: redis.Redis = redis.Redis(connection_pool=self.connection_pool)
 
@@ -73,3 +75,14 @@ class AkariCache:
         if value is None:
             return None
         return value
+
+    async def cacheExists(self, key: str) -> bool:
+        """Checks to make sure if the cache exists
+
+        Args:
+            key (str): Redis key to check
+
+        Returns:
+            bool: Whether the key exists or not
+        """
+        return True if await self.client.exists(key) >= 1 else False

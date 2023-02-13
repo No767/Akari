@@ -1,16 +1,13 @@
 from typing import Union
 
 import redis.asyncio as redis
-from redis.asyncio.connection import Connection, ConnectionPool
+from redis.asyncio.connection import ConnectionPool
 
 from .cache_obj import memCache
 
 
 async def setupRedisConnPool(
-    redis_host: str = "localhost",
-    redis_port: int = 6379,
-    key: str = "main",
-    timeout: float = 15.0,
+    redis_host: str = "localhost", redis_port: int = 6379, key: str = "main"
 ) -> None:
     """Sets up the Redis connection pool
 
@@ -18,10 +15,8 @@ async def setupRedisConnPool(
         redis_host (str): Redis Host to connect to
         redis_port (int): Redis Port to connect to
         key (str): Key to store the connection pool object into memory
-        timeout (float): Socket connection timeout
     """
-    conn = Connection(host=redis_host, port=redis_port, db=0, socket_timeout=timeout)
-    await memCache.add(key=key, value=ConnectionPool(connection_class=conn))  # type: ignore
+    await memCache.add(key=key, value=ConnectionPool.from_url(f"redis://{redis_host}:{redis_port}/0"))  # type: ignore
 
 
 async def pingRedisServer(connection_pool: Union[ConnectionPool, None]) -> bool:
