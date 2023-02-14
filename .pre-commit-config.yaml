@@ -13,14 +13,14 @@ repos:
        
 
 -   repo: https://github.com/psf/black
-    rev: 22.3.0
+    rev: 23.1.0
     hooks:
     -   id: black
         name: Black
         stages: [commit]
         
 -   repo: https://github.com/PyCQA/autoflake
-    rev: v1.4
+    rev: v2.0.1
     hooks:
     -   id: autoflake
         args: ["--in-place", "--remove-unused-variables", "--remove-all-unused-imports", "--recursive"]
