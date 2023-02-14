@@ -3,7 +3,7 @@ from discord import app_commands
 from discord.ext import commands
 from Libs.cache import AkariCache, CommandKeyBuilder
 from Libs.utils.redis import memCache
-from prisma.models import Tag
+from prisma.models import Tag # type: ignore
 
 
 class Tags(commands.GroupCog, name="tags"):
