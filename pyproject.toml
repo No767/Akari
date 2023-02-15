@@ -16,7 +16,7 @@ rin-exceptions = "^1.0.3"
 ormsgpack = "^1.2.4"
 orjson = "^3.8.6"
 discord-py = {extras = ["voice"], version = "^2.1.0"}
-redis = {extras = ["hiredis"], version = "^4.4.2"}
+redis = {extras = ["hiredis"], version = "^4.5.1"}
 ciso8601 = "^2.3.0"
 rich = "^13.3.1"
 anyio = "^3.6.2"
