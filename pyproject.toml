@@ -13,7 +13,7 @@ aiodns = "^3.0.0"
 Brotli = "^1.0.9"
 uvloop = "^0.17.0"
 rin-exceptions = "^1.0.3"
-ormsgpack = "^1.2.4"
+ormsgpack = "^1.2.5"
 orjson = "^3.8.6"
 discord-py = {extras = ["voice"], version = "^2.1.0"}
 redis = {extras = ["hiredis"], version = "^4.5.1"}
