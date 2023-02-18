@@ -18,7 +18,6 @@ class AkariCache:
         if connection_pool is None:
             self.connection_pool = ConnectionPool.from_url("redis://localhost:6379/0")
         self.connection_pool = connection_pool
-        self.client: redis.Redis = redis.Redis(connection_pool=self.connection_pool)
 
     async def setBasicCommandCache(
         self,
@@ -35,7 +34,11 @@ class AkariCache:
         """
         if key is None:
             key = CommandKeyBuilder()
-        await self.client.set(name=key, value=ormsgpack.packb(value), ex=ttl)
+        client: redis.Redis = redis.Redis(
+            connection_pool=self.connection_pool, auto_close_connection_pool=False
+        )
+        await client.set(name=key, value=ormsgpack.packb(value), ex=ttl)
+        await client.close(close_connection_pool=False)
 
     async def getBasicCommandCache(self, key: str) -> Union[str, None]:
         """Gets the command cache on Redis
@@ -46,7 +49,11 @@ class AkariCache:
         Returns:
             str: The value of the key-value pair
         """
-        value: Union[str, None] = await self.client.get(name=key)
+        client: redis.Redis = redis.Redis(
+            connection_pool=self.connection_pool, auto_close_connection_pool=False
+        )
+        value: Union[str, None] = await client.get(name=key)
+        await client.close(close_connection_pool=False)
         if value is None:
             return None
         return ormsgpack.unpackb(value)
@@ -59,8 +66,12 @@ class AkariCache:
             value (Dict[str, Any]): The value of the key-pair value
             ttl (Optional[int], optional): TTL of the key-value pair. Defaults to 5.
         """
-        await self.client.json().set(name=key, path="$", obj=value)
-        await self.client.expire(name=key, time=ttl)
+        client: redis.Redis = redis.Redis(
+            connection_pool=self.connection_pool, auto_close_connection_pool=False
+        )
+        await client.json().set(name=key, path="$", obj=value)
+        await client.expire(name=key, time=ttl)
+        await client.close(close_connection_pool=False)
 
     async def getJSONCache(self, key: str) -> Union[str, None]:
         """Gets the JSON cache on Redis
@@ -71,7 +82,11 @@ class AkariCache:
         Returns:
             Dict[str, Any]: The value of the key-value pair
         """
-        value = await self.client.json().get(name=key)
+        client: redis.Redis = redis.Redis(
+            connection_pool=self.connection_pool, auto_close_connection_pool=False
+        )
+        value = await client.json().get(name=key)
+        await client.close(close_connection_pool=False)
         if value is None:
             return None
         return value
@@ -85,4 +100,9 @@ class AkariCache:
         Returns:
             bool: Whether the key exists or not
         """
-        return True if await self.client.exists(key) >= 1 else False
+        client: redis.Redis = redis.Redis(
+            connection_pool=self.connection_pool, auto_close_connection_pool=False
+        )
+        keyExists = await client.exists(key) >= 1
+        await client.close(close_connection_pool=False)
+        return True if keyExists else False

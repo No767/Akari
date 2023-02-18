@@ -8,11 +8,11 @@ generator client {
   recursive_type_depth = 5
 }
 
-model User {
-    id    BigInt   @id   @unique
-    username String
-    tags Tag[]
-}
+// model User {
+//     id    BigInt   @id   @unique
+//     username String
+//     tags Tag[]
+// }
 
 model Guild {
     id   BigInt   @id   @unique
@@ -22,10 +22,10 @@ model Guild {
 
 model Tag {
     id    String @id @default(uuid())
-    user User @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
-    guild Guild @relation(fields: [guild_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
-    user_id BigInt
-    guild_id BigInt
+    // user User @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    guild Guild? @relation(fields: [guild_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    // user_id BigInt
+    guild_id BigInt?
     name String 
     content String 
     created_at DateTime @default(now())
