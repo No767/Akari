@@ -35,8 +35,7 @@ RUN apt update \
   tini \
   ca-certificates \
   bash \
-  netcat \
-  git
+  netcat 
 
 WORKDIR /Akari
 COPY /Bot/akaribot.py /Akari/Bot/akaribot.py

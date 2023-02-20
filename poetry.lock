@@ -699,7 +699,7 @@ develop = false
 [package.source]
 type = "git"
 url = "https://github.com/Rapptz/discord-ext-menus"
-reference = "HEAD"
+reference = "8686b5d1bbc1d3c862292eb436ab630d6e9c9b53"
 resolved_reference = "8686b5d1bbc1d3c862292eb436ab630d6e9c9b53"
 
 [[package]]
@@ -2667,4 +2667,4 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<4.0"
-content-hash = "36590722a03d16a68b751436f71917d8af04de08c5277add8e8d503dfd1fbe2b"
+content-hash = "215aa32e657d4020bd7b91f3c8e37e584123ff8158b8e09add24f2855dda7abe"
