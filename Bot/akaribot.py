@@ -11,6 +11,9 @@ load_dotenv()
 
 DEV_GUILD = discord.Object(id=970159505390325842)
 AKARI_TOKEN = os.environ["AKARI_DEV_TOKEN"]
+REDIS_HOST = os.environ["REDIS_HOST"]
+REDIS_PORT = os.environ["REDIS_PORT"]
+
 intents = discord.Intents.default()
 intents.message_content = True
 
@@ -21,7 +24,12 @@ logger = logging.getLogger("discord")
 
 
 async def main():
-    async with AkariCore(intents=intents, testing_guild_id=DEV_GUILD.id) as bot:
+    async with AkariCore(
+        intents=intents,
+        redis_host=REDIS_HOST,
+        redis_port=int(REDIS_PORT),
+        testing_guild_id=DEV_GUILD.id,
+    ) as bot:
         await bot.start(AKARI_TOKEN)
 
 

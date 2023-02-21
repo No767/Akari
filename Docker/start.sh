@@ -11,6 +11,13 @@ if [[ -v AKARI_DEV_TOKEN ]]; then
     echo "AKARI_DEV_TOKEN=${AKARI_DEV_TOKEN}" >> /Akari/Bot/.env
 fi 
 
+if [[ -v IPC_SECRET_KEY ]]; then
+    echo "IPC_SECRET_KEY=${IPC_SECRET_KEY}" >> /Akari/.env
+else
+    echo "Missing IPC_SECRET_KEY env var! IPC_SECRET_KEY environment variable is not set."
+    exit 1;
+fi
+
 if [[ -v DATABASE_URL ]]; then
     echo "DATABASE_URL=${DATABASE_URL}" >> /Akari/.env
 else

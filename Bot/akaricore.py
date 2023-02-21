@@ -19,6 +19,8 @@ class AkariCore(commands.Bot):
         self,
         intents: discord.Intents,
         command_prefix: str = "!",
+        redis_host: str = "localhost",
+        redis_port: int = 6379,
         testing_guild_id: Optional[int] = None,
         *args,
         **kwargs,
@@ -26,6 +28,8 @@ class AkariCore(commands.Bot):
         super().__init__(
             intents=intents, command_prefix=command_prefix, *args, **kwargs
         )
+        self.redis_host = redis_host
+        self.redis_port = redis_port
         self.testing_guild_id: Optional[int] = testing_guild_id
         self.logger = logging.getLogger("akaribot")
         self.backoffSec = 5
@@ -41,7 +45,9 @@ class AkariCore(commands.Bot):
 
     async def redisCheck(self) -> None:
         try:
-            await setupRedisConnPool()
+            await setupRedisConnPool(
+                redis_host=self.redis_host, redis_port=self.redis_port
+            )
             res = await pingRedisServer(connection_pool=await memCache.get(key="main"))
             if res is True:
                 self.logger.info("Successfully connected to Redis server")
