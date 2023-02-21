@@ -2,8 +2,9 @@ from typing import Any, Dict, Optional, Union
 
 import ormsgpack
 import redis.asyncio as redis
-from cache.key_builder import CommandKeyBuilder
 from redis.asyncio.connection import ConnectionPool
+
+from .key_builder import CommandKeyBuilder
 
 
 class AkariCache:
