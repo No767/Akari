@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 IPC_SECRET_KEY = os.environ["IPC_SECRET_KEY"]
+IPC_HOST = os.environ["IPC_HOST"]
 
 
 class IPCServer(commands.Cog):
@@ -16,7 +17,7 @@ class IPCServer(commands.Cog):
 
     def __init__(self, bot: commands.Bot):
         self.bot = bot
-        self.ipc = Server(self.bot, secret_key=IPC_SECRET_KEY)
+        self.ipc = Server(self.bot, secret_key=IPC_SECRET_KEY, host=IPC_HOST)
 
     async def cog_load(self) -> None:
         await self.ipc.start()

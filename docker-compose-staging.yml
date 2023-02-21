@@ -28,6 +28,9 @@ services:
     command: sh -c '/Akari/wait-for postgres:5432 -- echo "[Wait-for] PostgreSQL is fully up. Waiting for Redis" && /Akari/wait-for redis:6379 -- echo "[Wait-for] Redis is fully up. Starting Akari" && /Akari/start.sh'
     env_file:
       - .env
+    ports:
+      - 1025:1025
+      - 20000:20000
     depends_on:
       - postgres
       - redis

@@ -18,6 +18,13 @@ else
     exit 1;
 fi
 
+if [[ -v IPC_HOST ]]; then
+    echo "IPC_HOST=${IPC_HOST}" >> /Akari/.env
+else
+    echo "Missing IPC_HOST env var! IPC_HOST environment variable is not set."
+    exit 1;
+fi
+
 if [[ -v DATABASE_URL ]]; then
     echo "DATABASE_URL=${DATABASE_URL}" >> /Akari/.env
 else
