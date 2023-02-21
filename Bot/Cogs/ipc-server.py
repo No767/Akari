@@ -10,6 +10,7 @@ load_dotenv()
 
 IPC_SECRET_KEY = os.environ["IPC_SECRET_KEY"]
 IPC_HOST = os.environ["IPC_HOST"]
+from prisma.models import Guild, Tag  # type: ignore
 
 
 class IPCServer(commands.Cog):
@@ -29,6 +30,25 @@ class IPCServer(commands.Cog):
     async def get_user_data(self, data: ClientPayload) -> Dict:
         user = await self.bot.fetch_user(data.user_id)
         return user._to_minimal_user_json()
+
+    @Server.route()
+    async def create_tag(self, data: ClientPayload) -> None:
+        await Guild.prisma().update(
+            where={"id": data.guild_id},
+            data={"tags": {"create": [{"name": data.name, "content": data.content}]}},
+        )
+
+    @Server.route()
+    async def get_tag(self, data: ClientPayload) -> Dict:
+        tagRes = await Guild.prisma().find_first(
+            where={
+                "id": data.guild_id,
+                "tags": {"every": {"name": {"contains": data.name}}},
+            }
+        )
+        if tagRes is None:
+            return {"message": "Tag not found"}
+        return tagRes.dict()
 
 
 async def setup(bot):

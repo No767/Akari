@@ -1,4 +1,5 @@
 version: "3.9"
+name: "akari-dev"
 services:
   postgres:
     container_name: Akari-Postgres-Dev
