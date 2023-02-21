@@ -5,7 +5,7 @@ from discord.utils import escape_markdown
 from Libs.cache import AkariCache, CommandKeyBuilder
 from Libs.ui.tags import CreateTag
 from Libs.utils.redis import memCache
-from prisma.models import Guild, Tag
+from prisma.models import Guild, Tag  # type: ignore
 
 
 class Tags(commands.GroupCog, name="tags"):

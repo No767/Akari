@@ -1,5 +1,5 @@
 import discord
-from prisma.models import Guild
+from prisma.models import Guild  # type: ignore
 
 
 class CreateTag(discord.ui.Modal, title="Create a tag"):
@@ -22,8 +22,8 @@ class CreateTag(discord.ui.Modal, title="Create a tag"):
                     "create": [{"name": self.name.value, "content": self.content.value}]
                 }
             },
-            where={"id": interaction.guild.id},
-        )  # type: ignore
+            where={"id": interaction.guild.id},  # type: ignore
+        )
 
         await interaction.response.send_message("Tag created", ephemeral=True)
 
