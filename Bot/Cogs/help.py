@@ -11,7 +11,7 @@ class HelpSelect(discord.ui.Select):
         options = [
             discord.SelectOption(label=cog_name, description=cog.__doc__)
             for cog_name, cog in sorted(bot.cogs.items())
-            if cog_name not in ["RedisPing"]
+            if cog_name not in ["Events"]
         ]
         super().__init__(
             placeholder="Select a category",

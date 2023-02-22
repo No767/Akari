@@ -9,7 +9,7 @@ from rich.logging import RichHandler
 
 load_dotenv()
 
-DEV_GUILD = discord.Object(id=970159505390325842)
+DEV_GUILD = discord.Object(id=1076731943938441256)
 AKARI_TOKEN = os.environ["AKARI_DEV_TOKEN"]
 REDIS_HOST = os.environ["REDIS_HOST"]
 REDIS_PORT = os.environ["REDIS_PORT"]

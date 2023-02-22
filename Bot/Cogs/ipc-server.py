@@ -5,12 +5,12 @@ from discord.ext import commands
 from discord.ext.ipc.objects import ClientPayload
 from discord.ext.ipc.server import Server
 from dotenv import load_dotenv
+from prisma.models import Guild, Tag  # type: ignore
 
 load_dotenv()
 
 IPC_SECRET_KEY = os.environ["IPC_SECRET_KEY"]
 IPC_HOST = os.environ["IPC_HOST"]
-from prisma.models import Guild, Tag  # type: ignore
 
 
 class IPCServer(commands.Cog):

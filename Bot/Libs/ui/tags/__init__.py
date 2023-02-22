@@ -1,3 +1,3 @@
-from .modals import CreateTag
+from .modals import CreateTag, EditTag
 
-__all__ = ["CreateTag"]
+__all__ = ["CreateTag", "EditTag"]

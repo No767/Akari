@@ -3,7 +3,7 @@ from discord import app_commands
 from discord.ext import commands
 from discord.utils import escape_markdown
 from Libs.cache import AkariCache, CommandKeyBuilder
-from Libs.ui.tags import CreateTag
+from Libs.ui.tags import CreateTag, EditTag
 from Libs.utils.redis import memCache
 from prisma.models import Guild, Tag  # type: ignore
 
@@ -27,8 +27,7 @@ class Tags(commands.GroupCog, name="tags"):
         connPool = await memCache.get("main")
         cache = AkariCache(connection_pool=connPool)
         if await cache.cacheExists(key=key) is False:
-            # Needs to be guild-only
-            tagData = await Tag.prisma().find_first(where={"name": {"contains": name}})
+            tagData = await Tag.prisma().find_first(where={"AND": [{"id": interaction.guild_id}, {"name": {"equals": name}}]})  # type: ignore
             if tagData is None:
                 return await interaction.response.send_message(f"{name} was not found")
             await cache.setBasicCommandCache(key=key, value=tagData.content, ttl=30)
@@ -50,7 +49,7 @@ class Tags(commands.GroupCog, name="tags"):
         connPool = await memCache.get("main")
         cache = AkariCache(connection_pool=connPool)
         if await cache.cacheExists(key=key) is False:
-            tagData = await Tag.prisma().find_first(where={"name": {"contains": name}})
+            tagData = await Tag.prisma().find_first(where={"AND": [{"id": interaction.guild_id}, {"name": {"equals": name}}]})  # type: ignore
             if tagData is None:
                 return await interaction.response.send_message(f"{name} was not found")
             await cache.setBasicCommandCache(key=key, value=tagData.content, ttl=30)
@@ -96,6 +95,44 @@ class Tags(commands.GroupCog, name="tags"):
                     title="Tags", description=await cache.getBasicCommandCache(key=key)
                 )
             )
+
+    @app_commands.command(name="search")
+    async def tagSearch(self, interaction: discord.Interaction, name: str) -> None:
+        """Search for a tag
+
+        Args:
+            interaction (discord.Interaction): _description_
+            name (str): Name of the tag
+        """
+        key = CommandKeyBuilder(id=interaction.guild_id, command="tag display")
+        connPool = await memCache.get("main")
+        cache = AkariCache(connection_pool=connPool)
+        if await cache.cacheExists(key=key) is False:
+            data = await Guild.prisma().find_first(where={"AND": [{"id": interaction.guild_id}, {"tags": {"every": {"name": {"contains": name}}}}]}, include={"tags": True})  # type: ignore
+            if data is None:
+                return await interaction.response.send_message(
+                    f"The tag ({name}) does not exist on the server"
+                )
+            tagNames = "\n".join([f"{i + 1}. {item.name}" for i, item in enumerate(data.tags)])  # type: ignore
+            await cache.setBasicCommandCache(key=key, value=tagNames, ttl=5)
+            return await interaction.response.send_message(
+                embed=discord.Embed(title="Tags", description=tagNames)
+            )
+        else:
+            return await interaction.response.send_message(
+                embed=discord.Embed(
+                    title="Tags", description=await cache.getBasicCommandCache(key=key)
+                )
+            )
+
+    @app_commands.command(name="edit")
+    async def tagDelete(self, interaction: discord.Interaction) -> None:
+        """Edits a tag
+
+        Args:
+            interaction (discord.Interaction): Base interaction
+        """
+        await interaction.response.send_modal(EditTag())
 
 
 async def setup(bot):
