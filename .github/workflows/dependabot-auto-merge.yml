@@ -4,7 +4,7 @@ on:
     types:
       - opened
   workflow_run:
-    workflows: ["Tests", "CodeQL", "Docker Build"]
+    workflows: ["Tests", "CodeQL", "Docker Build", "Lint"]
     branches: [dev]
     types: 
       - completed
@@ -16,7 +16,7 @@ permissions:
 jobs:
   dependabot:
     runs-on: ubuntu-latest
-    if: ${{ github.actor == 'dependabot[bot]' }}
+    if: ${{ github.actor == 'dependabot[bot]' && steps.metadata.outputs.update-type != 'version-update:semver-major'}} 
     steps:
       - name: Dependabot metadata
         id: metadata
