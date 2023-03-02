@@ -724,14 +724,14 @@ resolved_reference = "8686b5d1bbc1d3c862292eb436ab630d6e9c9b53"
 
 [[package]]
 name = "discord-py"
-version = "2.2.0"
+version = "2.2.1"
 description = "A Python wrapper for the Discord API"
 category = "main"
 optional = false
 python-versions = ">=3.8.0"
 files = [
-    {file = "discord.py-2.2.0-py3-none-any.whl", hash = "sha256:012e98571af6847467e81f9501bbe4c6ebfe292c842f5ef8e951908839ee1cd0"},
-    {file = "discord.py-2.2.0.tar.gz", hash = "sha256:a92d69ab6f982998693d0c371ea19235fa0f9900b50068fc461086d02c33e6bb"},
+    {file = "discord.py-2.2.1-py3-none-any.whl", hash = "sha256:c2b8c9f411d27117902f083594d81ac0de9bf168d538a0f9c6640944a9c15367"},
+    {file = "discord.py-2.2.1.tar.gz", hash = "sha256:419f7b9487faf2bec5606f9f94158c5408ca057f289cc87bb21aed6ce84279ee"},
 ]
 
 [package.dependencies]
@@ -2694,4 +2694,4 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<4.0"
-content-hash = "35815d1a67661747a3d623009679388eb118366f6184be20b111909f973369d3"
+content-hash = "bd6e874dada3428ea37c8ce6c1781deb862e86b7fc5d7aeb76fb29421828486e"
