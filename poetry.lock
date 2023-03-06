@@ -1594,14 +1594,14 @@ virtualenv = ">=20.10.0"
 
 [[package]]
 name = "prisma"
-version = "0.8.1"
+version = "0.8.2"
 description = "Prisma Client Python is an auto-generated and fully type-safe database client"
 category = "main"
 optional = false
 python-versions = ">=3.7.0"
 files = [
-    {file = "prisma-0.8.1-py3-none-any.whl", hash = "sha256:62a87032f19cddb0cacdb33c56f4606ece7e09f1c372de994d1ebcc682e978e9"},
-    {file = "prisma-0.8.1.tar.gz", hash = "sha256:c4933064e211888e943bb0dbef45b6067144f0a23d735f7ceba5a204cff0330b"},
+    {file = "prisma-0.8.2-py3-none-any.whl", hash = "sha256:4d0ebf63ecd21bc4fda633867403429d24f89e6af5889944b2f9ca4203f50835"},
+    {file = "prisma-0.8.2.tar.gz", hash = "sha256:b3a639941f4bf33dbd414fee3e02cf30218968d05b108f8a4d5b7c331dcbc19c"},
 ]
 
 [package.dependencies]
@@ -2694,4 +2694,4 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<4.0"
-content-hash = "418b76ac02c7e38da353bfc7268a4e2ce95ed8ef93618d57dec50167d85510b6"
+content-hash = "fbe1f597a9258ded05502f4f89520d40bd1a34a34babf4d427ed328dab3d3677"
