@@ -1,9 +1,20 @@
+import asyncio
+import logging
 from typing import Union
 
 import redis.asyncio as redis
 from redis.asyncio.connection import ConnectionPool
 
+from ..backoff import backoff
 from .cache_obj import memCache
+from .gconn import akariCP
+
+logger = logging.getLogger("discord")
+
+
+def setupConnPool() -> ConnectionPool:
+    """Sets up the Redis connection pool"""
+    return akariCP.createConnPool()
 
 
 async def setupRedisConnPool(
@@ -28,3 +39,20 @@ async def pingRedisServer(connection_pool: Union[ConnectionPool, None]) -> bool:
     res = await r.ping()
     isServerUp = True if res == b"PONG" or "PONG" else False
     return isServerUp
+
+
+async def redisCheck(backoff_sec: int = 15, backoff_index: int = 0) -> None:
+    connPool = akariCP.getConnPool()
+    pingRedis = pingRedisServer(connection_pool=connPool)
+    if pingRedis is True:
+        logger.info("Sucessfully connected to Redis server")
+    else:
+        backoffTime = backoff(backoff_sec=backoff_sec, backoff_sec_index=backoff_index)
+        logger.error(
+            f"Failed to connect to Redis server - Restarting connection in {int(backoffTime)} seconds"
+        )
+        await asyncio.sleep(backoffTime)
+        await redisCheck(
+            backoff_sec=backoff_sec,
+            backoff_index=backoff_index + 1,
+        )

@@ -5,7 +5,7 @@ from discord.ext import commands
 from discord.ext.ipc.objects import ClientPayload
 from discord.ext.ipc.server import Server
 from dotenv import load_dotenv
-from prisma.models import Guild, Tag  # type: ignore
+from prisma.models import Guild  # type: ignore
 
 load_dotenv()
 

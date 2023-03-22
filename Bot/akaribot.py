@@ -26,9 +26,6 @@ logger = logging.getLogger("discord")
 async def main():
     async with AkariCore(
         intents=intents,
-        redis_host=REDIS_HOST,
-        redis_port=int(REDIS_PORT),
-        testing_guild_id=DEV_GUILD.id,
     ) as bot:
         await bot.start(AKARI_TOKEN)
 
