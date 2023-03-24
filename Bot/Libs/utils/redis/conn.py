@@ -42,11 +42,20 @@ async def pingRedisServer(connection_pool: Union[ConnectionPool, None]) -> bool:
 
 
 async def redisCheck(backoff_sec: int = 15, backoff_index: int = 0) -> None:
-    connPool = akariCP.getConnPool()
-    pingRedis = pingRedisServer(connection_pool=connPool)
-    if pingRedis is True:
-        logger.info("Sucessfully connected to Redis server")
-    else:
+    """Coroutine to check whether the Redis server is up or not.
+
+    This is handled recursively believe or not
+
+    Args:
+        backoff_sec (int, optional): Default backoff to use. Defaults to 15.
+        backoff_index (int, optional): The current index. This will be needed to be passed in order to keep the loop going. Defaults to 0.
+    """
+    try:
+        connPool = akariCP.getConnPool()
+        pingRedis = pingRedisServer(connection_pool=connPool)
+        if pingRedis is True:
+            logger.info("Sucessfully connected to Redis server")
+    except TimeoutError:
         backoffTime = backoff(backoff_sec=backoff_sec, backoff_sec_index=backoff_index)
         logger.error(
             f"Failed to connect to Redis server - Restarting connection in {int(backoffTime)} seconds"
