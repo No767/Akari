@@ -1818,19 +1818,19 @@ files = [
 cffi = ">=1.4.1"
 
 [package.extras]
-docs = ["sphinx (>=1.6.5)", "sphinx_rtd_theme"]
+docs = ["sphinx (>=1.6.5)", "sphinx-rtd-theme"]
 tests = ["hypothesis (>=3.27.0)", "pytest (>=3.2.1,!=3.3.0)"]
 
 [[package]]
 name = "pyright"
-version = "1.1.299"
+version = "1.1.300"
 description = "Command line wrapper for pyright"
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "pyright-1.1.299-py3-none-any.whl", hash = "sha256:f34dfd0c2fcade34f9878b1fc69cb9456476dc78227e0a2fa046107ec55c0235"},
-    {file = "pyright-1.1.299.tar.gz", hash = "sha256:b3a9a6affa1252c52793e8663ade59ff966f8495ecfad6328deffe59cfc5a9a9"},
+    {file = "pyright-1.1.300-py3-none-any.whl", hash = "sha256:2ff0a21337d1d369e930143f1eed61ba4f225f59ae949631f512722bc9e61e4e"},
+    {file = "pyright-1.1.300.tar.gz", hash = "sha256:1874009c372bb2338e0696d99d915a152977e4ecbef02d3e4a3fd700da699993"},
 ]
 
 [package.dependencies]
@@ -1981,14 +1981,14 @@ files = [
 
 [[package]]
 name = "redis"
-version = "4.5.2"
+version = "4.5.3"
 description = "Python client for Redis database and key-value store"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "redis-4.5.2-py3-none-any.whl", hash = "sha256:4b12b3a1e9bfb43dc533330ec6d142329d0c27ea6bb6716a9d0389e8f2038a4e"},
-    {file = "redis-4.5.2.tar.gz", hash = "sha256:d8ae1a4f725eea6e3958411870fdf944c587b00ea12be28d3bd5575d8f26430c"},
+    {file = "redis-4.5.3-py3-none-any.whl", hash = "sha256:7df17a0a2b72a4c8895b462dd07616c51b1dcb48fdd7ecb7b6f4bf39ecb2e94e"},
+    {file = "redis-4.5.3.tar.gz", hash = "sha256:56732e156fe31801c4f43396bd3ca0c2a7f6f83d7936798531b9848d103381aa"},
 ]
 
 [package.dependencies]
@@ -2337,14 +2337,14 @@ cryptography = ">=35.0.0"
 
 [[package]]
 name = "types-redis"
-version = "4.5.2.0"
+version = "4.5.3.0"
 description = "Typing stubs for redis"
 category = "dev"
 optional = false
 python-versions = "*"
 files = [
-    {file = "types-redis-4.5.2.0.tar.gz", hash = "sha256:f3243339702cde2966e21f7fc34f8e9be1b55b407e8242ba204a42360f248678"},
-    {file = "types_redis-4.5.2.0-py3-none-any.whl", hash = "sha256:54964b1b18b7c868c543011eafab7aafd3d57e5285075ae1b574288535d93b4e"},
+    {file = "types-redis-4.5.3.0.tar.gz", hash = "sha256:f23415e448ca25ec5028c24fdf3717a13f0c905eb1933733e8a8a7d4952f6908"},
+    {file = "types_redis-4.5.3.0-py3-none-any.whl", hash = "sha256:7c1d5fdb0a2d5fd92eac37ce382fdb47d99a69889e7d6c2bc4479148ac646c73"},
 ]
 
 [package.dependencies]
@@ -2632,4 +2632,4 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<4.0"
-content-hash = "0df6be626d6c254a32e0b7725a61b4fb73e3ff40232fe4833b75bc9d0fdc61db"
+content-hash = "d60c20209b476a122266e1969e03852a656bd39d9a54fab11ea1e945d68833f3"
