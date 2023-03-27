@@ -26,7 +26,7 @@ better-ipc = "^2.0.1"
 discord-ext-menus = {git = "https://github.com/Rapptz/discord-ext-menus", rev = "8686b5d1bbc1d3c862292eb436ab630d6e9c9b53"}
 
 [tool.poetry.group.dev.dependencies]
-pre-commit = "^3.2.0"
+pre-commit = "^3.2.1"
 pyinstrument = "^4.4.0"
 pyright = "^1.1.300"
 
