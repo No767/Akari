@@ -29,7 +29,7 @@ async def test_basic_cache():
     cache = AkariCache(connection_pool=connPool)
     await cache.setBasicCache(key=key, value=DATA)
     res = await cache.getBasicCache(key=key)
-    assert (res == DATA) and (isinstance(res, str))  # nosec
+    assert (res == DATA.encode("utf-8")) and (isinstance(res, bytes))  # nosec
 
 
 @pytest.mark.asyncio
@@ -39,7 +39,7 @@ async def test_basic_cache_from_mem():
     getConnPool = cpm.getConnPool()
     cache = AkariCache(connection_pool=getConnPool)
     res = await cache.getBasicCache(key=key)
-    assert (res == DATA) and (isinstance(res, str))  # nosec
+    assert (res == DATA.encode("utf-8")) and (isinstance(res, bytes))  # nosec
 
 
 @pytest.mark.asyncio
@@ -78,7 +78,7 @@ async def test_default_key_builder():
     cache = AkariCache(connection_pool=connPool)
     await cache.setBasicCache(key=None, value=DATA)
     res = await cache.getBasicCache(key=f"cache:akari:None:None")
-    assert res == DATA and isinstance(res, str)  # nosec
+    assert res == DATA.encode("utf-8") and isinstance(res, bytes)  # nosec
 
 
 @pytest.mark.asyncio
