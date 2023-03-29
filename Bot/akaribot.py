@@ -5,7 +5,6 @@ import discord
 from akaricore import AkariCore
 from anyio import run
 from dotenv import load_dotenv
-from rich.logging import RichHandler
 
 load_dotenv()
 
@@ -17,9 +16,11 @@ REDIS_PORT = os.environ["REDIS_PORT"]
 intents = discord.Intents.default()
 intents.message_content = True
 
-FORMATTER = logging.Formatter(fmt="%(message)s", datefmt="[%Y-%m-%d %H:%M:%S]")
-HANDLER = RichHandler(show_path=False)
-discord.utils.setup_logging(handler=HANDLER, formatter=FORMATTER)
+FORMATTER = logging.Formatter(
+    fmt="%(asctime)s %(levelname)s    %(message)s", datefmt="[%Y-%m-%d %H:%M:%S]"
+)
+discord.utils.setup_logging(formatter=FORMATTER)
+discord.utils.setup_logging(formatter=FORMATTER)
 logger = logging.getLogger("discord")
 
 

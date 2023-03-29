@@ -11,7 +11,7 @@ from cache import CommandKeyBuilder
 
 
 def test_key_builder_defaults():
-    assert CommandKeyBuilder() == "None:None:None:None"  # nosec
+    assert CommandKeyBuilder() == "cache:akari:None:None"  # nosec
 
 
 def test_key_builder_params():

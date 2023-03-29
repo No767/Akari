@@ -3,18 +3,18 @@ import logging
 from typing import Union
 
 import redis.asyncio as redis
+from Libs.cache import akariCPM
 from redis.asyncio.connection import ConnectionPool
 from redis.exceptions import ConnectionError, TimeoutError
 
 from ..backoff import backoff
-from .gconn import akariCP
 
-logger = logging.getLogger("discord")
+logger = logging.getLogger("discord" or __name__)
 
 
 def setupConnPool() -> ConnectionPool:
     """Sets up the Redis connection pool"""
-    return akariCP.createConnPool()
+    return akariCPM.createConnPool()
 
 
 async def pingRedisServer(connection_pool: Union[ConnectionPool, None]) -> bool:
@@ -24,8 +24,8 @@ async def pingRedisServer(connection_pool: Union[ConnectionPool, None]) -> bool:
     """
     r: redis.Redis = redis.Redis(connection_pool=connection_pool)
     res = await r.ping()
-    isServerUp = True if res == b"PONG" or "PONG" else False
-    return isServerUp
+    await r.close()
+    return res
 
 
 async def redisCheck(
@@ -40,9 +40,9 @@ async def redisCheck(
         backoff_index (int, optional): The current index. This will be needed to be passed in order to keep the loop going. Defaults to 0.
     """
     try:
-        connPool = akariCP.getConnPool()
-        pingRedis = pingRedisServer(connection_pool=connPool)
-        if backoff_index == 5:
+        connPool = akariCPM.getConnPool()
+        pingRedis = await pingRedisServer(connection_pool=connPool)
+        if backoff_index >= 5:
             logger.error("Unable to connect to Redis server")
             return False
         if pingRedis is True:
@@ -55,6 +55,5 @@ async def redisCheck(
         )
         await asyncio.sleep(backoffTime)
         await redisCheck(
-            backoff_sec=backoff_sec,
             backoff_index=backoff_index + 1,
         )

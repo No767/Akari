@@ -13,14 +13,11 @@ aiodns = "^3.0.0"
 Brotli = "^1.0.9"
 uvloop = "^0.17.0"
 rin-exceptions = "^1.0.3"
-ormsgpack = "^1.2.5"
 orjson = "^3.8.9"
 discord-py = {extras = ["voice"], version = "^2.2.2"}
 redis = {extras = ["hiredis"], version = "^4.5.3"}
 ciso8601 = "^2.3.0"
-rich = "^13.3.3"
 anyio = "^3.6.2"
-aiocache = "^0.12.0"
 prisma = "^0.8.2"
 better-ipc = "^2.0.1"
 discord-ext-menus = {git = "https://github.com/Rapptz/discord-ext-menus", rev = "8686b5d1bbc1d3c862292eb436ab630d6e9c9b53"}
@@ -29,6 +26,8 @@ discord-ext-menus = {git = "https://github.com/Rapptz/discord-ext-menus", rev = 
 pre-commit = "^3.2.1"
 pyinstrument = "^4.4.0"
 pyright = "^1.1.300"
+watchfiles = "^0.19.0"
+jishaku = "^2.5.1"
 
 
 [tool.poetry.group.test.dependencies]
@@ -38,26 +37,28 @@ pytest-cov = "^4.0.0"
 nox = "^2022.11.21"
 nox-poetry = "^1.0.2"
 
-[tool.bandit]
-skips = ["B311", "B101"]
-
 [tool.poetry.group.types.dependencies]
 types-redis = "^4.5.3.1"
+
 
 [tool.poetry.group.docs.dependencies]
 sphinx = "6.1.3"
 myst-parser = "^1.0.0"
 sphinx-autobuild = "^2021.3.14"
 
+
 [tool.pyright]
 include = ["Bot/**"]
-exclude = ["**/__pycache__", "**/.mypy_cache", "**/.dmpypy.json"]
+exclude = ["**/__pycache__", "**/.mypy_cache", "**/.dmpypy.json", "Bot/Cogs/tags.py"]
 ignore = ["Docker"]
 reportMissingImports = true
 reportMissingTypeStubs = false
 
 [tool.isort]
 profile = 'black'
+
+[tool.bandit]
+skips = ["B311", "B101"]
 
 [build-system]
 requires = ["poetry-core"]

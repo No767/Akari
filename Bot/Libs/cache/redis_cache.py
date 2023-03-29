@@ -1,6 +1,5 @@
 from typing import Any, Dict, Optional, Union
 
-import ormsgpack
 import redis.asyncio as redis
 from redis.asyncio.connection import ConnectionPool
 
@@ -38,7 +37,7 @@ class AkariCache:
         client: redis.Redis = redis.Redis(
             connection_pool=self.connection_pool, auto_close_connection_pool=False
         )
-        await client.set(name=key, value=ormsgpack.packb(value), ex=ttl)
+        await client.set(name=key, value=value, ex=ttl)
         await client.close(close_connection_pool=False)
 
     async def getBasicCache(self, key: str) -> Union[str, None]:
@@ -57,7 +56,7 @@ class AkariCache:
         await client.close(close_connection_pool=False)
         if value is None:
             return None
-        return ormsgpack.unpackb(value)
+        return value
 
     async def setJSONCache(self, key: str, value: Dict[str, Any], ttl: int = 5) -> None:
         """Sets the JSON cache on Redis

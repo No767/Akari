@@ -3,7 +3,7 @@ from typing import Optional
 from redis.asyncio.connection import ConnectionPool
 
 
-class RedisConnPool:
+class AkariCPM:
     def __init__(
         self, host: str = "127.0.0.1", port: int = 6379, password: Optional[str] = None
     ) -> None:

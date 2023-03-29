@@ -3,10 +3,10 @@ import sys
 from pathlib import Path
 
 path = Path(__file__).parents[2]
-packagePath = os.path.join(str(path), "Bot", "Libs")
+packagePath = os.path.join(str(path), "Bot")
 sys.path.append(packagePath)
 
-from utils import backoff
+from Libs.utils import backoff
 
 
 def test_backoff():

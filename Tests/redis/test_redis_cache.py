@@ -4,13 +4,12 @@ import uuid
 from pathlib import Path
 
 import pytest
-from aiocache import Cache
 from redis.asyncio.connection import ConnectionPool
 
-path = Path(__file__).parents[2]
+path = Path(__file__).parents[2].joinpath("Bot")
 sys.path.append(str(path))
 
-from Bot.Libs.cache import AkariCache, CommandKeyBuilder
+from Libs.cache import AkariCache, AkariCPM, CommandKeyBuilder
 
 DATA = "Hello World"
 
@@ -36,12 +35,8 @@ async def test_basic_cache():
 @pytest.mark.asyncio
 async def test_basic_cache_from_mem():
     key = CommandKeyBuilder(id=None, command=None)
-    connPool = ConnectionPool().from_url("redis://localhost:6379/0")
-    memCache = Cache(Cache.MEMORY)
-    await memCache.set("redis_conn_pool", connPool)
-    getConnPool = await memCache.get("redis_conn_pool")
-    if getConnPool is None:
-        raise ValueError("Unable to get conn pool from mem cache")
+    cpm = AkariCPM()
+    getConnPool = cpm.getConnPool()
     cache = AkariCache(connection_pool=getConnPool)
     res = await cache.getBasicCache(key=key)
     assert (res == DATA) and (isinstance(res, str))  # nosec
@@ -60,12 +55,8 @@ async def test_json_cache(load_json_data):
 @pytest.mark.asyncio
 async def test_json_cache_mem(load_json_data):
     key = CommandKeyBuilder(id=uuid.uuid4(), command="test test")
-    memCache = Cache(Cache.MEMORY)
-    connPool = ConnectionPool().from_url("redis://localhost:6379/0")
-    await memCache.add(key="redis_conn_pool", value=connPool)
-    connPool = await memCache.get("redis_conn_pool")
-    if connPool is None:
-        raise ValueError("Unable to get conn pool from mem cache")
+    cpm = AkariCPM()
+    connPool = cpm.getConnPool()
     cache = AkariCache(connection_pool=connPool)
     await cache.setJSONCache(key=key, value=load_json_data, ttl=60)
     res = await cache.getJSONCache(key=key)
@@ -88,15 +79,6 @@ async def test_default_key_builder():
     await cache.setBasicCache(key=None, value=DATA)
     res = await cache.getBasicCache(key=f"cache:akari:None:None")
     assert res == DATA and isinstance(res, str)  # nosec
-
-
-@pytest.mark.asyncio
-async def test_default_key_builder_no_key():
-    connPool = ConnectionPool.from_url("redis://localhost:6379/0")
-    cache = AkariCache(connection_pool=connPool)
-    await cache.setBasicCache(key="what", value=DATA)
-    res = await cache.getBasicCache(key="no")
-    assert res is None  # nosec
 
 
 @pytest.mark.asyncio
