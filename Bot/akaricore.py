@@ -4,7 +4,6 @@ import discord
 from anyio import Path
 from discord.ext import commands
 from Libs.utils.redis import redisCheck
-from prisma import Prisma  # type: ignore
 
 
 class AkariCore(commands.Bot):

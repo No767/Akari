@@ -20,7 +20,7 @@ class AkariCache:
             self.connection_pool = ConnectionPool.from_url("redis://localhost:6379/0")
         self.connection_pool = connection_pool
 
-    async def setBasicCommandCache(
+    async def setBasicCache(
         self,
         key: Optional[str],
         value: Union[str, bytes],
@@ -41,7 +41,7 @@ class AkariCache:
         await client.set(name=key, value=ormsgpack.packb(value), ex=ttl)
         await client.close(close_connection_pool=False)
 
-    async def getBasicCommandCache(self, key: str) -> Union[str, None]:
+    async def getBasicCache(self, key: str) -> Union[str, None]:
         """Gets the command cache on Redis
 
         Args:

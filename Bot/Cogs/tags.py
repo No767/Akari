@@ -2,10 +2,11 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 from discord.utils import escape_markdown
-from Libs.cache import AkariCache, CommandKeyBuilder
 from Libs.ui.tags import CreateTag, EditTag
 from Libs.utils.redis import memCache
 from prisma.models import Guild, Tag  # type: ignore
+
+from Bot.Libs.cache import AkariCache, CommandKeyBuilder
 
 
 class Tags(commands.GroupCog, name="tags"):

@@ -1,14 +1,5 @@
 from .backoff_conn import backoff
-from .cache_obj import memCache
-from .conn import pingRedisServer, redisCheck, setupConnPool, setupRedisConnPool
+from .conn import pingRedisServer, redisCheck, setupConnPool
 from .gconn import akariCP
 
-__all__ = [
-    "setupRedisConnPool",
-    "pingRedisServer",
-    "backoff",
-    "memCache",
-    "akariCP",
-    "setupConnPool",
-    "redisCheck",
-]
+__all__ = ["backoff", "akariCP", "setupConnPool", "redisCheck", "pingRedisServer"]

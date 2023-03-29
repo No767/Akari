@@ -11,13 +11,19 @@ from cache import CommandKeyBuilder
 
 
 def test_key_builder_defaults():
-    assert CommandKeyBuilder() == "cache:akari:None:None"  # nosec
+    assert CommandKeyBuilder() == "None:None:None:None"  # nosec
 
 
 def test_key_builder_params():
-    assert CommandKeyBuilder(id=123, command="test") == "cache:akari:123:test"  # nosec
+    assert (
+        CommandKeyBuilder(prefix="cache", namespace="akari", id=123, command="test")
+        == "cache:akari:123:test"
+    )  # nosec
 
 
 def test_key_builder_id():
-    id = str(uuid.uuid4())
-    assert CommandKeyBuilder(id=id, command="test") == f"cache:akari:{id}:test"  # nosec
+    id = uuid.uuid4()
+    assert (
+        CommandKeyBuilder(prefix="cache", namespace="akari", id=id, command="test")
+        == f"cache:akari:{str(id)}:test"
+    )  # nosec

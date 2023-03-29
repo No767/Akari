@@ -1,6 +1,6 @@
 from typing import Optional
 
-from redis.asyncio.connection import Connection, ConnectionPool
+from redis.asyncio.connection import ConnectionPool
 
 
 class RedisConnPool:
@@ -13,8 +13,9 @@ class RedisConnPool:
         self.connPool = None
 
     def createConnPool(self) -> ConnectionPool:
-        conn = Connection(host=self.host, port=self.port, password=self.password)
-        self.connPool = ConnectionPool(connection_class=conn)  # type: ignore
+        self.connPool = ConnectionPool(
+            host=self.host, port=self.port, password=self.password
+        )
         return self.connPool
 
     def getConnPool(self) -> ConnectionPool:

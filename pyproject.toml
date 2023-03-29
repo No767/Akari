@@ -38,6 +38,8 @@ pytest-cov = "^4.0.0"
 nox = "^2022.11.21"
 nox-poetry = "^1.0.2"
 
+[tool.bandit]
+skips = ["B311", "B101"]
 
 [tool.poetry.group.types.dependencies]
 types-redis = "^4.5.3.1"
