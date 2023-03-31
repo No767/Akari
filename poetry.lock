@@ -251,14 +251,14 @@ pytz = ">=2015.7"
 
 [[package]]
 name = "better-ipc"
-version = "2.0.1"
+version = "2.0.3"
 description = "A high-performance inter-process communication library designed to work with the latest version of discord.py"
 category = "main"
 optional = false
 python-versions = ">=3.8.0"
 files = [
-    {file = "better-ipc-2.0.1.tar.gz", hash = "sha256:eb7f057c74ac9eae4363da9ef85928805bc1c52c65b024eb445284585c1996e9"},
-    {file = "better_ipc-2.0.1-py3-none-any.whl", hash = "sha256:419e37dc30d9a8b7989a3fbd79c150c704b36b32345db1ffd5a23b759c867703"},
+    {file = "better-ipc-2.0.3.tar.gz", hash = "sha256:000c19f279760e88361d06318b51f970a8bf916a1e45fd35a812570ee317cfc6"},
+    {file = "better_ipc-2.0.3-py3-none-any.whl", hash = "sha256:dfb82c2497591d711f05c07b38e0886d6327d678d5e090c33174706c0ff0e5b1"},
 ]
 
 [package.dependencies]
@@ -2751,4 +2751,4 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<4.0"
-content-hash = "2bd2782dafdb8a64f6918df1a64dc47ef5d183d0ee6dc245e1f00d539f48442e"
+content-hash = "9cf4df69da2c258d56b1060f662828f8e99431f88b14c4a3f94e1c745c016397"
