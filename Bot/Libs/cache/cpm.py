@@ -14,7 +14,10 @@ class AkariCPM:
 
     def createConnPool(self) -> ConnectionPool:
         self.connPool = ConnectionPool(
-            host=self.host, port=self.port, password=self.password
+            host=self.host,
+            port=self.port,
+            password=self.password,
+            decode_responses=True,
         )
         return self.connPool
 
