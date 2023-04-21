@@ -1919,14 +1919,14 @@ tests = ["hypothesis (>=3.27.0)", "pytest (>=3.2.1,!=3.3.0)"]
 
 [[package]]
 name = "pyright"
-version = "1.1.302"
+version = "1.1.304"
 description = "Command line wrapper for pyright"
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "pyright-1.1.302-py3-none-any.whl", hash = "sha256:1929e3126b664b5281dba66a789e8e04358afca48c10994ee0243b8c2a14acdf"},
-    {file = "pyright-1.1.302.tar.gz", hash = "sha256:e74a7dfbbb1d754941d015cccea8a6d29b395d8e4cb0e45dcfcaf3b6c6cfd540"},
+    {file = "pyright-1.1.304-py3-none-any.whl", hash = "sha256:70021bbae07fc28ed16e435f5efa65cd71e06a1888d9ca998798c283d4b3d010"},
+    {file = "pyright-1.1.304.tar.gz", hash = "sha256:87adec38081904c939e3657ab23d5fc40b7ccc22709be0af1859fc785ae4ea61"},
 ]
 
 [package.dependencies]
@@ -2757,4 +2757,4 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<4.0"
-content-hash = "e8aa74403597052ebbc1dfa668567792acebb108eec35efbc1c651e07a9c13aa"
+content-hash = "7f8a62790a5746a1753cb28697ec0712b4ed5f0452f4c5a3582273bdb8ddb161"
