@@ -1,23 +1,19 @@
-import uuid
 from typing import Dict, Union
 
 from prisma import types  # type: ignore
 from prisma.models import Guild, Tag  # type: ignore
 
-from ..cache import CommandKeyBuilder, akariCPM, cached, cachedJson
+from ..cache import akariCPM, cache, cacheJson
 
 
-@cachedJson(
+@cacheJson(
     connection_pool=akariCPM.getConnPool(),
-    command_key=CommandKeyBuilder(
-        prefix="cache", namespace="akari", id=uuid.uuid4(), command="internal_get_tag"
-    ),
 )
-async def getGuildTag(guild_id: int, tag_name: str) -> Union[Dict, None]:
+async def getGuildTag(id: int, tag_name: str) -> Union[Dict, None]:
     """Gets a tag from the database. This is the JSON model that will be cached
 
     Args:
-        guild_id (int): Guild ID
+        id (int): Guild ID
         tag_name (str): Tag name
 
     Returns:
@@ -26,7 +22,7 @@ async def getGuildTag(guild_id: int, tag_name: str) -> Union[Dict, None]:
     res = await Tag.prisma().find_first(
         where={
             "AND": [
-                {"guild_id": {"equals": guild_id}},
+                {"guild_id": {"equals": id}},
                 {"name": {"contains": tag_name}},
             ]
         }
@@ -36,20 +32,14 @@ async def getGuildTag(guild_id: int, tag_name: str) -> Union[Dict, None]:
     return res.to_dict()
 
 
-@cached(
+@cache(
     connection_pool=akariCPM.getConnPool(),
-    command_key=CommandKeyBuilder(
-        prefix="cache",
-        namespace="akari",
-        id=uuid.uuid4(),
-        command="internal_get_tag_raw",
-    ),
 )
-async def getGuildTagText(guild_id: int, tag_name: str) -> Union[str, None]:
+async def getGuildTagText(id: int, tag_name: str) -> Union[str, None]:
     """Gets a tag from the database. This is the raw text that will be cached
 
     Args:
-        guild_id (int): Guild ID
+        id (int): Guild ID
         tag_name (str): Tag name
 
     Returns:
@@ -58,7 +48,7 @@ async def getGuildTagText(guild_id: int, tag_name: str) -> Union[str, None]:
     res = await Tag.prisma().find_first(
         where={
             "AND": [
-                {"guild_id": {"equals": guild_id}},
+                {"guild_id": {"equals": id}},
                 {"name": {"contains": tag_name}},
             ]
         }
