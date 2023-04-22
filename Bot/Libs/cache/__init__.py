@@ -6,9 +6,9 @@ from .redis_cache import AkariCache
 
 __all__ = [
     "AkariCPM",
+    "akariCPM",
     "CommandKeyBuilder",
     "AkariCache",
-    "akariCPM",
     "cache",
     "cacheJson",
 ]
