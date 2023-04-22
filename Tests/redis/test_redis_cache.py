@@ -32,14 +32,14 @@ async def test_basic_cache():
     assert (res == DATA.encode("utf-8")) and (isinstance(res, bytes))  # nosec
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncios
 async def test_basic_cache_from_mem():
     key = CommandKeyBuilder(id=None, command=None)
     cpm = AkariCPM()
     getConnPool = cpm.getConnPool()
     cache = AkariCache(connection_pool=getConnPool)
     res = await cache.getBasicCache(key=key)
-    assert (res == DATA) and (isinstance(res, bytes))  # nosec
+    assert (res == DATA) and (isinstance(res, str))  # nosec
 
 
 @pytest.mark.asyncio
