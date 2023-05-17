@@ -26,6 +26,7 @@ model Tag {
     user_id BigInt
     guild_id BigInt
     name String 
+    aliases String[]
     content String 
     created_at DateTime @default(now())
 }

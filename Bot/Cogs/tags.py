@@ -1,8 +1,12 @@
+from typing import Optional
+
 import discord
 from discord import app_commands
 from discord.ext import commands
+from discord.utils import escape_markdown
 
 # from Libs.utils.redis import memCache
+from Libs.tags import getGuildTagText
 from prisma.models import Guild, Tag  # type: ignore
 
 
@@ -14,52 +18,49 @@ class Tags(commands.GroupCog, name="tags"):
         self.bot = bot
 
     @app_commands.command(name="display")
-    async def tagView(self, interaction: discord.Interaction, name: str):
+    async def tagView(
+        self, interaction: discord.Interaction, name: str, raw: Optional[bool] = False
+    ) -> None:
         """Displays the content of a tag
 
         Args:
             interaction (discord.Interaction): Base interaction
             name (str): Name of the tag
+            raw (str): Whether to display an escaped version of the tag's content
         """
 
-        await interaction.response.send_message()
-        # key = CommandKeyBuilder(id=interaction.guild_id, command="tag display")
-        # connPool = await memCache.get("main")
-        # cache = AkariCache(connection_pool=connPool)
-        # if await cache.cacheExists(key=key) is False:
-        #     tagData = await Tag.prisma().find_first(where={"AND": [{"id": interaction.guild_id}, {"name": {"equals": name}}]})  # type: ignore
-        #     if tagData is None:
-        #         return await interaction.response.send_message(f"{name} was not found")
-        #     await cache.setBasicCommandCache(key=key, value=tagData.content, ttl=30)
-        #     return await interaction.response.send_message(tagData.content)
-        # else:
-        #     return await interaction.response.send_message(
-        #         await cache.getBasicCommandCache(key=key)
-        #     )
+        tagData = await getGuildTagText(id=interaction.guild_id, tag_name=name)  # type: ignore
+        if tagData is None:
+            return await interaction.response.send_message(
+                content=f"{name} was not found"
+            )
+        return await interaction.response.send_message(
+            content=tagData if raw is False else escape_markdown(tagData)
+        )
 
-    # @app_commands.command(name="raw")
-    # async def tagViewRaw(self, interaction: discord.Interaction, name: str):
-    #     """Displays the raw content of a tag
-    #
-    #     Args:
-    #         interaction (discord.Interaction): Base interaction
-    #         name (str): Name of the tag
-    #     """
-    #     key = CommandKeyBuilder(id=interaction.guild_id, command="tag display")
-    #     connPool = await memCache.get("main")
-    #     cache = AkariCache(connection_pool=connPool)
-    #     if await cache.cacheExists(key=key) is False:
-    #         tagData = await Tag.prisma().find_first(where={"AND": [{"id": interaction.guild_id}, {"name": {"equals": name}}]})  # type: ignore
-    #         if tagData is None:
-    #             return await interaction.response.send_message(f"{name} was not found")
-    #         await cache.setBasicCommandCache(key=key, value=tagData.content, ttl=30)
-    #         return await interaction.response.send_message(
-    #             escape_markdown(tagData.content)
-    #         )
-    #     else:
-    #         return await interaction.response.send_message(
-    #             await cache.getBasicCommandCache(key=key)
-    #         )
+    @app_commands.command(name="alias")
+    async def tagAlias(
+        self, interaction: discord.Interaction, name: str, alias: str
+    ) -> None:
+        """Aliases a tag
+
+        Args:
+            interaction (discord.Interaction): Base interaction
+            name (str): The name of the original tag
+            alias (str): The alias of the tag
+        """
+        await Tag.prisma().find_first(where={"name": name})
+        await Tag.prisma().update(where={"guild_id": interaction.guild.id}, data={"aliases": {"push": [alias]}})  # type: ignore
+
+    @app_commands.command(name="create")
+    async def tagCreate(self, interaction: discord.Interaction) -> None:
+        """Creates a tag
+
+        Args:
+            interaction (discord.Interaction): Base interaction
+        """
+        await interaction.response.send_message(interaction.user.display_avatar.url)
+
     #
     # @app_commands.command(name="create")
     # async def tagCreate(self, interaction: discord.Interaction) -> None:
