@@ -7,6 +7,7 @@ from aiohttp import ClientSession
 from anyio import Path
 from discord.ext import commands
 from Libs.utils.redis import redisCheck
+from Libs.utils import ensureOpenConn
 
 # Some weird import logic to ensure that watchfiles is there
 _fsw = True
@@ -68,6 +69,7 @@ class AkariCore(commands.Bot):
             self.logger.debug(f"Loaded Cog: {cog.name[:-3]}")
             await self.load_extension(f"Cogs.{cog.name[:-3]}")
 
+        self.loop.create_task(ensureOpenConn(self._pool))
         self.loop.create_task(redisCheck())
         if self.dev_mode is True and _fsw is True:
             self.logger.info("Dev mode is enabled. Loading Jishaku and FSWatcher")
