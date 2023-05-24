@@ -1,7 +1,9 @@
 import logging
 from pathlib import Path as SyncPath
 
+import asyncpg
 import discord
+from aiohttp import ClientSession
 from anyio import Path
 from discord.ext import commands
 from Libs.utils.redis import redisCheck
@@ -20,16 +22,35 @@ class AkariCore(commands.Bot):
     def __init__(
         self,
         intents: discord.Intents,
-        command_prefix: str = "~",
+        session: ClientSession,
+        pool: asyncpg.Pool,
         dev_mode: bool = False,
         *args,
         **kwargs,
     ) -> None:
-        super().__init__(
-            intents=intents, command_prefix=command_prefix, *args, **kwargs
-        )
+        super().__init__(intents=intents, command_prefix="~", *args, **kwargs)
+        self._session = session
+        self._pool = pool
         self.dev_mode = dev_mode
         self.logger = logging.getLogger("akaribot")
+
+    @property
+    def session(self) -> ClientSession:
+        """A global AIOHTTP ClientSession used throughout the lifetime of Akari
+
+        Returns:
+            ClientSession: AIOHTTP ClientSession
+        """
+        return self._session
+
+    @property
+    def pool(self) -> asyncpg.Pool:
+        """A global connection pool used throughout the lifetime of Akari
+
+        Returns:
+            asyncpg.Pool: Asyncpg connection pool
+        """
+        return self._pool
 
     async def fsWatcher(self) -> None:
         cogsPath = SyncPath(__file__).parent.joinpath("Cogs")

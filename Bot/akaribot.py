@@ -1,33 +1,35 @@
-import logging
 import os
 
+import asyncpg
 import discord
+from aiohttp import ClientSession
 from akaricore import AkariCore
 from anyio import run
 from dotenv import load_dotenv
+from Libs.utils import AkariLogger
 
 load_dotenv()
 
 AKARI_TOKEN = os.environ["AKARI_DEV_TOKEN"]
+POSTGRES_URI = os.environ["POSTGRES_URI"]
 
 intents = discord.Intents.default()
 intents.message_content = True
 
-FORMATTER = logging.Formatter(
-    fmt="%(asctime)s %(levelname)s    %(message)s", datefmt="[%Y-%m-%d %H:%M:%S]"
-)
-discord.utils.setup_logging(formatter=FORMATTER)
-discord.utils.setup_logging(formatter=FORMATTER)
-logger = logging.getLogger("discord")
-
 
 async def main():
-    async with AkariCore(intents=intents, dev_mode=True) as bot:
-        await bot.start(AKARI_TOKEN)
+    async with ClientSession() as session, asyncpg.create_pool(
+        dsn=POSTGRES_URI, command_timeout=60, max_size=20, min_size=20
+    ) as pool:
+        async with AkariCore(
+            intents=intents, session=session, pool=pool, dev_mode=True
+        ) as bot:
+            await bot.start(AKARI_TOKEN)
 
 
 if __name__ == "__main__":
     try:
-        run(main, backend_options={"use_uvloop": True})
+        with AkariLogger():
+            run(main, backend_options={"use_uvloop": True})
     except KeyboardInterrupt:
-        logger.info("Shutting down Akari...")
+        pass
