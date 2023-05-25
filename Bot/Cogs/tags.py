@@ -7,6 +7,7 @@ from discord.ext import commands
 from discord.utils import escape_markdown
 from Libs.tags import getGuildTag, getGuildTagText
 from Libs.utils import Embed
+from Libs.ui.tags import EditTag, CreateTag, DeleteTag
 
 
 class Tags(commands.GroupCog, name="tags"):
@@ -53,6 +54,37 @@ class Tags(commands.GroupCog, name="tags"):
         embed.add_field(name="Aliases", value=tagInfo["aliases"])  # type: ignore
         await interaction.response.send_message(embed=embed)
 
+    @app_commands.command(name="edit")
+    async def editTag(self, interaction: discord.Interaction) -> None:
+        """Edits a tag
 
+        Args:
+            interaction (discord.Interaction): Base interaction
+        """
+        editModal = EditTag(self.pool)
+        await interaction.response.send_modal(editModal)
+    
+    @app_commands.command(name="create")
+    async def createTag(self, interaction: discord.Interaction) -> None:
+        """Creates a new tag
+
+        Args:
+            interaction (discord.Interaction): Base interaction
+        """
+        createTagModal = CreateTag(self.pool)
+        await interaction.response.send_modal(createTagModal)
+    
+    @app_commands.command(name="delete")
+    async def deleteTag(self, interaction: discord.Interaction, name: str) -> None:
+        """Deletes a tag
+
+        Args:
+            interaction (discord.Interaction): Base interaction
+            name (str): Name of tag
+        """
+        # TODO: Add a check if the tag doesn't exist or not
+        deleteTagView = DeleteTag(self.pool, name)
+        await interaction.response.send_message(embed=Embed(description=f"Are you sure you want to delete the current tag? {name}"), view=deleteTagView)
+        
 async def setup(bot: AkariCore) -> None:
     await bot.add_cog(Tags(bot))
