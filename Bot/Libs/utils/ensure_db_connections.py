@@ -1,12 +1,14 @@
-import asyncpg
 import logging
+
+import asyncpg
+
 
 async def ensureOpenConn(conn_pool: asyncpg.Pool) -> bool:
     """Ensures that the current connection pulled from the pool can be run.
-    
+
     Args:
         conn_pool (asyncpg.Pool): The connection pool to get connections from.
-    
+
     Returns:
         bool: True if the connection can be ran.
     """
