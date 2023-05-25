@@ -16,6 +16,7 @@ class CreateTag(discord.ui.Modal, title="Create a tag"):
     )
 
     async def on_submit(self, interaction: discord.Interaction) -> None:
+        # TODO: Add aliases support
         await Guild.prisma().update(
             data={
                 "tags": {

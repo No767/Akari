@@ -16,7 +16,7 @@ async def ensureOpenConn(conn_pool: asyncpg.Pool) -> bool:
     async with conn_pool.acquire() as conn:
         connStatus = conn.is_closed()
         if connStatus is False:
-            logger.info("Successfully connected to PostgreSQL")
+            logger.info("PostgreSQL server is up")
             return True
     logger.error("Failed to connect to PostgreSQL")
     return False
