@@ -3,6 +3,7 @@ from typing import Union
 import asyncpg
 
 from ..cache import akariCPM, cache, cacheJson
+from ..utils import encodeDatetime
 
 # from prisma import types  # type: ignore
 # from prisma.models import Guild, Tag  # type: ignore
@@ -27,13 +28,13 @@ async def getGuildTag(id: int, tag_name: str, pool: asyncpg.Pool) -> Union[dict,
         t.id, t.author_id, t.name, t.aliases, t.created_at
     FROM guild g
     INNER JOIN tag t ON g.id = t.guild_id
-    WHERE g.id=$1 AND t.name=$2;
+    WHERE g.id=$1 AND t.name=$2 OR aliases @> $3;
     """
     async with pool.acquire() as conn:
-        res = await conn.fetchrow(sqlQuery, id, tag_name)
+        res = await conn.fetchrow(sqlQuery, id, tag_name, [tag_name])
         if res is None:
             return None
-        return dict(res)
+        return encodeDatetime(dict(res))
 
 
 @cache(
@@ -56,10 +57,10 @@ async def getGuildTagText(
         t.content
     FROM guild g
     INNER JOIN tag t ON g.id = t.guild_id
-    WHERE g.id=$1 AND t.name=$2;
+    WHERE g.id=$1 AND t.name=$2 OR aliases @> $3;
     """
     async with pool.acquire() as conn:
-        res = await conn.fetchval(sqlQuery, id, tag_name)
+        res = await conn.fetchval(sqlQuery, id, tag_name, [tag_name])
         if res is None:
             return None
         return res

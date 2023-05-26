@@ -6,8 +6,8 @@ from discord import app_commands
 from discord.ext import commands
 from discord.utils import escape_markdown
 from Libs.tags import getGuildTag, getGuildTagText
-from Libs.utils import Embed
-from Libs.ui.tags import EditTag, CreateTag, DeleteTag
+from Libs.ui.tags import CreateTag, DeleteTag, EditTag
+from Libs.utils import Embed, parseDatetime
 
 
 class Tags(commands.GroupCog, name="tags"):
@@ -44,14 +44,17 @@ class Tags(commands.GroupCog, name="tags"):
             interaction (discord.Interaction): Base interaction
             name (str): Name of tag
         """
-        tagInfo = await getGuildTag(interaction.guild.id, name, self.pool)  # type: ignore
+        tagInfo: dict = await getGuildTag(interaction.guild.id, name, self.pool)  # type: ignore
         if tagInfo is None:
             await interaction.response.send_message("Sorry but the tag was not found")
             return
         embed = Embed()
-        embed.title = tagInfo["name"]  # type: ignore
-        embed.add_field(name="Owner", value=f"<@{tagInfo['author_id']}>")  # type: ignore
-        embed.add_field(name="Aliases", value=tagInfo["aliases"])  # type: ignore
+        embed.title = tagInfo["name"]
+        embed.add_field(name="Owner", value=f"<@{tagInfo['author_id']}>")
+        embed.add_field(name="Aliases", value=tagInfo["aliases"])
+        embed.set_footer(
+            text=f"Created at: {parseDatetime(tagInfo['created_at']).strftime('%A, %d %B %Y %H:%M')}"
+        )
         await interaction.response.send_message(embed=embed)
 
     @app_commands.command(name="edit")
@@ -63,7 +66,7 @@ class Tags(commands.GroupCog, name="tags"):
         """
         editModal = EditTag(self.pool)
         await interaction.response.send_modal(editModal)
-    
+
     @app_commands.command(name="create")
     async def createTag(self, interaction: discord.Interaction) -> None:
         """Creates a new tag
@@ -73,7 +76,7 @@ class Tags(commands.GroupCog, name="tags"):
         """
         createTagModal = CreateTag(self.pool)
         await interaction.response.send_modal(createTagModal)
-    
+
     @app_commands.command(name="delete")
     async def deleteTag(self, interaction: discord.Interaction, name: str) -> None:
         """Deletes a tag
@@ -82,12 +85,28 @@ class Tags(commands.GroupCog, name="tags"):
             interaction (discord.Interaction): Base interaction
             name (str): Name of tag
         """
-        # TODO: Add a check if the tag doesn't exist or not
-        deleteTagView = DeleteTag(self.pool, name)
-        await interaction.response.send_message(embed=Embed(description=f"Are you sure you want to delete the current tag? {name}"), view=deleteTagView)
-        
+        selectQuery = """
+        SELECT DISTINCT (name, aliases) FROM tag WHERE name=$1 OR aliases @> $2;
+        """
+        async with self.pool.acquire() as conn:
+            selCheck = await conn.fetchrow(selectQuery, name, [name])
+            if selCheck is None:
+                await interaction.response.send_message(
+                    "The tag could not be found. Please try again"
+                )
+                return
+            deleteTagView = DeleteTag(self.pool, name)
+            await interaction.response.send_message(
+                embed=Embed(
+                    description=f"Are you sure you want to delete the current tag? {name}"
+                ),
+                view=deleteTagView,
+            )
+
     @app_commands.command(name="alias")
-    async def aliasTag(self, interaction: discord.Interaction, name: str, alias: str) -> None:
+    async def aliasTag(
+        self, interaction: discord.Interaction, name: str, alias: str
+    ) -> None:
         """Aliases a tag
 
         Args:
@@ -109,12 +128,17 @@ class Tags(commands.GroupCog, name="tags"):
         """
         async with self.pool.acquire() as conn:
             async with conn.transaction():
-                res = await conn.fetchrow(selectQuery, interaction.guild.id, name) # type: ignore
+                res = await conn.fetchrow(selectQuery, interaction.guild.id, name)  # type: ignore
                 if res is None:
-                    await interaction.response.send_message("Sorry but the tag was not found")
+                    await interaction.response.send_message(
+                        "Sorry but the tag was not found"
+                    )
                     return
-                await conn.execute(updateQuery, interaction.guild.id, interaction.user.id, name, alias) # type: ignore
-                await interaction.response.send_message(f"The tag is now aliased to {alias}")
-    
+                await conn.execute(updateQuery, interaction.guild.id, interaction.user.id, name, alias)  # type: ignore
+                await interaction.response.send_message(
+                    f"The tag is now aliased to {alias}"
+                )
+
+
 async def setup(bot: AkariCore) -> None:
     await bot.add_cog(Tags(bot))
