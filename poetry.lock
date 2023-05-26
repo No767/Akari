@@ -186,7 +186,7 @@ uvloop = ["uvloop (>=0.17.0,<0.18.0)"]
 [package.source]
 type = "git"
 url = "https://github.com/No767/apgmx"
-reference = "HEAD"
+reference = "7339d2e6b2d87c8833b458d05369158f58b82bbe"
 resolved_reference = "7339d2e6b2d87c8833b458d05369158f58b82bbe"
 
 [[package]]
@@ -2684,4 +2684,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<4.0"
-content-hash = "fbe1e7dc40fdac1edc7626e7f9f5f34629e458d1ade04d88dcf389f2473ba6ad"
+content-hash = "d8e344c93f84bd086caec272a95595dbc01e541c9c3b4da0feda5402e30d9733"

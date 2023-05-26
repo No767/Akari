@@ -20,7 +20,7 @@ anyio = "^3.6.2"
 better-ipc = "^2.0.3"
 discord-ext-menus = {git = "https://github.com/Rapptz/discord-ext-menus", rev = "8686b5d1bbc1d3c862292eb436ab630d6e9c9b53"}
 asyncpg = "^0.27.0"
-apgmx = {git = "https://github.com/No767/apgmx"}
+apgmx = {git = "https://github.com/No767/apgmx", rev = "7339d2e6b2d87c8833b458d05369158f58b82bbe"}
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.3.2"
