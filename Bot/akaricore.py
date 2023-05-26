@@ -6,8 +6,8 @@ import discord
 from aiohttp import ClientSession
 from anyio import Path
 from discord.ext import commands
-from Libs.utils.redis import redisCheck
 from Libs.utils import ensureOpenConn
+from Libs.utils.redis import redisCheck
 
 # Some weird import logic to ensure that watchfiles is there
 _fsw = True
