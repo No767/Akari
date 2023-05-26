@@ -173,21 +173,17 @@ version = "0.0.1"
 description = "A database migrations tool for asyncpg"
 optional = false
 python-versions = ">=3.8,<4.0"
-files = []
-develop = false
+files = [
+    {file = "apgmx-0.0.1-py3-none-any.whl", hash = "sha256:85c8cad1ae2a3182f6cba38c28020fb7e5a8413245cd259111b10fea08a52ace"},
+    {file = "apgmx-0.0.1.tar.gz", hash = "sha256:7c1230d73277833b63b28429b7711e836b5baa770b7137a234d2455499549781"},
+]
 
 [package.dependencies]
-asyncpg = "^0.27.0"
-typer = {version = "^0.9.0", extras = ["all"]}
+asyncpg = ">=0.27.0,<0.28.0"
+typer = {version = ">=0.9.0,<0.10.0", extras = ["all"]}
 
 [package.extras]
 uvloop = ["uvloop (>=0.17.0,<0.18.0)"]
-
-[package.source]
-type = "git"
-url = "https://github.com/No767/apgmx"
-reference = "7339d2e6b2d87c8833b458d05369158f58b82bbe"
-resolved_reference = "7339d2e6b2d87c8833b458d05369158f58b82bbe"
 
 [[package]]
 name = "argcomplete"
@@ -2684,4 +2680,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<4.0"
-content-hash = "d8e344c93f84bd086caec272a95595dbc01e541c9c3b4da0feda5402e30d9733"
+content-hash = "11a76a2c28f3b7ada1bfb2634e3c12b8120fad421314a87b10059385c0b37d45"
