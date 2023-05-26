@@ -86,5 +86,35 @@ class Tags(commands.GroupCog, name="tags"):
         deleteTagView = DeleteTag(self.pool, name)
         await interaction.response.send_message(embed=Embed(description=f"Are you sure you want to delete the current tag? {name}"), view=deleteTagView)
         
+    @app_commands.command(name="alias")
+    async def aliasTag(self, interaction: discord.Interaction, name: str, alias: str) -> None:
+        """Aliases a tag
+
+        Args:
+            interaction (discord.Interaction): Base interaction
+            name (str): The original name of the tag
+            alias (str): The alias of the tag
+        """
+        selectQuery = """
+        SELECT DISTINCT ON (g.id)
+            t.name, t.aliases
+        FROM guild g
+        INNER JOIN tag t ON g.id = t.guild_id
+        WHERE g.id=$1 AND t.name=$2;
+        """
+        updateQuery = """
+        UPDATE tag
+        SET aliases=array_append(aliases, $4)
+        WHERE tag.guild_id=$1 AND tag.author_id=$2 AND tag.name=$3;
+        """
+        async with self.pool.acquire() as conn:
+            async with conn.transaction():
+                res = await conn.fetchrow(selectQuery, interaction.guild.id, name) # type: ignore
+                if res is None:
+                    await interaction.response.send_message("Sorry but the tag was not found")
+                    return
+                await conn.execute(updateQuery, interaction.guild.id, interaction.user.id, name, alias) # type: ignore
+                await interaction.response.send_message(f"The tag is now aliased to {alias}")
+    
 async def setup(bot: AkariCore) -> None:
     await bot.add_cog(Tags(bot))
