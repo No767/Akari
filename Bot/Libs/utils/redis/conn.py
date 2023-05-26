@@ -46,7 +46,7 @@ async def redisCheck(
             logger.error("Unable to connect to Redis server")
             return False
         if pingRedis is True:
-            logger.info("Sucessfully connected to Redis server")
+            logger.info("Redis server is up")
             return True
     except (ConnectionError, TimeoutError):
         backoffTime = backoff(backoff_sec=backoff_sec, backoff_sec_index=backoff_index)

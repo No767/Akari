@@ -12,15 +12,15 @@ python-dotenv = "^1.0.0"
 aiodns = "^3.0.0"
 Brotli = "^1.0.9"
 uvloop = "^0.17.0"
-rin-exceptions = "^1.0.3"
-orjson = "^3.8.13"
+orjson = "^3.8.14"
 discord-py = {extras = ["voice"], version = "^2.2.3"}
 redis = {extras = ["hiredis"], version = "^4.5.5"}
 ciso8601 = "^2.3.0"
 anyio = "^3.6.2"
-prisma = "^0.8.2"
 better-ipc = "^2.0.3"
 discord-ext-menus = {git = "https://github.com/Rapptz/discord-ext-menus", rev = "8686b5d1bbc1d3c862292eb436ab630d6e9c9b53"}
+asyncpg = "^0.27.0"
+apgmx = {git = "https://github.com/No767/apgmx"}
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.3.2"

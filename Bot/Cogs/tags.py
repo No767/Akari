@@ -1,139 +1,144 @@
+from typing import Optional
+
 import discord
+from akaricore import AkariCore
 from discord import app_commands
 from discord.ext import commands
-
-# from Libs.utils.redis import memCache
-from prisma.models import Guild, Tag  # type: ignore
+from discord.utils import escape_markdown
+from Libs.tags import getGuildTag, getGuildTagText
+from Libs.ui.tags import CreateTag, DeleteTag, EditTag
+from Libs.utils import Embed, parseDatetime
 
 
 class Tags(commands.GroupCog, name="tags"):
-    """Commands for tags"""
+    """Akari's custom tags feature, based off of RDanny"""
 
-    def __init__(self, bot: commands.Bot):
-        super().__init__()
+    def __init__(self, bot: AkariCore) -> None:
         self.bot = bot
+        self.pool = self.bot.pool
+        super().__init__()
 
-    @app_commands.command(name="display")
-    async def tagView(self, interaction: discord.Interaction, name: str):
-        """Displays the content of a tag
+    @app_commands.command(name="get")
+    async def getTag(
+        self, interaction: discord.Interaction, name: str, raw: Optional[bool] = False
+    ) -> None:
+        """Gets a tag
 
         Args:
             interaction (discord.Interaction): Base interaction
-            name (str): Name of the tag
+            name (str): The name of the tag to look for
+            raw (Optional[bool]): Whether to display the raw text or not
         """
+        tagContent = await getGuildTagText(interaction.guild.id, name, self.pool)  # type: ignore
+        if tagContent is None:
+            await interaction.response.send_message("Sorry but the tag was not found")
+            return
+        finalContent = escape_markdown(tagContent) if raw is True else tagContent
+        await interaction.response.send_message(finalContent)
 
-        await interaction.response.send_message()
-        # key = CommandKeyBuilder(id=interaction.guild_id, command="tag display")
-        # connPool = await memCache.get("main")
-        # cache = AkariCache(connection_pool=connPool)
-        # if await cache.cacheExists(key=key) is False:
-        #     tagData = await Tag.prisma().find_first(where={"AND": [{"id": interaction.guild_id}, {"name": {"equals": name}}]})  # type: ignore
-        #     if tagData is None:
-        #         return await interaction.response.send_message(f"{name} was not found")
-        #     await cache.setBasicCommandCache(key=key, value=tagData.content, ttl=30)
-        #     return await interaction.response.send_message(tagData.content)
-        # else:
-        #     return await interaction.response.send_message(
-        #         await cache.getBasicCommandCache(key=key)
-        #     )
+    @app_commands.command(name="info")
+    async def tagInfo(self, interaction: discord.Interaction, name: str) -> None:
+        """Provides with info about an tag
 
-    # @app_commands.command(name="raw")
-    # async def tagViewRaw(self, interaction: discord.Interaction, name: str):
-    #     """Displays the raw content of a tag
-    #
-    #     Args:
-    #         interaction (discord.Interaction): Base interaction
-    #         name (str): Name of the tag
-    #     """
-    #     key = CommandKeyBuilder(id=interaction.guild_id, command="tag display")
-    #     connPool = await memCache.get("main")
-    #     cache = AkariCache(connection_pool=connPool)
-    #     if await cache.cacheExists(key=key) is False:
-    #         tagData = await Tag.prisma().find_first(where={"AND": [{"id": interaction.guild_id}, {"name": {"equals": name}}]})  # type: ignore
-    #         if tagData is None:
-    #             return await interaction.response.send_message(f"{name} was not found")
-    #         await cache.setBasicCommandCache(key=key, value=tagData.content, ttl=30)
-    #         return await interaction.response.send_message(
-    #             escape_markdown(tagData.content)
-    #         )
-    #     else:
-    #         return await interaction.response.send_message(
-    #             await cache.getBasicCommandCache(key=key)
-    #         )
-    #
-    # @app_commands.command(name="create")
-    # async def tagCreate(self, interaction: discord.Interaction) -> None:
-    #     """Creates a tag
-    #
-    #     Args:
-    #         interaction (discord.Interaction): Base interaction
-    #     """
-    #     await interaction.response.send_modal(CreateTag())
-    #
-    # @app_commands.command(name="list")
-    # async def tagList(self, interaction: discord.Interaction) -> None:
-    #     """Lists all of the tags on the server
-    #
-    #     Args:
-    #         interaction (discord.Interaction): Base interaction
-    #     """
-    #     key = CommandKeyBuilder(id=interaction.guild_id, command="tag display")
-    #     connPool = await memCache.get("main")
-    #     cache = AkariCache(connection_pool=connPool)
-    #     if await cache.cacheExists(key=key) is False:
-    #         tagData = await Guild.prisma().find_first(where={"id": interaction.guild_id}, include={"tags": True})  # type: ignore
-    #         if tagData is None:
-    #             return await interaction.response.send_message("No tags were found")
-    #         tagNames = ", ".join([item.name for item in tagData.tags]).rstrip(",")  # type: ignore
-    #         await cache.setBasicCommandCache(key=key, value=tagNames, ttl=5)
-    #         return await interaction.response.send_message(
-    #             embed=discord.Embed(title="Tags", description=tagNames)
-    #         )
-    #     else:
-    #         return await interaction.response.send_message(
-    #             embed=discord.Embed(
-    #                 title="Tags", description=await cache.getBasicCommandCache(key=key)
-    #             )
-    #         )
-    #
-    # @app_commands.command(name="search")
-    # async def tagSearch(self, interaction: discord.Interaction, name: str) -> None:
-    #     """Search for a tag
-    #
-    #     Args:
-    #         interaction (discord.Interaction): _description_
-    #         name (str): Name of the tag
-    #     """
-    #     key = CommandKeyBuilder(id=interaction.guild_id, command="tag display")
-    #     connPool = await memCache.get("main")
-    #     cache = AkariCache(connection_pool=connPool)
-    #     if await cache.cacheExists(key=key) is False:
-    #         data = await Guild.prisma().find_first(where={"AND": [{"id": interaction.guild_id}, {"tags": {"every": {"name": {"contains": name}}}}]}, include={"tags": True})  # type: ignore
-    #         if data is None:
-    #             return await interaction.response.send_message(
-    #                 f"The tag ({name}) does not exist on the server"
-    #             )
-    #         tagNames = "\n".join([f"{i + 1}. {item.name}" for i, item in enumerate(data.tags)])  # type: ignore
-    #         await cache.setBasicCommandCache(key=key, value=tagNames, ttl=5)
-    #         return await interaction.response.send_message(
-    #             embed=discord.Embed(title="Tags", description=tagNames)
-    #         )
-    #     else:
-    #         return await interaction.response.send_message(
-    #             embed=discord.Embed(
-    #                 title="Tags", description=await cache.getBasicCommandCache(key=key)
-    #             )
-    #         )
-    #
-    # @app_commands.command(name="edit")
-    # async def tagDelete(self, interaction: discord.Interaction) -> None:
-    #     """Edits a tag
-    #
-    #     Args:
-    #         interaction (discord.Interaction): Base interaction
-    #     """
-    #     await interaction.response.send_modal(EditTag())
+        Args:
+            interaction (discord.Interaction): Base interaction
+            name (str): Name of tag
+        """
+        tagInfo: dict = await getGuildTag(interaction.guild.id, name, self.pool)  # type: ignore
+        if tagInfo is None:
+            await interaction.response.send_message("Sorry but the tag was not found")
+            return
+        embed = Embed()
+        embed.title = tagInfo["name"]
+        embed.add_field(name="Owner", value=f"<@{tagInfo['author_id']}>")
+        embed.add_field(name="Aliases", value=tagInfo["aliases"])
+        embed.set_footer(
+            text=f"Created at: {parseDatetime(tagInfo['created_at']).strftime('%A, %d %B %Y %H:%M')}"
+        )
+        await interaction.response.send_message(embed=embed)
+
+    @app_commands.command(name="edit")
+    async def editTag(self, interaction: discord.Interaction) -> None:
+        """Edits a tag
+
+        Args:
+            interaction (discord.Interaction): Base interaction
+        """
+        editModal = EditTag(self.pool)
+        await interaction.response.send_modal(editModal)
+
+    @app_commands.command(name="create")
+    async def createTag(self, interaction: discord.Interaction) -> None:
+        """Creates a new tag
+
+        Args:
+            interaction (discord.Interaction): Base interaction
+        """
+        createTagModal = CreateTag(self.pool)
+        await interaction.response.send_modal(createTagModal)
+
+    @app_commands.command(name="delete")
+    async def deleteTag(self, interaction: discord.Interaction, name: str) -> None:
+        """Deletes a tag
+
+        Args:
+            interaction (discord.Interaction): Base interaction
+            name (str): Name of tag
+        """
+        selectQuery = """
+        SELECT DISTINCT (name, aliases) FROM tag WHERE name=$1 OR aliases @> $2;
+        """
+        async with self.pool.acquire() as conn:
+            selCheck = await conn.fetchrow(selectQuery, name, [name])
+            if selCheck is None:
+                await interaction.response.send_message(
+                    "The tag could not be found. Please try again"
+                )
+                return
+            deleteTagView = DeleteTag(self.pool, name)
+            await interaction.response.send_message(
+                embed=Embed(
+                    description=f"Are you sure you want to delete the current tag? {name}"
+                ),
+                view=deleteTagView,
+            )
+
+    @app_commands.command(name="alias")
+    async def aliasTag(
+        self, interaction: discord.Interaction, name: str, alias: str
+    ) -> None:
+        """Aliases a tag
+
+        Args:
+            interaction (discord.Interaction): Base interaction
+            name (str): The original name of the tag
+            alias (str): The alias of the tag
+        """
+        selectQuery = """
+        SELECT DISTINCT ON (g.id)
+            t.name, t.aliases
+        FROM guild g
+        INNER JOIN tag t ON g.id = t.guild_id
+        WHERE g.id=$1 AND t.name=$2;
+        """
+        updateQuery = """
+        UPDATE tag
+        SET aliases=array_append(aliases, $4)
+        WHERE tag.guild_id=$1 AND tag.author_id=$2 AND tag.name=$3;
+        """
+        async with self.pool.acquire() as conn:
+            async with conn.transaction():
+                res = await conn.fetchrow(selectQuery, interaction.guild.id, name)  # type: ignore
+                if res is None:
+                    await interaction.response.send_message(
+                        "Sorry but the tag was not found"
+                    )
+                    return
+                await conn.execute(updateQuery, interaction.guild.id, interaction.user.id, name, alias)  # type: ignore
+                await interaction.response.send_message(
+                    f"The tag is now aliased to {alias}"
+                )
 
 
-async def setup(bot):
+async def setup(bot: AkariCore) -> None:
     await bot.add_cog(Tags(bot))
