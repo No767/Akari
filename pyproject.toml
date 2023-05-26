@@ -12,7 +12,7 @@ python-dotenv = "^1.0.0"
 aiodns = "^3.0.0"
 Brotli = "^1.0.9"
 uvloop = "^0.17.0"
-orjson = "^3.8.12"
+orjson = "^3.8.14"
 discord-py = {extras = ["voice"], version = "^2.2.3"}
 redis = {extras = ["hiredis"], version = "^4.5.5"}
 ciso8601 = "^2.3.0"
@@ -23,9 +23,9 @@ asyncpg = "^0.27.0"
 apgmx = {git = "https://github.com/No767/apgmx"}
 
 [tool.poetry.group.dev.dependencies]
-pre-commit = "^3.3.1"
+pre-commit = "^3.3.2"
 pyinstrument = "^4.4.0"
-pyright = "^1.1.308"
+pyright = "^1.1.310"
 watchfiles = "^0.19.0"
 jishaku = "^2.5.1"
 
@@ -33,7 +33,7 @@ jishaku = "^2.5.1"
 [tool.poetry.group.test.dependencies]
 pytest = "^7.3.1"
 pytest-asyncio = "^0.21.0"
-pytest-cov = "^4.0.0"
+pytest-cov = "^4.1.0"
 nox = "^2023.4.22"
 nox-poetry = "^1.0.2"
 
