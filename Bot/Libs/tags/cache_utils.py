@@ -1,12 +1,9 @@
-from typing import Union
+from typing import Any, Dict, List, Union
 
 import asyncpg
 
 from ..cache import akariCPM, cache, cacheJson
 from ..utils import encodeDatetime
-
-# from prisma import types  # type: ignore
-# from prisma.models import Guild, Tag  # type: ignore
 
 
 @cacheJson(
@@ -66,13 +63,23 @@ async def getGuildTagText(
         return res
 
 
-@cacheJson(
-    connection_pool=akariCPM.getConnPool(),
-)
-async def listGuildTags(id: Union[int, None]):
-    # trueID = id if id is not None else 0
-    # res = await Guild.prisma().find_unique(where={"id": trueID}, include={"tags": True})
-    # if res is None:
-    #     return None
-    # return res.dict()
-    return None
+@cacheJson(connection_pool=akariCPM.getConnPool(), ttl=120)
+async def listGuildTags(id: int, pool: asyncpg.Pool) -> List[Dict[str, Any]]:
+    """Returns a list of all of the tags that the guild owns
+
+    Args:
+        id (int): Guild ID
+        pool (asyncpg.Pool): Asyncpg connection pool
+
+    Returns:
+        List[Dict[str, Any]]: A list of all of the tags that the guild owns
+    """
+    query = """
+    SELECT t.id, t.author_id, t.name, t.aliases, t.content, t.created_at
+    FROM guild g
+    INNER JOIN tag t ON g.id = t.guild_id
+    WHERE g.id=$1;
+    """
+    async with pool.acquire() as conn:
+        res = await conn.fetch(query, id)
+        return [encodeDatetime(dict(row)) for row in res]

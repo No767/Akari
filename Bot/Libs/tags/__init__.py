@@ -1,3 +1,3 @@
-from .cache_utils import getGuildTag, getGuildTagText
+from .cache_utils import getGuildTag, getGuildTagText, listGuildTags
 
-__all__ = ["getGuildTagText", "getGuildTag"]
+__all__ = ["getGuildTagText", "getGuildTag", "listGuildTags"]
