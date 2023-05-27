@@ -11,7 +11,7 @@ from Libs.utils import AkariLogger
 load_dotenv()
 
 AKARI_TOKEN = os.environ["AKARI_DEV_TOKEN"]
-POSTGRES_URI = os.environ["POSTGRES_URI"]
+POSTGRES_URI = os.environ["DATABASE_URI"]
 
 intents = discord.Intents.default()
 intents.message_content = True
