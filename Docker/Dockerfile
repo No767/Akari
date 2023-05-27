@@ -63,6 +63,10 @@ ENV PATH="${PATH}:/home/akari/.local/bin"
 
 RUN pip install --user --no-index --find-links=/Akari/wheels -r requirements.txt
 
+# IPC ports
+EXPOSE 1025
+EXPOSE 20000
+
 ENTRYPOINT ["/usr/bin/tini", "--"]
 
 CMD ["/Akari/start.sh"]
