@@ -1,0 +1,51 @@
+version: "3.9"
+name: "akari-staging"
+
+services:
+  postgres:
+    container_name: Akari-Postgres
+    image: postgres:15
+    env_file:
+      - prod.env
+    volumes:
+      - staging_prod_postgres_volume:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+
+  redis:
+    container_name: Akari-Redis
+    image: redis/redis-stack:7.0.6-RC8
+    ports:
+      - 6379:6379
+    volumes:
+      - staging_prod_redis_stack_volume:/data
+
+  akari:
+    container_name: Akari
+    image: no767/akari:edge
+    command: sh -c '/Akari/wait-for postgres:5432 -- echo "[Wait-for] PostgreSQL is fully up. Waiting for Redis" && /Akari/wait-for redis:6379 -- echo "[Wait-for] Redis is fully up. Starting Akari" && /Akari/start.sh'
+    env_file:
+      - prod.env
+    ports:
+      - 1025:1025
+      - 20000:20000
+    depends_on:
+      - postgres
+      - redis
+
+  chitose:
+    container_name: Chitose
+    image: no767/chitose:edge
+    command: sh -c '/Chitose/wait-for akari:1025 -- echo "[Wait-for] Akari is fully up. Starting Chitose" && /Chitose/start.sh'
+    env_file:
+      - prod.env
+    ports:
+      - 8000:8000
+    depends_on:
+      - akari
+
+
+volumes:
+  staging_prod_postgres_volume:
+  staging_prod_redis_stack_volume:

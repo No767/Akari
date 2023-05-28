@@ -1,0 +1,180 @@
+{
+    "result": "ok",
+    "response": "entity",
+    "data": {
+      "id": "5f0295c2-c6ec-4250-b745-bfbf116ac5b5",
+      "type": "manga",
+      "attributes": {
+        "title": {
+          "en": "Bokura no Hentai"
+        },
+        "altTitles": [
+          {
+            "tr": "Dönüşümümüz"
+          },
+          {
+            "es-la": "Nuestra Perversión"
+          },
+          {
+            "es-la": "Nuestra Transformación"
+          },
+          {
+            "es-la": "Nuestras Anormalidades"
+          },
+          {
+            "en": "Our birthplace"
+          },
+          {
+            "en": "Our Perversion"
+          },
+          {
+            "en": "Our Transformation"
+          },
+          {
+            "en": "Vår Transformasjon"
+          },
+          {
+            "hi": "हमारे परिवर्तन"
+          },
+          {
+            "ja": "ぼくらのへんたい"
+          }
+        ],
+        "description": {
+          "en": "Three boys in junior-high who cross-dress because of differing reasons meet each other through a cross-dressing community website, and decide to meet up in real life. \"Parou\" started cross-dressing because he wanted to attract a heterosexual boy he liked. \"Marika\" is transgender and identifies as female. Lastly, \"Yui\" is an antagonistic boy who adopted the persona of his older sister after her death. In contrast to Parou and Marika, Yui is sorely disappointed at the meeting."
+        },
+        "isLocked": false,
+        "links": {
+          "al": "71973",
+          "ap": "bokura-no-hentai",
+          "bw": "series/42454/list",
+          "kt": "21862",
+          "mu": "76714",
+          "amz": "https://www.amazon.co.jp/gp/product/B074CGRHRC",
+          "ebj": "https://ebookjapan.yahoo.co.jp/books/209606/",
+          "mal": "41973"
+        },
+        "originalLanguage": "ja",
+        "lastVolume": "10",
+        "lastChapter": "41",
+        "publicationDemographic": null,
+        "status": "completed",
+        "year": null,
+        "contentRating": "safe",
+        "tags": [
+          {
+            "id": "3b60b75c-a2d7-4860-ab56-05f391bb889c",
+            "type": "tag",
+            "attributes": {
+              "name": {
+                "en": "Psychological"
+              },
+              "description": {},
+              "group": "genre",
+              "version": 1
+            },
+            "relationships": []
+          },
+          {
+            "id": "423e2eae-a7a2-4a8b-ac03-a8351462d71d",
+            "type": "tag",
+            "attributes": {
+              "name": {
+                "en": "Romance"
+              },
+              "description": {},
+              "group": "genre",
+              "version": 1
+            },
+            "relationships": []
+          },
+          {
+            "id": "5920b825-4181-4a17-beeb-9918b0ff7a30",
+            "type": "tag",
+            "attributes": {
+              "name": {
+                "en": "Boys' Love"
+              },
+              "description": {},
+              "group": "genre",
+              "version": 1
+            },
+            "relationships": []
+          },
+          {
+            "id": "9ab53f92-3eed-4e9b-903a-917c86035ee3",
+            "type": "tag",
+            "attributes": {
+              "name": {
+                "en": "Crossdressing"
+              },
+              "description": {},
+              "group": "theme",
+              "version": 1
+            },
+            "relationships": []
+          },
+          {
+            "id": "b9af3a63-f058-46de-a9a0-e0c13906197a",
+            "type": "tag",
+            "attributes": {
+              "name": {
+                "en": "Drama"
+              },
+              "description": {},
+              "group": "genre",
+              "version": 1
+            },
+            "relationships": []
+          },
+          {
+            "id": "caaa44eb-cd40-4177-b930-79d3ef2afe87",
+            "type": "tag",
+            "attributes": {
+              "name": {
+                "en": "School Life"
+              },
+              "description": {},
+              "group": "theme",
+              "version": 1
+            },
+            "relationships": []
+          }
+        ],
+        "state": "published",
+        "chapterNumbersResetOnNewVolume": false,
+        "createdAt": "2018-05-31T08:23:47+00:00",
+        "updatedAt": "2022-03-17T05:04:45+00:00",
+        "version": 7,
+        "availableTranslatedLanguages": [
+          "en",
+          "pt-br"
+        ],
+        "latestUploadedChapter": "94070cfe-aea0-4fa9-9f1b-ef5c82ca4092"
+      },
+      "relationships": [
+        {
+          "id": "6901da6e-91d2-48ea-9eb6-ff1a686d25b0",
+          "type": "author"
+        },
+        {
+          "id": "6901da6e-91d2-48ea-9eb6-ff1a686d25b0",
+          "type": "artist"
+        },
+        {
+          "id": "7db69603-55ba-4ff0-babf-80a5fd0a6c85",
+          "type": "cover_art"
+        },
+        {
+          "id": "b86c1c21-ac77-4b2b-ba40-e65ade270462",
+          "type": "manga",
+          "related": "alternate_story"
+        },
+        {
+          "id": "c235eb3e-4254-4c36-9022-42af28ab7fae",
+          "type": "manga",
+          "related": "sequel"
+        }
+      ]
+    }
+  }

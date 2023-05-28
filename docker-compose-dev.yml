@@ -1,25 +1,26 @@
 version: "3.9"
+name: "akari-dev"
 services:
   postgres:
     container_name: Akari-Postgres-Dev
-    image: postgres:14
+    image: postgres:15
     env_file:
       - .env
     volumes:
-      - postgres_volume:/var/lib/postgresql/data
+      - dev_postgres_volume:/var/lib/postgresql/data
     ports:
       - 5432:5432
 
 
   redis:
     container_name: Akari-Redis-Dev
-    image: redis:7
+    image: redis/redis-stack:7.0.6-RC5
     ports:
       - 6379:6379
     volumes:
-      - redis_volume:/data
-    command: redis-server --save 60 1 --loglevel warning
+      - dev_redis_stack_volume:/data
+    command: redis-stack-server --protected-mode no
 
 volumes:
-  postgres_volume:
-  redis_volume:
+  dev_postgres_volume:
+  dev_redis_stack_volume:

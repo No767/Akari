@@ -1,35 +1,64 @@
 [tool.poetry]
-name = "akari"
-version = "0.1.0"
-description = "A general-purpose toolkit bot for servers"
+name = "Akari"
+version = "0.2.0"
+description = "A utliity toolkit bot for Discord support servers"
 authors = ["No767 <73260931+No767@users.noreply.github.com>"]
 license = "Apache-2.0"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.10"
-python-dotenv = "^0.21.0"
+python = ">=3.8,<4.0"
+python-dotenv = "^1.0.0"
 aiodns = "^3.0.0"
 Brotli = "^1.0.9"
-orjson = "^3.8.0"
 uvloop = "^0.17.0"
+orjson = "^3.8.14"
+discord-py = {extras = ["voice"], version = "^2.2.3"}
+redis = {extras = ["hiredis"], version = "^4.5.5"}
+ciso8601 = "^2.3.0"
+anyio = "^3.6.2"
+better-ipc = "^2.0.3"
+discord-ext-menus = {git = "https://github.com/Rapptz/discord-ext-menus", rev = "8686b5d1bbc1d3c862292eb436ab630d6e9c9b53"}
 asyncpg = "^0.27.0"
-tortoise-orm = {extras = ["accel"], version = "^0.19.2"}
-rin-exceptions = "^1.0.3"
-py-cord = "2.2.2"
-pysimdjson = "^5.0.2"
-charset-normalizer = "^2.1.1"
-coredis = "~4.8.0"
-python-dateutil = "^2.8.2"
-pytimeparse = "^1.1.8"
-python-rapidjson = "^1.9"
+apgmx = "^0.0.1"
 
 [tool.poetry.group.dev.dependencies]
-pre-commit = "^2.20.0"
-pyinstrument = "^4.3.0"
+pre-commit = "^3.3.2"
+pyinstrument = "^4.4.0"
+pyright = "^1.1.310"
+watchfiles = "^0.19.0"
+jishaku = "^2.5.1"
+
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.3.1"
+pytest-asyncio = "^0.21.0"
+pytest-cov = "^4.1.0"
+nox = "^2023.4.22"
+nox-poetry = "^1.0.2"
+
+[tool.poetry.group.types.dependencies]
+types-redis = "^4.5.5.2"
+
+
+[tool.poetry.group.docs.dependencies]
+sphinx = "6.2.1"
+myst-parser = "^1.0.0"
+sphinx-autobuild = "^2021.3.14"
+
+
+[tool.pyright]
+include = ["Bot/**"]
+exclude = ["**/__pycache__", "**/.mypy_cache", "**/.dmpypy.json", "Bot/Cogs/tags.py"]
+ignore = ["Docker"]
+reportMissingImports = true
+reportMissingTypeStubs = false
 
 [tool.isort]
 profile = 'black'
+
+[tool.bandit]
+skips = ["B311", "B101"]
 
 [build-system]
 requires = ["poetry-core"]

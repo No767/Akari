@@ -4,12 +4,12 @@ tasks:
             libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm \
             libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev python3-dev libffi-dev -y 
             cd /home/gitpod/.pyenv/plugins/python-build/../.. && git pull && cd -
-            pyenv install 3.10.8
-            pyenv local 3.10.8
+            pyenv install 3.11.2
+            pyenv local 3.11.2
             pip install --upgrade pip setuptools wheel
             curl -sSL https://install.python-poetry.org | python -
             export PATH="$HOME/.local/bin:$PATH"
-            poetry env use 3.10
+            poetry env use 3.11
             poetry install
             poetry run pre-commit install
 
