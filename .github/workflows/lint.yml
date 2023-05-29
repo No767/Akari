@@ -18,41 +18,22 @@ jobs:
     name: Analyze
     runs-on: ubuntu-latest
 
-    services:
-       postgres:
-        image: postgres:15
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: postgres
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
     steps:
       - name: Checkout
         uses: actions/checkout@v3
         
       - name: Set up Python 3.11
         id: setup-python
-        uses: actions/setup-python@v4.5.0
+        uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-
-      - name: Set up Node.js 18
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
 
       - name: Set up Poetry
         uses: Gr1N/setup-poetry@v8
 
       - name: Cache Poetry
         id: cache-poetry
-        uses: actions/cache@v3.2.5
+        uses: actions/cache@v3
         with:
           path: ~/.cache/pypoetry/virtualenvs
           key: ${{ runner.os }}-poetry-v4-${{ hashFiles('**/poetry.lock') }}
@@ -60,7 +41,7 @@ jobs:
       - name: Install Poetry Dependencies
         if: steps.cache-poetry.outputs.cache-hit != 'true'
         run: |
-          poetry install --with=dev,types
+          poetry install --with=dev
       
       - name: Run Pyright
         run: |

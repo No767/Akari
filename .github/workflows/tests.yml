@@ -22,7 +22,7 @@ jobs:
 
     services:
       redis:
-        image: redis/redis-stack-server:7.0.6-RC8
+        image: redis/redis-stack-server:7.2.0-M01
         ports: 
           - 6379:6379
 
@@ -57,7 +57,7 @@ jobs:
 
       - name: Set up Python
         id: setup-python
-        uses: actions/setup-python@v4.5.0
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.version }}
 
