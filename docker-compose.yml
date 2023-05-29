@@ -34,17 +34,6 @@ services:
       - postgres
       - redis
 
-  chitose:
-    container_name: Chitose
-    image: no767/chitose:edge
-    command: sh -c '/Chitose/wait-for akari:1025 -- echo "[Wait-for] Akari is fully up. Starting Chitose" && /Chitose/start.sh'
-    env_file:
-      - prod.env
-    ports:
-      - 8000:8000
-    depends_on:
-      - akari
-
 
 volumes:
   staging_prod_postgres_volume:
