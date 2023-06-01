@@ -42,6 +42,8 @@ sphinx = "6.2.1"
 myst-parser = "^1.0.0"
 sphinx-autobuild = "^2021.3.14"
 sphinxawesome-theme = "^5.0.0b2"
+sphinxemoji = "^0.2.0"
+sphinx-design = "^0.4.1"
 
 
 [tool.pyright]
