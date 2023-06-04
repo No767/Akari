@@ -11,12 +11,13 @@ from .modals import NumberedPageModal
 
 
 # This is originally from RoboDanny's Paginator class (RoboPages)
-class KumikoPages(discord.ui.View):
+class AkariPages(discord.ui.View):
     def __init__(
         self,
         source: menus.PageSource,
         *,
         ctx: Context,
+        interaction: discord.Interaction,
         check_embeds: bool = True,
         compact: bool = False,
     ):
@@ -24,6 +25,7 @@ class KumikoPages(discord.ui.View):
         self.source: menus.PageSource = source
         self.check_embeds: bool = check_embeds
         self.ctx: Context = ctx
+        self.interaction: discord.Interaction = interaction
         self.message: Optional[discord.Message] = None
         self.current_page: int = 0
         self.compact: bool = compact

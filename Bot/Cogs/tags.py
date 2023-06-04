@@ -8,6 +8,7 @@ from discord.utils import escape_markdown
 from Libs.tags import getGuildTag, getGuildTagText
 from Libs.ui.tags import CreateTag, DeleteTag, EditTag
 from Libs.utils import Embed, parseDatetime
+from Libs.utils.pages import AkariPages
 
 
 class Tags(commands.GroupCog, name="tags"):
@@ -138,6 +139,33 @@ class Tags(commands.GroupCog, name="tags"):
                 await interaction.response.send_message(
                     f"The tag is now aliased to {alias}"
                 )
+
+    @app_commands.command(name="search")
+    async def searchTag(self, interaction: discord.Interaction, name: str) -> None:
+        # This was written before my flight to Tokyo
+        # ! PROBABLY WILL NOT WORK
+        """Searches for a tag
+
+        Args:
+            interaction (discord.Interaction): Interaction
+            name (str): Tag to search
+        """
+        selectQuery = """
+        SELECT DISTINCT ON (g.id)
+            t.name, t.aliases
+        FROM guild g
+        INNER JOIN tag t ON g.id = t.guild_id
+        WHERE g.id=$1 AND t.name=$2;
+        """
+        async with self.pool.acquire() as conn:
+            res = await conn.fetch(selectQuery, interaction.guild.id, name)  # type: ignore
+            if len(res) == 0:
+                await interaction.response.send_message(
+                    "Sorry but the tag was not found"
+                )
+                return
+            AkariPages(self.bot, interaction)
+            # TODO: Finish the sources later (on flight)
 
 
 async def setup(bot: AkariCore) -> None:

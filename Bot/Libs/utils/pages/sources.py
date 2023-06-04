@@ -7,13 +7,13 @@ from discord.ext import menus
 from discord.ext.commands import Paginator as CommandPaginator
 
 from ..embeds import Embed
-from .paginator import KumikoPages
+from .paginator import AkariPages
 
 
 class BasicListSource(menus.ListPageSource):
     """Basic list source for the paginator"""
 
-    async def format_page(self, menu: KumikoPages, entries: List[Any]) -> Embed:
+    async def format_page(self, menu: AkariPages, entries: List[Any]) -> Embed:
         """Formats the given page
 
         Args:
@@ -48,7 +48,7 @@ class FieldPageSource(menus.ListPageSource):
         self.inline: bool = inline
 
     async def format_page(
-        self, menu: KumikoPages, entries: list[tuple[Any, Any]]
+        self, menu: AkariPages, entries: list[tuple[Any, Any]]
     ) -> discord.Embed:
         self.embed.clear_fields()
         if self.clear_description:
@@ -77,11 +77,11 @@ class TextPageSource(menus.ListPageSource):
 
         super().__init__(entries=pages.pages, per_page=1)
 
-    async def format_page(self, menu: KumikoPages, content: str):
+    async def format_page(self, menu: AkariPages, content: str):
         """Formats the given page
 
         Args:
-            menu (KumikoPages): Default menu passed in
+            menu (AkariPages): Default menu passed in
             content (str): Content to format
         """
         maximum = self.get_max_pages()
@@ -94,7 +94,7 @@ class EmbedListSource(menus.ListPageSource):
     """Source for taking contents of an Embed, and formatting them into a page"""
 
     async def format_page(
-        self, menu: KumikoPages, entries: Dict[str, Any]
+        self, menu: AkariPages, entries: Dict[str, Any]
     ) -> discord.Embed:
         """Formatter for the embed list source
 
