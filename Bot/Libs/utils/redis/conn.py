@@ -28,6 +28,26 @@ async def pingRedisServer(connection_pool: Union[ConnectionPool, None]) -> bool:
     return res
 
 
+async def openConnCheck() -> bool:
+    """Pings the Redis server to check if it's open or not
+
+    Args:
+        connection_pool (Union[ConnectionPool, None]): The supplied connection pool. If none, it will be created automatically
+
+    Returns:
+        bool: Whether the server is up or not
+    """
+    # Lol I actually wrote this on an flight to Tokyo
+    connPool = akariCPM.getConnPool()
+    r: redis.Redis = redis.Redis(connection_pool=connPool)
+    resultPing = await r.ping()
+    if resultPing:
+        logger.info("Sucessfully connected to the Redis server")
+        return True
+    logger.error("Failed to connect to the Redis server - Restart Akari to reconnect")
+    return False
+
+
 async def redisCheck(
     backoff_sec: int = 15, backoff_index: int = 0
 ) -> Union[bool, None]:

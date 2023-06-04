@@ -178,10 +178,14 @@ class AkariPages(discord.ui.View):
         self, *, content: Optional[str] = None, ephemeral: bool = False
     ) -> None:
         if self.check_embeds and not self.ctx.channel.permissions_for(self.ctx.me).embed_links:  # type: ignore
-            await self.ctx.send(
-                "Bot does not have embed links permission in this channel.",
-                ephemeral=True,
+            await self.interaction.response.send_message(
+                "Bot doesn't have embed link perms in this channel", ephemeral=True
             )
+            # NOELLE DISABLE THIS LATER!
+            # await self.ctx.send(
+            #    "Bot does not have embed links permission in this channel.",
+            #    ephemeral=True,
+            # )
             return
 
         await self.source._prepare_once()
@@ -191,7 +195,12 @@ class AkariPages(discord.ui.View):
             kwargs.setdefault("content", content)
 
         self._update_labels(0)
-        self.message = await self.ctx.send(**kwargs, view=self, ephemeral=ephemeral)
+        await self.interaction.response.send_message(
+            **kwargs, view=self, ephemeral=True
+        )
+        # NOELLE DOESN'T KNOW HOW TO MAKE THIS WORK
+        self.message = self.interaction.message()  # type: ignore
+        # self.message = await self.ctx.send(**kwargs, view=self, ephemeral=ephemeral)
 
     @discord.ui.button(label="≪", style=discord.ButtonStyle.grey)
     async def go_to_first_page(
