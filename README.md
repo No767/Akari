@@ -35,6 +35,14 @@ Akari is still in development, and not ready for public use.
 - [GHCR](https://github.com/No767/Akari/pkgs/container/akari)
 - [Docker Hub](https://hub.docker.com/r/no767/akari)
 
+# Setup Notes
+
+Don't forget to include the pg_trgm module
+
+```sql
+CREATE EXTENSION pg_trgm;
+```
+
 # Licensing
 
 Apache-2.0
