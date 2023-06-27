@@ -14,7 +14,7 @@ Brotli = "^1.0.9"
 uvloop = "^0.17.0"
 orjson = "^3.9.1"
 discord-py = {extras = ["voice"], version = "^2.3.1"}
-redis = {extras = ["hiredis"], version = "^4.5.5"}
+redis = {extras = ["hiredis"], version = "^4.6.0"}
 ciso8601 = "^2.3.0"
 anyio = "^3.7.0"
 better-ipc = "^2.0.3"
