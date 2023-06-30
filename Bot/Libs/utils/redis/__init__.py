@@ -1,3 +1,3 @@
-from .conn import openConnCheck, pingRedisServer, redisCheck
+from .conn import openConnCheck
 
-__all__ = ["redisCheck", "pingRedisServer", "openConnCheck"]
+__all__ = ["openConnCheck"]
