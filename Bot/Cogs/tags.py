@@ -246,6 +246,15 @@ class Tags(commands.GroupCog, name="tags"):
     #         AkariPages(self.bot, interaction)
     #         # TODO: Finish the sources later (on flight)
 
+    # TODO: Add checks since only the owner can do this
+    # @app_commands.command(name="export")
+    # async def exportTags(self, interaction: discord.Interaction) -> None:
+    #     """Exports all of the tags that the guild has as an JSON document
+
+    #     Args:
+    #         interaction (discord.Interaction): _description_
+    #     """
+
 
 async def setup(bot: AkariCore) -> None:
     await bot.add_cog(Tags(bot))
