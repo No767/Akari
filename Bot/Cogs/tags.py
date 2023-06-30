@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Optional, Union
 
 import asyncpg
 import discord
@@ -6,9 +6,10 @@ from akaricore import AkariCore
 from discord import app_commands
 from discord.ext import commands
 from discord.utils import escape_markdown
-from Libs.cache import akariCPM, cache, cacheJson
+from Libs.cache import cache, cacheJson
 from Libs.ui.tags import CreateTag, DeleteTag, EditTag
 from Libs.utils import Embed, encodeDatetime, parseDatetime
+from redis.asyncio.connection import ConnectionPool
 
 
 class Tags(commands.GroupCog, name="tags"):
@@ -20,11 +21,13 @@ class Tags(commands.GroupCog, name="tags"):
         self.redis_pool = self.bot.redis_pool
         super().__init__()
 
-    @cacheJson(
-        connection_pool=self.redis_pool,
-    )
+    @cacheJson()
     async def getGuildTag(
-        self, id: int, tag_name: str, pool: asyncpg.Pool
+        self,
+        connection_pool: ConnectionPool,
+        id: int,
+        tag_name: str,
+        pool: asyncpg.Pool,
     ) -> Union[dict, None]:
         """Gets a tag from the database. This is the JSON model that will be cached
 
@@ -32,7 +35,7 @@ class Tags(commands.GroupCog, name="tags"):
             id (int): Guild ID
             tag_name (str): Tag name
             pool (asyncpg.Pool): Asyncpg Connection Pool to pull conns from
-
+            connection_pool (ConnectionPool): Redis Connection Pool to pull conns from
         Returns:
             Union[Dict, None]: The tag content or None if it doesn't exist
         """
@@ -49,11 +52,13 @@ class Tags(commands.GroupCog, name="tags"):
                 return None
             return encodeDatetime(dict(res))
 
-    @cache(
-        connection_pool=akariCPM.getConnPool(),
-    )
+    @cache()
     async def getGuildTagText(
-        self, id: int, tag_name: str, pool: asyncpg.Pool
+        self,
+        connection_pool: ConnectionPool,
+        id: int,
+        tag_name: str,
+        pool: asyncpg.Pool,
     ) -> Union[str, None]:
         """Gets a tag from the database. This is the raw text that will be cached
 
@@ -77,27 +82,6 @@ class Tags(commands.GroupCog, name="tags"):
                 return None
             return res
 
-    @cacheJson(connection_pool=akariCPM.getConnPool(), ttl=120)
-    async def listGuildTags(self, id: int, pool: asyncpg.Pool) -> List[Dict[str, Any]]:
-        """Returns a list of all of the tags that the guild owns
-
-        Args:
-            id (int): Guild ID
-            pool (asyncpg.Pool): Asyncpg connection pool
-
-        Returns:
-            List[Dict[str, Any]]: A list of all of the tags that the guild owns
-        """
-        query = """
-        SELECT t.id, t.author_id, t.name, t.aliases, t.content, t.created_at
-        FROM guild g
-        INNER JOIN tag t ON g.id = t.guild_id
-        WHERE g.id=$1;
-        """
-        async with pool.acquire() as conn:
-            res = await conn.fetch(query, id)
-            return [encodeDatetime(dict(row)) for row in res]
-
     @app_commands.command(name="get")
     async def getTag(
         self, interaction: discord.Interaction, name: str, raw: Optional[bool] = False
@@ -109,7 +93,7 @@ class Tags(commands.GroupCog, name="tags"):
             name (str): The name of the tag to look for
             raw (Optional[bool]): Whether to display the raw text or not
         """
-        tagContent = await self.getGuildTagText(interaction.guild.id, name, self.pool)  # type: ignore
+        tagContent = await self.getGuildTagText(self.redis_pool, interaction.guild.id, name, self.pool)  # type: ignore
         if tagContent is None:
             await interaction.response.send_message("Sorry but the tag was not found")
             return
@@ -124,17 +108,16 @@ class Tags(commands.GroupCog, name="tags"):
             interaction (discord.Interaction): Base interaction
             name (str): Name of tag
         """
-        tagInfo: dict = await self.getGuildTag(interaction.guild.id, name, self.pool)  # type: ignore
+        tagInfo: dict = await self.getGuildTag(self.redis_pool, interaction.guild.id, name, self.pool)  # type: ignore
         if tagInfo is None:
             await interaction.response.send_message("Sorry but the tag was not found")
             return
         embed = Embed()
         embed.title = tagInfo["name"]
+        embed.timestamp = parseDatetime(tagInfo["created_at"])
         embed.add_field(name="Owner", value=f"<@{tagInfo['author_id']}>")
         embed.add_field(name="Aliases", value=tagInfo["aliases"])
-        embed.set_footer(
-            text=f"Created at: {parseDatetime(tagInfo['created_at']).strftime('%A, %d %B %Y %H:%M')}"
-        )
+        embed.set_footer(text=f"Created at: {embed.timestamp}")
         await interaction.response.send_message(embed=embed)
 
     @app_commands.command(name="edit")

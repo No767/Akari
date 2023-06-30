@@ -6,9 +6,7 @@ from ..cache import akariCPM, cache, cacheJson
 from ..utils import encodeDatetime
 
 
-@cacheJson(
-    connection_pool=akariCPM.getConnPool(),
-)
+@cacheJson()
 async def getGuildTag(id: int, tag_name: str, pool: asyncpg.Pool) -> Union[dict, None]:
     """Gets a tag from the database. This is the JSON model that will be cached
 
@@ -34,9 +32,7 @@ async def getGuildTag(id: int, tag_name: str, pool: asyncpg.Pool) -> Union[dict,
         return encodeDatetime(dict(res))
 
 
-@cache(
-    connection_pool=akariCPM.getConnPool(),
-)
+@cache()
 async def getGuildTagText(
     id: int, tag_name: str, pool: asyncpg.Pool
 ) -> Union[str, None]:

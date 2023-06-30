@@ -10,29 +10,37 @@ from .redis_cache import AkariCache, CommandKeyBuilder
 class cache:
     """A decorator to cache the result of a function that returns a `str` to Redis.
 
+    The function that this decorator wraps expects two args: `id: int` and `connection_pool: redis.asyncio.connection.ConnectionPool`
     **Note**: The return type of the coroutine used has to be `str` or `bytes`
 
     Args:
-        connection_pool (ConnectionPool): Redis connection pool to use
         ttl (int, optional): TTL (Time-To-Live). Defaults to 30.
     """
 
-    def __init__(self, connection_pool: ConnectionPool, ttl: int = 30):
-        self.connection_pool = connection_pool
+    def __init__(self, ttl: int = 30):
         self.ttl = ttl
 
     def __call__(self, func: Callable, *args: Any, **kwargs: Any):
         @wraps(func)
-        async def wrapper(id: int, *args: Any, **kwargs: Any):
-            return await self.deco(func, id, *args, **kwargs)
+        async def wrapper(
+            id: int, connection_pool: ConnectionPool, *args: Any, **kwargs: Any
+        ):
+            return await self.deco(func, id, connection_pool, *args, **kwargs)
 
         return wrapper
 
-    async def deco(self, func: Callable, id: Union[int, None], *args, **kwargs):
-        res = await func(id, *args, **kwargs)
+    async def deco(
+        self,
+        func: Callable,
+        id: Union[int, None],
+        connection_pool: ConnectionPool,
+        *args,
+        **kwargs
+    ):
+        res = await func(id, connection_pool, *args, **kwargs)
         if res is None:
             return None
-        aCache = AkariCache(connection_pool=self.connection_pool)
+        aCache = AkariCache(connection_pool=connection_pool)
         key = CommandKeyBuilder(
             prefix="cache",
             namespace="akari",
@@ -50,6 +58,7 @@ class cacheJson:
     """
     A decorator to cache the result of a function that returns a `dict` to Redis.
 
+    The function that this decorator wraps expects two args: `id: int` and `connection_pool: redis.asyncio.connection.ConnectionPool`
     **Note**: The return type of the coroutine used has to be `dict`
 
     Args:
@@ -58,22 +67,30 @@ class cacheJson:
         Defaults to 30.
     """
 
-    def __init__(self, connection_pool: ConnectionPool, ttl: int = 30):
-        self.connection_pool = connection_pool
+    def __init__(self, ttl: int = 30):
         self.ttl = ttl
 
     def __call__(self, func: Callable, *args: Any, **kwargs: Any):
         @wraps(func)
-        async def wrapper(id: int, *args: Any, **kwargs: Any):
-            return await self.deco(func, id, *args, **kwargs)
+        async def wrapper(
+            id: int, connection_pool: ConnectionPool, *args: Any, **kwargs: Any
+        ):
+            return await self.deco(func, id, connection_pool, *args, **kwargs)
 
         return wrapper
 
-    async def deco(self, func: Callable, id: Union[int, None], *args, **kwargs):
-        res = await func(id, *args, **kwargs)
+    async def deco(
+        self,
+        func: Callable,
+        id: Union[int, None],
+        connection_pool: ConnectionPool,
+        *args,
+        **kwargs
+    ):
+        res = await func(id, connection_pool, *args, **kwargs)
         if res is None:
             return None
-        cache = AkariCache(connection_pool=self.connection_pool)
+        cache = AkariCache(connection_pool=connection_pool)
         key = CommandKeyBuilder(
             prefix="cache",
             namespace="akari",
