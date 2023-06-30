@@ -14,7 +14,7 @@ from Libs.utils import ensureOpenConn
 
 @pytest.fixture(scope="session")
 def getURI():
-    uri = os.getenv("DATABASE_URL")
+    uri = os.getenv("POSTGRES_URI")
     if uri is None:
         return "postgresql://postgres:postgres@localhost:5432/postgres"
     return uri

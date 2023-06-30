@@ -12,11 +12,6 @@ from ..backoff import backoff
 logger = logging.getLogger("discord" or __name__)
 
 
-def setupConnPool() -> ConnectionPool:
-    """Sets up the Redis connection pool"""
-    return akariCPM.createConnPool()
-
-
 async def pingRedisServer(connection_pool: Union[ConnectionPool, None]) -> bool:
     """Pings Redis to make sure it is alive
     Args:
@@ -28,7 +23,7 @@ async def pingRedisServer(connection_pool: Union[ConnectionPool, None]) -> bool:
     return res
 
 
-async def openConnCheck() -> bool:
+async def openConnCheck(connection_pool: ConnectionPool) -> bool:
     """Pings the Redis server to check if it's open or not
 
     Args:
@@ -38,11 +33,10 @@ async def openConnCheck() -> bool:
         bool: Whether the server is up or not
     """
     # Lol I actually wrote this on an flight to Tokyo
-    connPool = akariCPM.getConnPool()
-    r: redis.Redis = redis.Redis(connection_pool=connPool)
+    r: redis.Redis = redis.Redis(connection_pool=connection_pool)
     resultPing = await r.ping()
     if resultPing:
-        logger.info("Sucessfully connected to the Redis server")
+        logger.info("Redis server is up")
         return True
     logger.error("Failed to connect to the Redis server - Restart Akari to reconnect")
     return False

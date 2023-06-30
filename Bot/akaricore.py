@@ -8,6 +8,7 @@ from anyio import Path
 from discord.ext import commands
 from Libs.utils import ensureOpenConn
 from Libs.utils.redis import openConnCheck
+from redis.asyncio.connection import ConnectionPool
 
 # Some weird import logic to ensure that watchfiles is there
 _fsw = True
@@ -25,15 +26,17 @@ class AkariCore(commands.Bot):
         intents: discord.Intents,
         session: ClientSession,
         pool: asyncpg.Pool,
+        redis_pool: ConnectionPool,
         dev_mode: bool = False,
         *args,
         **kwargs,
     ) -> None:
         super().__init__(intents=intents, command_prefix="~", *args, **kwargs)
-        self._session = session
-        self._pool = pool
         self.dev_mode = dev_mode
         self.logger = logging.getLogger("akaribot")
+        self._session = session
+        self._pool = pool
+        self._redis_pool = redis_pool
 
     @property
     def session(self) -> ClientSession:
@@ -53,6 +56,18 @@ class AkariCore(commands.Bot):
         """
         return self._pool
 
+    @property
+    def redis_pool(self) -> ConnectionPool:
+        """A global connection pool used throughout the lifetime of Akari
+
+        For redis
+
+        Returns:
+            ConnectionPool: Redis connection pool
+
+        """
+        return self._redis_pool
+
     async def fsWatcher(self) -> None:
         cogsPath = SyncPath(__file__).parent.joinpath("Cogs")
         async for changes in awatch(cogsPath):
@@ -70,7 +85,7 @@ class AkariCore(commands.Bot):
             await self.load_extension(f"Cogs.{cog.name[:-3]}")
 
         self.loop.create_task(ensureOpenConn(self._pool))
-        self.loop.create_task(openConnCheck())
+        self.loop.create_task(openConnCheck(self._redis_pool))
         if self.dev_mode is True and _fsw is True:
             self.logger.info("Dev mode is enabled. Loading Jishaku and FSWatcher")
             self.loop.create_task(self.fsWatcher())

@@ -1,3 +1,4 @@
+import os
 import sys
 from pathlib import Path
 
@@ -7,18 +8,20 @@ sys.path.append(str(path))
 from Libs.cache import AkariCPM
 from redis.asyncio.connection import ConnectionPool
 
+REDIS_URI = os.environ["REDIS_URI"]
+
 
 def test_get_conn():
-    cpm = AkariCPM()
+    cpm = AkariCPM(uri=REDIS_URI)
     assert isinstance(cpm.getConnPool(), ConnectionPool)
 
 
 def test_create_conn():
-    cpm = AkariCPM()
-    assert isinstance(cpm.createConnPool(), ConnectionPool)
+    cpm = AkariCPM(uri=REDIS_URI)
+    assert isinstance(cpm.createPool(), ConnectionPool)
 
 
 def test_create_get_conn():
-    cpm = AkariCPM()
-    cpm.createConnPool()
+    cpm = AkariCPM(uri=REDIS_URI)
+    cpm.createPool()
     assert isinstance(cpm.getConnPool(), ConnectionPool)

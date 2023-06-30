@@ -32,10 +32,10 @@ async def test_basic_cache():
     assert (res == DATA.encode("utf-8")) and (isinstance(res, bytes))  # nosec
 
 
-@pytest.mark.asyncios
+@pytest.mark.asyncio
 async def test_basic_cache_from_mem():
     key = CommandKeyBuilder(id=None, command=None)
-    cpm = AkariCPM()
+    cpm = AkariCPM(uri="redis://localhost:6379/0")
     getConnPool = cpm.getConnPool()
     cache = AkariCache(connection_pool=getConnPool)
     res = await cache.getBasicCache(key=key)
@@ -55,7 +55,7 @@ async def test_json_cache(load_json_data):
 @pytest.mark.asyncio
 async def test_json_cache_mem(load_json_data):
     key = CommandKeyBuilder(id=uuid.uuid4(), command="test test")
-    cpm = AkariCPM()
+    cpm = AkariCPM(uri="redis://localhost:6379/0")
     connPool = cpm.getConnPool()
     cache = AkariCache(connection_pool=connPool)
     await cache.setJSONCache(key=key, value=load_json_data, ttl=60)

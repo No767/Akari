@@ -14,5 +14,5 @@ def test_get_cp():
 
 
 def test_creation_cp():
-    connPool = akariCPM.createConnPool()
+    connPool = akariCPM.createPool()
     assert isinstance(connPool, ConnectionPool)
