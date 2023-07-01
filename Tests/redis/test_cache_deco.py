@@ -26,7 +26,7 @@ async def test_cache_deco():
 async def test_cache_deco_json():
     connPool = ConnectionPool(max_connections=25)
 
-    @cacheJson(connection_pool=connPool)
+    @cacheJson()
     async def testFuncJSON(
         id=234, redis_pool=ConnectionPool().from_url("redis://localhost:6379/0")
     ):
