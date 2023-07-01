@@ -39,7 +39,9 @@ class cache:
         **kwargs
     ):
         res = await func(id, redis_pool, *args, **kwargs)
-        if res is None:
+        # if res is None:
+        #     return None
+        if isinstance(res, str) is False:
             return None
         aCache = AkariCache(connection_pool=redis_pool)
         key = CommandKeyBuilder(

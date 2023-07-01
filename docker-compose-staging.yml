@@ -4,7 +4,7 @@ name: "akari-staging"
 services:
   postgres:
     container_name: Akari-Postgres
-    image: postgres:15
+    image: no767/akari-pg:edge
     env_file:
       - .env
     volumes:
@@ -15,12 +15,10 @@ services:
 
   redis:
     container_name: Akari-Redis
-    image: redis/redis-stack:7.0.6-RC5
+    image: redis/redis-stack-server:latest
     ports:
       - 6379:6379
-    volumes:
-      - staging_redis_stack_volume:/data
-    command: redis-stack-server --protected-mode no
+    # command: redis-stack-server --protected-mode no
 
   akari:
     container_name: Akari
@@ -37,4 +35,3 @@ services:
 
 volumes:
   staging_postgres_volume:
-  staging_redis_stack_volume:

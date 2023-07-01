@@ -25,19 +25,38 @@ class CreateTag(discord.ui.Modal, title="Create a tag"):
         self.add_item(self.content)
 
     async def on_submit(self, interaction: discord.Interaction) -> None:
-        # TODO: Add aliases support
-        insertQuery = """
-        INSERT INTO tag (author_id, guild_id, name, content) VALUES ($1, $2, $3, $4);
+        # Ripped the whole thing from RDanny again...
+        insertQuery = """WITH tag_insert AS (
+            INSERT INTO tag (author_id, guild_id, name, content) 
+            VALUES ($1, $2, $3, $4)
+            RETURNING id
+        )
+        INSERT INTO tag_lookup (name, owner_id, guild_id, tag_id)
+        VALUES ($3, $1, $2, (SELECT id FROM tag_insert));
         """
         async with self.pool.acquire() as conn:
-            await conn.execute(
-                insertQuery,
-                interaction.user.id,
-                interaction.guild.id,  # type: ignore
-                self.name.value,
-                self.content.value,
-            )
-            await interaction.response.send_message("Tag created", ephemeral=True)
+            tr = conn.transaction()
+            await tr.start()
+
+            try:
+                await conn.execute(
+                    insertQuery,
+                    interaction.user.id,
+                    interaction.guild.id,  # type: ignore
+                    self.name.value,
+                    self.content.value,
+                )
+            except asyncpg.UniqueViolationError:
+                await tr.rollback()
+                await interaction.response.send_message("This tag already exists.")
+            except:
+                await tr.rollback()
+                await interaction.response.send_message("Could not create tag.")
+            else:
+                await tr.commit()
+                await interaction.response.send_message(
+                    f"Tag {self.name} successfully created."
+                )
 
     async def on_error(
         self, interaction: discord.Interaction, error: Exception
