@@ -1,11 +1,10 @@
 name: Docker Build (PostgreSQL)
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: "0 0 1 * *"
   push:
-    paths-ignore:
-      - "**.md"
     paths:
       - "Docker/pg/**"
     # branches:
