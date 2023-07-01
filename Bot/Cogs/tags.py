@@ -1,15 +1,13 @@
-from typing import Optional, Union
+from typing import Optional
 
-import asyncpg
 import discord
 from akaricore import AkariCore
 from discord import app_commands
 from discord.ext import commands
 from discord.utils import escape_markdown
-from Libs.cache import cache, cacheJson
+from Libs.tags import getGuildTag, getGuildTagText
 from Libs.ui.tags import CreateTag, DeleteTag, EditTag
-from Libs.utils import Embed, encodeDatetime, parseDatetime
-from redis.asyncio.connection import ConnectionPool
+from Libs.utils import Embed, parseDatetime
 
 
 class Tags(commands.GroupCog, name="tags"):
@@ -20,67 +18,6 @@ class Tags(commands.GroupCog, name="tags"):
         self.pool = self.bot.pool
         self.redis_pool = self.bot.redis_pool
         super().__init__()
-
-    @cacheJson()
-    async def getGuildTag(
-        self,
-        connection_pool: ConnectionPool,
-        id: int,
-        tag_name: str,
-        pool: asyncpg.Pool,
-    ) -> Union[dict, None]:
-        """Gets a tag from the database. This is the JSON model that will be cached
-
-        Args:
-            id (int): Guild ID
-            tag_name (str): Tag name
-            pool (asyncpg.Pool): Asyncpg Connection Pool to pull conns from
-            connection_pool (ConnectionPool): Redis Connection Pool to pull conns from
-        Returns:
-            Union[Dict, None]: The tag content or None if it doesn't exist
-        """
-        sqlQuery = """
-        SELECT DISTINCT ON (g.id)
-            t.id, t.author_id, t.name, t.aliases, t.created_at
-        FROM guild g
-        INNER JOIN tag t ON g.id = t.guild_id
-        WHERE g.id=$1 AND t.name=$2 OR aliases @> $3;
-        """
-        async with pool.acquire() as conn:
-            res = await conn.fetchrow(sqlQuery, id, tag_name, [tag_name])
-            if res is None:
-                return None
-            return encodeDatetime(dict(res))
-
-    @cache()
-    async def getGuildTagText(
-        self,
-        connection_pool: ConnectionPool,
-        id: int,
-        tag_name: str,
-        pool: asyncpg.Pool,
-    ) -> Union[str, None]:
-        """Gets a tag from the database. This is the raw text that will be cached
-
-        Args:
-            id (int): Guild ID
-            tag_name (str): Tag name
-
-        Returns:
-            Union[str, None]: The tag content or None if it doesn't exist
-        """
-        sqlQuery = """
-        SELECT DISTINCT ON (g.id)
-            t.content
-        FROM guild g
-        INNER JOIN tag t ON g.id = t.guild_id
-        WHERE g.id=$1 AND t.name=$2 OR aliases @> $3;
-        """
-        async with pool.acquire() as conn:
-            res = await conn.fetchval(sqlQuery, id, tag_name, [tag_name])
-            if res is None:
-                return None
-            return res
 
     @app_commands.command(name="get")
     async def getTag(
@@ -93,7 +30,7 @@ class Tags(commands.GroupCog, name="tags"):
             name (str): The name of the tag to look for
             raw (Optional[bool]): Whether to display the raw text or not
         """
-        tagContent = await self.getGuildTagText(self.redis_pool, interaction.guild.id, name, self.pool)  # type: ignore
+        tagContent = await getGuildTagText(id=interaction.guild.id, redis_pool=self.redis_pool, tag_name=name, db_pool=self.pool)  # type: ignore
         if tagContent is None:
             await interaction.response.send_message("Sorry but the tag was not found")
             return
@@ -108,7 +45,7 @@ class Tags(commands.GroupCog, name="tags"):
             interaction (discord.Interaction): Base interaction
             name (str): Name of tag
         """
-        tagInfo: dict = await self.getGuildTag(self.redis_pool, interaction.guild.id, name, self.pool)  # type: ignore
+        tagInfo: dict = await getGuildTag(id=interaction.guild.id, redis_pool=self.redis_pool, tag_name=name, db_pool=self.pool)  # type: ignore
         if tagInfo is None:
             await interaction.response.send_message("Sorry but the tag was not found")
             return

@@ -1,13 +1,16 @@
 from typing import Any, Dict, List, Union
 
 import asyncpg
+from redis.asyncio.connection import ConnectionPool
 
-from ..cache import akariCPM, cache, cacheJson
+from ..cache import cache, cacheJson
 from ..utils import encodeDatetime
 
 
 @cacheJson()
-async def getGuildTag(id: int, tag_name: str, pool: asyncpg.Pool) -> Union[dict, None]:
+async def getGuildTag(
+    id: int, redis_pool: ConnectionPool, tag_name: str, db_pool: asyncpg.Pool
+) -> Union[dict, None]:
     """Gets a tag from the database. This is the JSON model that will be cached
 
     Args:
@@ -25,7 +28,7 @@ async def getGuildTag(id: int, tag_name: str, pool: asyncpg.Pool) -> Union[dict,
     INNER JOIN tag t ON g.id = t.guild_id
     WHERE g.id=$1 AND t.name=$2 OR aliases @> $3;
     """
-    async with pool.acquire() as conn:
+    async with db_pool.acquire() as conn:
         res = await conn.fetchrow(sqlQuery, id, tag_name, [tag_name])
         if res is None:
             return None
@@ -34,7 +37,7 @@ async def getGuildTag(id: int, tag_name: str, pool: asyncpg.Pool) -> Union[dict,
 
 @cache()
 async def getGuildTagText(
-    id: int, tag_name: str, pool: asyncpg.Pool
+    id: int, redis_pool: ConnectionPool, tag_name: str, db_pool: asyncpg.Pool
 ) -> Union[str, None]:
     """Gets a tag from the database. This is the raw text that will be cached
 
@@ -52,15 +55,17 @@ async def getGuildTagText(
     INNER JOIN tag t ON g.id = t.guild_id
     WHERE g.id=$1 AND t.name=$2 OR aliases @> $3;
     """
-    async with pool.acquire() as conn:
+    async with db_pool.acquire() as conn:
         res = await conn.fetchval(sqlQuery, id, tag_name, [tag_name])
         if res is None:
             return None
         return res
 
 
-@cacheJson(connection_pool=akariCPM.getConnPool(), ttl=120)
-async def listGuildTags(id: int, pool: asyncpg.Pool) -> List[Dict[str, Any]]:
+@cacheJson(ttl=120)
+async def listGuildTags(
+    id: int, redis_pool: ConnectionPool, db_pool: asyncpg.Pool
+) -> List[Dict[str, Any]]:
     """Returns a list of all of the tags that the guild owns
 
     Args:
@@ -76,6 +81,6 @@ async def listGuildTags(id: int, pool: asyncpg.Pool) -> List[Dict[str, Any]]:
     INNER JOIN tag t ON g.id = t.guild_id
     WHERE g.id=$1;
     """
-    async with pool.acquire() as conn:
+    async with db_pool.acquire() as conn:
         res = await conn.fetch(query, id)
         return [encodeDatetime(dict(row)) for row in res]

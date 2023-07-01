@@ -1,9 +1,12 @@
 import os
+from typing import Any, Dict
 
 from akaricore import AkariCore
 from discord.ext import commands
+from discord.ext.ipc.objects import ClientPayload
 from discord.ext.ipc.server import Server
 from dotenv import load_dotenv
+from Libs.tags import getGuildTag, getGuildTagText, listGuildTags
 
 load_dotenv()
 
@@ -26,24 +29,29 @@ class IPCServer(commands.Cog):
     async def cog_unload(self) -> None:
         await self.ipc.stop()
 
-    # @Server.route()
-    # async def get_tag(self, data: ClientPayload) -> Any:
-    #     guildTag = await getGuildTag(
-    #         id=data.guild_id, tag_name=data.tag_name, pool=self.pool, connection_pool=self.redis_pool
-    #     )
-    #     return guildTag
+    @Server.route()
+    async def get_tag(self, data: ClientPayload) -> Any:
+        guildTag = await getGuildTag(
+            id=data.guild_id,
+            redis_pool=self.redis_pool,
+            tag_name=data.tag_name,
+            pool=self.pool,
+        )
+        return guildTag
 
-    # @Server.route()
-    # async def get_tag_content(self, data: ClientPayload) -> Dict:
-    #     guildTagContent = await getGuildTagText(
-    #         id=data.guild_id, tag_name=data.tag_name, pool=self.pool, connection_pool=self.redis_pool
-    #     )
-    #     return {"data": guildTagContent}
+    @Server.route()
+    async def get_tag_content(self, data: ClientPayload) -> Dict:
+        guildTagContent = await getGuildTagText(
+            id=data.guild_id, redis_pool=self.redis_pool, pool=self.pool
+        )
+        return {"data": guildTagContent}
 
-    # @Server.route()
-    # async def get_all_guild_tag(self, data: ClientPayload) -> Dict:
-    #     guildTagList = await listGuildTags(id=data.guild_id, pool=self.pool, connection_pool=self.redis_pool)
-    #     return {"data": guildTagList}
+    @Server.route()
+    async def get_all_guild_tag(self, data: ClientPayload) -> Dict:
+        guildTagList = await listGuildTags(
+            id=data.guild_id, redis_pool=self.redis_pool, pool=self.pool
+        )
+        return {"data": guildTagList}
 
 
 async def setup(bot: AkariCore) -> None:
