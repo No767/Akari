@@ -39,10 +39,10 @@ class cache:
         **kwargs
     ):
         res = await func(id, redis_pool, *args, **kwargs)
-        # if res is None:
-        #     return None
+        # Basically if it is not a str, then don't send it into the cache
+        # return literally the result of the func
         if isinstance(res, str) is False:
-            return None
+            return res
         aCache = AkariCache(connection_pool=redis_pool)
         key = CommandKeyBuilder(
             prefix="cache",

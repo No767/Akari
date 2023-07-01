@@ -4,8 +4,8 @@ import discord
 from akaricore import AkariCore
 from discord import app_commands
 from discord.ext import commands
-from discord.utils import escape_markdown
-from Libs.tags import getGuildTag, getGuildTagText
+from discord.utils import escape_markdown, format_dt, utcnow
+from Libs.tags import formatOptions, getGuildTag, getGuildTagText
 from Libs.ui.tags import CreateTag, DeleteTag, EditTag
 from Libs.utils import Embed, parseDatetime
 
@@ -31,10 +31,10 @@ class Tags(commands.GroupCog, name="tags"):
             raw (Optional[bool]): Whether to display the raw text or not
         """
         tagContent = await getGuildTagText(id=interaction.guild.id, redis_pool=self.redis_pool, tag_name=name, db_pool=self.pool)  # type: ignore
-        if tagContent is None:
-            await interaction.response.send_message("Sorry but the tag was not found")
+        if tagContent is None or isinstance(tagContent, str) is False:
+            await interaction.response.send_message(formatOptions(tagContent))  # type: ignore
             return
-        finalContent = escape_markdown(tagContent) if raw is True else tagContent
+        finalContent = escape_markdown(tagContent) if raw is True else tagContent  # type: ignore
         await interaction.response.send_message(finalContent)
 
     @app_commands.command(name="info")
@@ -51,10 +51,12 @@ class Tags(commands.GroupCog, name="tags"):
             return
         embed = Embed()
         embed.title = tagInfo["name"]
-        embed.timestamp = parseDatetime(tagInfo["created_at"])
+        embed.timestamp = utcnow()
         embed.add_field(name="Owner", value=f"<@{tagInfo['author_id']}>")
-        embed.add_field(name="Aliases", value=tagInfo["aliases"])
-        embed.set_footer(text=f"Created at: {embed.timestamp}")
+        embed.add_field(
+            name="Created At", value=format_dt(parseDatetime(tagInfo["created_at"]))
+        )
+        # embed.add_field(name="Aliases", value=tagInfo["aliases"])
         await interaction.response.send_message(embed=embed)
 
     @app_commands.command(name="edit")
