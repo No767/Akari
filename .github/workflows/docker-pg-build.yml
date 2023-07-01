@@ -27,6 +27,7 @@ jobs:
             no767/akari-pg
           tags: |
             type=schedule,pattern={{date 'YYYYMMDD'}}
+            type=edge,branch=dev
 
       - name: Setup Docker Buildx
         id: buildx
