@@ -35,7 +35,7 @@ pytest = "^7.4.0"
 pytest-asyncio = "^0.21.0"
 pytest-cov = "^4.1.0"
 nox = "^2023.4.22"
-nox-poetry = "^1.0.2"
+nox-poetry = "^1.0.3"
 
 [tool.poetry.group.docs.dependencies]
 sphinx = "6.2.1"
