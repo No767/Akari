@@ -2,7 +2,7 @@ import asyncpg
 import discord
 
 
-class CreateTag(discord.ui.Modal, title="Create a tag"):
+class CreateTagModal(discord.ui.Modal, title="Create a tag"):
     def __init__(self, pool: asyncpg.pool.Pool) -> None:
         super().__init__()
         self.pool: asyncpg.Pool = pool
@@ -66,7 +66,7 @@ class CreateTag(discord.ui.Modal, title="Create a tag"):
         )
 
 
-class EditTag(discord.ui.Modal, title="Edit a tag"):
+class EditTagModal(discord.ui.Modal, title="Edit a tag"):
     def __init__(self, pool: asyncpg.pool.Pool) -> None:
         super().__init__()
         self.pool: asyncpg.Pool = pool
@@ -90,11 +90,24 @@ class EditTag(discord.ui.Modal, title="Edit a tag"):
 
     async def on_submit(self, interaction: discord.Interaction) -> None:
         # OR aliases @> $ - To check for aliases
-        sqlQuery = """
-        UPDATE tag 
-        SET content = $2
-        WHERE name=$1;
+        query = """
+        UPDATE tag
+        SET content = $1
+        WHERE guild_id = $3 AND LOWER(tag.name) = $2 AND author_id = $4;
         """
-        async with self.pool.acquire() as conn:
-            await conn.execute(sqlQuery, self.name.value, self.content.value)
-            await interaction.response.send_message("Tag edited", ephemeral=True)
+        if interaction.guild is None:
+            await interaction.response.send_message(
+                "You can't do this in a DM", ephemeral=True
+            )
+            return
+        await self.pool.execute(
+            query,
+            self.content.value,
+            self.name.value,
+            interaction.guild.id,
+            interaction.user.id,
+        )
+        await interaction.response.send_message(
+            f"Tag `{self.name.value}` edited", ephemeral=True
+        )
+        return

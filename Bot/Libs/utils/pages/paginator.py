@@ -1,11 +1,9 @@
 from __future__ import annotations
 
-import traceback
 from typing import Any, Dict, Optional
 
 import discord
 from discord.ext import menus
-from discord.ext.commands import Context
 
 from .modals import NumberedPageModal
 
@@ -16,7 +14,7 @@ class AkariPages(discord.ui.View):
         self,
         source: menus.PageSource,
         *,
-        ctx: Context,
+        # ctx: Context,
         interaction: discord.Interaction,
         check_embeds: bool = True,
         compact: bool = False,
@@ -24,9 +22,8 @@ class AkariPages(discord.ui.View):
         super().__init__()
         self.source: menus.PageSource = source
         self.check_embeds: bool = check_embeds
-        self.ctx: Context = ctx
         self.interaction: discord.Interaction = interaction
-        self.message: Optional[discord.Message] = None
+        self.followup: Optional[discord.InteractionMessage] = None
         self.current_page: int = 0
         self.compact: bool = compact
         self.clear_items()
@@ -72,8 +69,8 @@ class AkariPages(discord.ui.View):
         self._update_labels(page_number)
         if kwargs:
             if interaction.response.is_done():
-                if self.message:
-                    await self.message.edit(**kwargs, view=self)
+                if self.followup:
+                    await self.followup.edit(**kwargs, view=self)
             else:
                 await interaction.response.edit_message(**kwargs, view=self)
 
@@ -123,8 +120,8 @@ class AkariPages(discord.ui.View):
 
     async def interaction_check(self, interaction: discord.Interaction) -> bool:
         if interaction.user and interaction.user.id in (
-            self.ctx.bot.owner_id,
-            self.ctx.author.id,
+            self.interaction.client.application.owner.id,  # type: ignore
+            self.interaction.user.id,
         ):
             return True
         await interaction.response.send_message(
@@ -133,8 +130,8 @@ class AkariPages(discord.ui.View):
         return False
 
     async def on_timeout(self) -> None:
-        if self.message:
-            await self.message.edit(view=None)
+        if self.followup:
+            await self.followup.edit(view=None)
 
     async def on_error(
         self, interaction: discord.Interaction, error: Exception, item: discord.ui.Item
@@ -148,44 +145,13 @@ class AkariPages(discord.ui.View):
                 "An unknown error occurred, sorry", ephemeral=True
             )
 
-        try:
-            exc = "".join(
-                traceback.format_exception(
-                    type(error), error, error.__traceback__, chain=False
-                )
-            )
-            embed = discord.Embed(
-                title=f"{self.source.__class__.__name__} Error",
-                description=f"```py\n{exc}\n```",
-                timestamp=interaction.created_at,
-                colour=0xCC3366,
-            )
-            embed.add_field(
-                name="User", value=f"{interaction.user} ({interaction.user.id})"
-            )
-            embed.add_field(
-                name="Guild", value=f"{interaction.guild} ({interaction.guild_id})"
-            )
-            embed.add_field(
-                name="Channel",
-                value=f"{interaction.channel} ({interaction.channel_id})",
-            )
-            await self.ctx.bot.stats_webhook.send(embed=embed)
-        except discord.HTTPException:
-            pass
-
     async def start(
         self, *, content: Optional[str] = None, ephemeral: bool = False
     ) -> None:
-        if self.check_embeds and not self.ctx.channel.permissions_for(self.ctx.me).embed_links:  # type: ignore
+        if self.check_embeds and not self.interaction.permissions.embed_links:  # type: ignore
             await self.interaction.response.send_message(
                 "Bot doesn't have embed link perms in this channel", ephemeral=True
             )
-            # NOELLE DISABLE THIS LATER!
-            # await self.ctx.send(
-            #    "Bot does not have embed links permission in this channel.",
-            #    ephemeral=True,
-            # )
             return
 
         await self.source._prepare_once()
@@ -195,12 +161,11 @@ class AkariPages(discord.ui.View):
             kwargs.setdefault("content", content)
 
         self._update_labels(0)
+
         await self.interaction.response.send_message(
-            **kwargs, view=self, ephemeral=True
+            **kwargs, view=self, ephemeral=ephemeral
         )
-        # NOELLE DOESN'T KNOW HOW TO MAKE THIS WORK
-        self.message = self.interaction.message()  # type: ignore
-        # self.message = await self.ctx.send(**kwargs, view=self, ephemeral=ephemeral)
+        self.followup = await self.interaction.original_response()
 
     @discord.ui.button(label="≪", style=discord.ButtonStyle.grey)
     async def go_to_first_page(
@@ -242,7 +207,7 @@ class AkariPages(discord.ui.View):
         self, interaction: discord.Interaction, button: discord.ui.Button
     ):
         """lets you type a page number to go to"""
-        if self.message is None:
+        if self.followup is None:
             return
 
         modal = NumberedPageModal(self.source.get_max_pages())
