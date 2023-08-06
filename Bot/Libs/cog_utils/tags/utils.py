@@ -15,7 +15,9 @@ async def edit_tag(
     return status
 
 
-async def get_tag_content(id: int, name: str, pool: asyncpg.Pool):
+async def get_tag_content(
+    id: int, name: str, pool: asyncpg.Pool
+) -> Union[str, List[Dict], None]:
     init_query = """
     SELECT tag.content
     FROM tag_lookup

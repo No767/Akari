@@ -2,7 +2,8 @@ import discord
 from akaricore import AkariCore
 from discord import app_commands
 from discord.ext import commands
-from Libs.utils.pages import AkariPages, BasicListSource
+from Libs.cog_utils.tags import format_options, get_tag_content
+from Libs.ui.tags import CreateTagModal, TagPages
 
 # from Libs.ui.tags import CreateTag, DeleteTag, EditTag
 
@@ -17,10 +18,44 @@ class Tags(commands.GroupCog, name="tags"):
         super().__init__()
 
     @app_commands.command(name="get")
-    async def get(self, interaction: discord.Interaction) -> None:
-        source = BasicListSource(["test", "test1"], per_page=1)
-        pages = AkariPages(source, interaction=interaction)
-        await pages.start()
+    @app_commands.describe(name="The name of the tag")
+    async def get(self, interaction: discord.Interaction, name: str) -> None:
+        """Obtain text for a tag"""
+        text = await get_tag_content(interaction.guild.id, name, self.pool)  # type: ignore
+        if isinstance(text, list):
+            await interaction.response.send_message(format_options(text) or ".")
+            return
+        await interaction.response.send_message(text or ".")
+
+    @app_commands.command(name="search")
+    @app_commands.describe(query="The name to look for")
+    async def search(self, interaction: discord.Interaction, query: str) -> None:
+        """Search for tags"""
+        if len(query) < 3:
+            await interaction.response.send_message(
+                "The query must be at least 3 characters"
+            )
+            return
+
+        sql = """SELECT id, name, owner_id
+                 FROM tag_lookup
+                 WHERE guild_id=$1 AND name % $2
+                 ORDER BY similarity(name, $2) DESC
+                 LIMIT 100;
+              """
+        rows = await self.pool.fetch(sql, interaction.guild.id, query)  # type: ignore
+
+        if rows:
+            pages = TagPages(entries=rows, per_page=10, interaction=interaction)
+            await pages.start()
+        else:
+            await interaction.response.send_message("No tags found")
+
+    @app_commands.command(name="create")
+    async def create(self, interaction: discord.Interaction) -> None:
+        """Create a tag"""
+        modal = CreateTagModal(self.pool)
+        await interaction.response.send_modal(modal)
 
     # @app_commands.command(name="get")
     # async def getTag(

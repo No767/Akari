@@ -14,7 +14,6 @@ class AkariPages(discord.ui.View):
         self,
         source: menus.PageSource,
         *,
-        # ctx: Context,
         interaction: discord.Interaction,
         check_embeds: bool = True,
         compact: bool = False,

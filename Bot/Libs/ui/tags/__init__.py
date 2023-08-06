@@ -1,4 +1,5 @@
-from .modals import CreateTag, EditTag
+from .modals import CreateTagModal, EditTagModal
+from .pages import TagPages
 from .views import DeleteTag
 
-__all__ = ["CreateTag", "EditTag", "DeleteTag"]
+__all__ = ["CreateTagModal", "EditTagModal", "DeleteTag", "TagPages"]
