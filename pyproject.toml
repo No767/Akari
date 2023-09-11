@@ -10,7 +10,7 @@ readme = "README.md"
 python = ">=3.8,<4.0"
 python-dotenv = "^1.0.0"
 aiodns = "^3.0.0"
-Brotli = "^1.0.9"
+Brotli = "^1.1.0"
 uvloop = "^0.17.0"
 orjson = "^3.9.7"
 discord-py = {extras = ["voice"], version = "^2.3.2"}
