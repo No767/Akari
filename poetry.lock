@@ -2193,13 +2193,13 @@ theme-sbt = ["sphinx-book-theme (>=1.0,<2.0)"]
 
 [[package]]
 name = "sphinxawesome-theme"
-version = "5.0.0b3"
+version = "5.0.0b4"
 description = "An awesome theme for the Sphinx documentation generator"
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "sphinxawesome_theme-5.0.0b3-py3-none-any.whl", hash = "sha256:48395d5a97519a5b20c543221d9f2a57e3967facbfba8f48d7f782b286cec36a"},
-    {file = "sphinxawesome_theme-5.0.0b3.tar.gz", hash = "sha256:e5230b98d125351765bcee12f3abe3d4314a5958d27d741ded29653508350299"},
+    {file = "sphinxawesome_theme-5.0.0b4-py3-none-any.whl", hash = "sha256:a74bec9e41d4e93f28dc86755ea9d8404ec3500ea28b34a6a1862695c720dbd4"},
+    {file = "sphinxawesome_theme-5.0.0b4.tar.gz", hash = "sha256:5358ed9642d3a61950287b471a137aba68ae0da4bee55bfd72d2f2bc74ca2eeb"},
 ]
 
 [package.dependencies]
@@ -2674,4 +2674,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<4.0"
-content-hash = "1c36b1f75f8d904510c6aef3cb4e28214a8ff68b7ae5c81a91bad2aae1ef7b2d"
+content-hash = "b936543feb1eb4ca286702e01e40689586388a6e932130c3713d48f5f1ae923d"
