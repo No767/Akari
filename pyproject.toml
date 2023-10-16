@@ -11,7 +11,7 @@ python = ">=3.8,<4.0"
 python-dotenv = "^1.0.0"
 aiodns = "^3.1.0"
 Brotli = "^1.1.0"
-uvloop = "^0.17.0"
+uvloop = "^0.18.0"
 orjson = "^3.9.9"
 discord-py = {extras = ["voice"], version = "^2.3.2"}
 redis = {extras = ["hiredis"], version = "^5.0.1"}
