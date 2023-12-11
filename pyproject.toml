@@ -21,7 +21,7 @@ better-ipc = "^2.0.3"
 discord-ext-menus = {git = "https://github.com/Rapptz/discord-ext-menus", rev = "8686b5d1bbc1d3c862292eb436ab630d6e9c9b53"}
 asyncpg = "^0.29.0"
 asyncpg-trek = "^0.3.1"
-typing-extensions = "^4.8.0"
+typing-extensions = "^4.9.0"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.5.0"
