@@ -25,9 +25,11 @@ class Info(commands.Cog):
         embed.title = user.display_name
         embed.add_field(
             name="On Nitro Since (UTC)",
-            value=user.premium_since.strftime("%Y-%m-%d %H:%M:%S")
-            if user.premium_since is not None
-            else None,
+            value=(
+                user.premium_since.strftime("%Y-%m-%d %H:%M:%S")
+                if user.premium_since is not None
+                else None
+            ),
             inline=True,
         )
         embed.add_field(
@@ -37,16 +39,20 @@ class Info(commands.Cog):
         )
         embed.add_field(
             name="Server Join Date (UTC)",
-            value=user.joined_at.strftime("%Y-%m-%d %H:%M:%S")
-            if user.joined_at is not None
-            else None,
+            value=(
+                user.joined_at.strftime("%Y-%m-%d %H:%M:%S")
+                if user.joined_at is not None
+                else None
+            ),
             inline=True,
         )
         embed.add_field(
             name="Timeout Since",
-            value=user.communication_disabled_until.strftime("%Y-%m-%d %H:%M:%S")
-            if user.communication_disabled_until is not None
-            else None,
+            value=(
+                user.communication_disabled_until.strftime("%Y-%m-%d %H:%M:%S")
+                if user.communication_disabled_until is not None
+                else None
+            ),
             inline=True,
         )
         embed.add_field(

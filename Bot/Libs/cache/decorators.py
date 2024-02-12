@@ -47,9 +47,11 @@ class cache:
         key = CommandKeyBuilder(
             prefix="cache",
             namespace="akari",
-            id=id
-            if id is not None
-            else (self.key if self.key is not None else uuid.uuid4()),
+            id=(
+                id
+                if id is not None
+                else (self.key if self.key is not None else uuid.uuid4())
+            ),
             command=func.__name__,
         )
 
@@ -100,9 +102,11 @@ class cacheJson:
         key = CommandKeyBuilder(
             prefix="cache",
             namespace="akari",
-            id=id
-            if id is not None
-            else (self.key if self.key is not None else uuid.uuid4()),
+            id=(
+                id
+                if id is not None
+                else (self.key if self.key is not None else uuid.uuid4())
+            ),
             command=func.__name__,
         )
 
