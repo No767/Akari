@@ -10,7 +10,7 @@ A Discord bot focused on providing modern utility to the modern-day support serv
 
 <div align=left>
 
-> [!IMPORTANT] 
+> ⚠️ **IMPORTANT**:
 > As of 2/19/2024, Akari is no longer being actively supported and developed. The repo is now archived to maintain historical content.
 
 ## Akari
