@@ -10,6 +10,9 @@ A Discord bot focused on providing modern utility to the modern-day support serv
 
 <div align=left>
 
+> [!IMPORTANT] 
+> As of 2/19/2024, Akari is no longer being actively supported and developed. The repo is now archived to maintain historical content.
+
 ## Akari
 
 Akari is a utility toolkit bot for Discord servers. Akari contains a variety of commands, ranging from tags, to moderation. Akari is designed to be used internally for Kumiko's Support Server, but can be also used by others as well.
